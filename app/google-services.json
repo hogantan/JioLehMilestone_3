@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1058691718982",
+    "firebase_url": "https://jioleh.firebaseio.com",
+    "project_id": "jioleh",
+    "storage_bucket": "jioleh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058691718982:android:105d614bcb6a48bbadcf47",
+        "android_client_info": {
+          "package_name": "com.example.jioleh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1058691718982-atnlsm44hl1fjurdr098tvlhkttt2n0l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKLjFuGkCubxUkWJbKBW0Mpwg2_SJ6hAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1058691718982-atnlsm44hl1fjurdr098tvlhkttt2n0l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
