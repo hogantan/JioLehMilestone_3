@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     //added comment to test github commit
+    //alex 123321312
     private EditText email;
     private EditText password;
     private Button login;
