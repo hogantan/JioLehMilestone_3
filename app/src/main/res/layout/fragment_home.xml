@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <Button
+        android:id="@+id/btn_findNearby"
+        android:layout_width="178sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_postActivities"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="100dip"
+
+        android:text="Find Nearby" />
+
+    <Button
+        android:id="@+id/btn_postActivities"
+        android:layout_width="178sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_findActivities"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="100dip"
+        android:text="Post Activities" />
+
+    <Button
+        android:id="@+id/btn_findActivities"
+        android:layout_width="178dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/home_frag"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="100dip"
+        android:text="Find Activities" />
+
+    <TextView
+        android:id="@+id/home_frag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dip"
+        android:text="Home Fragment"
+        android:textSize="30sp" />
+
+
+</RelativeLayout>
