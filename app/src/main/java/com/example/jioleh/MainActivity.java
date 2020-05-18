@@ -18,6 +18,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     private EditText email;
@@ -60,13 +62,28 @@ public class MainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent nextActivity = new Intent(MainActivity.this, PostLoginPage.class);
-                    startActivity(nextActivity);
+                    checkEmailVerification();
+                } else if (task.getException() instanceof FirebaseAuthInvalidUserException){
+                    Toast.makeText(MainActivity.this, "Login failed, user does not exist",
+                            Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Login failed, email address or password is incorrect",
+                            Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
+    }
+
+    private void checkEmailVerification() {
+        FirebaseUser currentUser = database.getCurrentUser();
+        boolean isVerified = currentUser.isEmailVerified();
+        if (isVerified) {
+            MainActivity.this.finish(); // functions like break to break entirely from the main activity
+            //insert post login activity here
+        } else {
+            Toast.makeText(MainActivity.this, "Account is not verified, please check email", Toast.LENGTH_SHORT).show();
+            database.signOut(); //sign out unverified user
+        }
     }
 }

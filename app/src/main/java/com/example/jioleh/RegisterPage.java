@@ -15,10 +15,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterPage extends AppCompatActivity {
 
     private EditText email;
+    private EditText username;
     private EditText password;
     private Button register;
     private TextView login;
@@ -33,23 +39,28 @@ public class RegisterPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (checkUserInputDetails()) {
-                    String user_email = email.getText().toString();
-                    String user_password = password.getText().toString();
-                    database.createUserWithEmailAndPassword(user_email, user_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(RegisterPage.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                                Intent nextActivity = new Intent(RegisterPage.this, MainActivity.class);
-                                startActivity(nextActivity);
-                            } else {
-                                Toast.makeText(RegisterPage.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    String user_email = email.getText().toString().trim();
+                    String user_password = password.getText().toString().trim();
+                    database.createUserWithEmailAndPassword(user_email, user_password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        sendEmailVerification();
+                                    } else if (task.getException() instanceof FirebaseAuthWeakPasswordException){
+                                        Toast.makeText(RegisterPage.this,
+                                                "Registration failed, password must have more than 6 characters",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(RegisterPage.this,
+                                                "Registration failed, please contact administrator",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                    }
+                                });
+                    }
                 }
-            }
-        });
+            });
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +72,7 @@ public class RegisterPage extends AppCompatActivity {
 
     private void initialise() {
         email = findViewById(R.id.etEmailRegister);
+        username = findViewById(R.id.etUsernameRegister);
         password = findViewById(R.id.etPasswordRegister);
         register = findViewById(R.id.btnRegister);
         login = findViewById(R.id.tvAlreadyHaveAcc);
@@ -68,14 +80,41 @@ public class RegisterPage extends AppCompatActivity {
     }
 
     private boolean checkUserInputDetails() {
-        String inputPassword = password.getText().toString();
         String inputEmail = email.getText().toString();
-
+        String inputUsername = username.getText().toString();
+        String inputPassword = password.getText().toString();
         if (inputPassword.isEmpty() || inputEmail.isEmpty()) {
-            Toast.makeText(RegisterPage.this, "Please fill up all the required fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterPage.this, "Please fill up all the required fields",
+                    Toast.LENGTH_SHORT).show();
             return false;
         } else {
             return true;
         }
+    }
+
+    private void sendEmailVerification() {
+        FirebaseUser currentUser = database.getCurrentUser();
+        currentUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(RegisterPage.this,
+                            "Registration successful, a verification email has been sent to your registered email",
+                            Toast.LENGTH_LONG).show();
+                    database.signOut();
+                    finish();
+                    Intent nextActivity = new Intent(RegisterPage.this, MainActivity.class);
+                    startActivity(nextActivity);
+                } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                    Toast.makeText(RegisterPage.this,
+                            "Registration failed, email address is already registered",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(RegisterPage.this,
+                            "Registration failed, please contact administrator",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
