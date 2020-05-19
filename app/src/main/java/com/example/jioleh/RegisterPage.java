@@ -24,7 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class RegisterPage extends AppCompatActivity {
 
     private EditText email;
-    private EditText username;
+    private EditText username; //to be included in profile database
     private EditText password;
     private Button register;
     private TextView login;
@@ -98,13 +98,7 @@ public class RegisterPage extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(RegisterPage.this,
-                            "Registration successful, a verification email has been sent to your registered email",
-                            Toast.LENGTH_LONG).show();
-                    database.signOut();
-                    finish();
-                    Intent nextActivity = new Intent(RegisterPage.this, MainActivity.class);
-                    startActivity(nextActivity);
+                    openVerificationDialog();
                 } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                     Toast.makeText(RegisterPage.this,
                             "Registration failed, email address is already registered",
@@ -116,5 +110,13 @@ public class RegisterPage extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    // Pop-up window when user successfully registers for an account
+    // Refer to VerificationEmailSentDialog class
+    private void openVerificationDialog() {
+        database.signOut();
+        VerificationEmailSentDialog popupDialog = new VerificationEmailSentDialog();
+        popupDialog.show(getSupportFragmentManager(), "popupDialog");
     }
 }

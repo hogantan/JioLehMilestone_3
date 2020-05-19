@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private Button login;
     private TextView register;
+    private TextView forgotpassword;
     private FirebaseAuth database;
 
     @Override
@@ -33,16 +34,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialise();
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkUser(email.getText().toString(), password.getText().toString());
             }
         });
+
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent nextActivity = new Intent(MainActivity.this, RegisterPage.class);
+                startActivity(nextActivity);
+            }
+        });
+
+        forgotpassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent(MainActivity.this, ForgotPasswordPage.class);
                 startActivity(nextActivity);
             }
         });
@@ -53,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.etPassword);
         login = findViewById(R.id.btnLogin);
         register = findViewById(R.id.tvRegister);
+        forgotpassword = findViewById(R.id.tvForgotPassword);
         database = FirebaseAuth.getInstance();
     }
 
@@ -64,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     checkEmailVerification();
                 } else if (task.getException() instanceof FirebaseAuthInvalidUserException){
-                    Toast.makeText(MainActivity.this, "Login failed, user does not exist",
+                    Toast.makeText(MainActivity.this, "User does not exist",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "Login failed, email address or password is incorrect",
+                    Toast.makeText(MainActivity.this, "Email address or password is incorrect",
                             Toast.LENGTH_SHORT).show();
                 }
 
@@ -84,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(postLoginActivity);
             //insert post login activity here
         } else {
-            Toast.makeText(MainActivity.this, "Account is not verified, please check email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this,
+                    "Account is not verified, please check email",
+                    Toast.LENGTH_SHORT).show();
             database.signOut(); //sign out unverified user
         }
     }
