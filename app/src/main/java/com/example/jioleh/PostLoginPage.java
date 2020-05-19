@@ -14,10 +14,13 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class PostLoginPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
+    private FirebaseAuth database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +53,18 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
 
     private void initialise() {
         drawer = findViewById(R.id.drawer_layout);
+        database = FirebaseAuth.getInstance();
     }
 
     //different actions based on what item is selected on the navigation bar
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
+            case R.id.nav_signout:
+                database.signOut();
+                Intent nextActivity = new Intent(PostLoginPage.this, MainActivity.class);
+                startActivity(nextActivity);
+                break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new SettingFragment()).commit();
