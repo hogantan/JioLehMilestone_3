@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         boolean isVerified = currentUser.isEmailVerified();
         if (isVerified) {
             MainActivity.this.finish(); // functions like break to break entirely from the main activity
+            Intent postLoginActivity = new Intent(this, PostLoginPage.class);
+            startActivity(postLoginActivity);
             //insert post login activity here
         } else {
             Toast.makeText(MainActivity.this, "Account is not verified, please check email", Toast.LENGTH_SHORT).show();
