@@ -12,15 +12,21 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class PostLoginPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
     private FirebaseAuth database;
+    private FirebaseFirestore fireStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,22 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
                     new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_home);
         }
+
+        String userID = database.getCurrentUser().getUid();
+        DocumentReference documentReference = FirebaseFirestore
+                .getInstance().collection("users").document(userID);
+
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                UserProfile user = documentSnapshot.toObject(UserProfile.class);
+                if(user.getIsNewUser()) {
+                    startActivity(new Intent(PostLoginPage.this,FirstTimeUserPage.class));
+                    finish();
+                }
+            }
+        });
+
     }
 
     private void initialise() {
@@ -95,4 +117,5 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
             super.onBackPressed();
         }
     }
+
 }

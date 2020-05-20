@@ -1,10 +1,13 @@
 package com.example.jioleh;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +26,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterPage extends AppCompatActivity {
 
@@ -29,6 +40,8 @@ public class RegisterPage extends AppCompatActivity {
     private Button register;
     private TextView login;
     private FirebaseAuth database;
+    private FirebaseFirestore fireStore;
+    private boolean isNewUser = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +51,7 @@ public class RegisterPage extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String userName = username.getText().toString();
                 if (checkUserInputDetails()) {
                     String user_email = email.getText().toString().trim();
                     String user_password = password.getText().toString().trim();
@@ -46,7 +60,19 @@ public class RegisterPage extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        sendEmailVerification();
+                                        final String userID = database.getCurrentUser().getUid();
+                                        DocumentReference documentReference = fireStore.collection("users").document(userID);
+                                        UserProfile user = new UserProfile(userName, isNewUser);
+                                        documentReference.set(user)
+                                                .onSuccessTask(new SuccessContinuation<Void, Void>() {
+                                            @NonNull
+                                            @Override
+                                            public Task<Void> then(@Nullable Void aVoid) throws Exception {
+                                                sendEmailVerification();
+                                                return null;
+                                            }
+                                        });
+
                                     } else if (task.getException() instanceof FirebaseAuthWeakPasswordException){
                                         Toast.makeText(RegisterPage.this,
                                                 "Registration failed, password must have more than 6 characters",
@@ -77,6 +103,7 @@ public class RegisterPage extends AppCompatActivity {
         register = findViewById(R.id.btnRegister);
         login = findViewById(R.id.tvAlreadyHaveAcc);
         database = FirebaseAuth.getInstance();
+        fireStore = FirebaseFirestore.getInstance();
     }
 
     private boolean checkUserInputDetails() {
