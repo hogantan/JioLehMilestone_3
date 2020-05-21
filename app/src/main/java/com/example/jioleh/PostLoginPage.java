@@ -60,10 +60,14 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
+            case R.id.nav_changepassword:
+                Intent nextActivity1 = new Intent(PostLoginPage.this, ChangePasswordPage.class);
+                startActivity(nextActivity1);
+                break;
             case R.id.nav_signout:
                 database.signOut();
-                Intent nextActivity = new Intent(PostLoginPage.this, MainActivity.class);
-                startActivity(nextActivity);
+                Intent nextActivity2 = new Intent(PostLoginPage.this, MainActivity.class);
+                startActivity(nextActivity2);
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,

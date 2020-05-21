@@ -33,30 +33,40 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initialise();
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkUser(email.getText().toString(), password.getText().toString());
-            }
-        });
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            Intent nextActivity = new Intent(MainActivity.this, PostLoginPage.class);
+            startActivity(nextActivity);
+            finish();
+        } else {
+            initialise();
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nextActivity = new Intent(MainActivity.this, RegisterPage.class);
-                startActivity(nextActivity);
-            }
-        });
+            login.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkUser(email.getText().toString(), password.getText().toString());
+                }
+            });
 
-        forgotpassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nextActivity = new Intent(MainActivity.this, ForgotPasswordPage.class);
-                startActivity(nextActivity);
-            }
-        });
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent nextActivity = new Intent(MainActivity.this, RegisterPage.class);
+                    startActivity(nextActivity);
+                    finish();
+                }
+            });
+
+            forgotpassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent nextActivity = new Intent(MainActivity.this, ForgotPasswordPage.class);
+                    startActivity(nextActivity);
+                    finish();
+                }
+            });
+        }
     }
 
     private void initialise() {
@@ -82,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Email address or password is incorrect",
                             Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
@@ -94,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.finish(); // functions like break to break entirely from the main activity
             Intent postLoginActivity = new Intent(this, PostLoginPage.class);
             startActivity(postLoginActivity);
-            //insert post login activity here
+            finish();
         } else {
             Toast.makeText(MainActivity.this,
                     "Account is not verified, please check email",
