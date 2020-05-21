@@ -1,6 +1,7 @@
 package com.example.jioleh;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -14,12 +15,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     private EditText email;
@@ -28,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView register;
     private TextView forgotpassword;
     private FirebaseAuth database;
+    private FirebaseFirestore fireStore;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,16 +104,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     private void checkEmailVerification() {
         FirebaseUser currentUser = database.getCurrentUser();
         boolean isVerified = currentUser.isEmailVerified();
+        String userID = currentUser.getUid();
         if (isVerified) {
-            MainActivity.this.finish(); // functions like break to break entirely from the main activity
-            Intent postLoginActivity = new Intent(this, PostLoginPage.class);
-            startActivity(postLoginActivity);
-            finish();
+                MainActivity.this.finish();
+                startActivity(new Intent(MainActivity.this, PostLoginPage.class));
         } else {
             Toast.makeText(MainActivity.this,
                     "Account is not verified, please check email",
@@ -111,4 +121,8 @@ public class MainActivity extends AppCompatActivity {
             database.signOut(); //sign out unverified user
         }
     }
+
+
+
+
 }
