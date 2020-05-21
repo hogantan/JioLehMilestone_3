@@ -21,6 +21,7 @@ public class ResetPasswordConfirmationDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent nextActivity = new Intent(getContext(), MainActivity.class);
+                        nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(nextActivity);
                     }
                 });

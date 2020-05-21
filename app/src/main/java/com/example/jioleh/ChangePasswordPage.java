@@ -1,10 +1,18 @@
 package com.example.jioleh;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -20,10 +29,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class ChangePasswordPage extends AppCompatActivity {
 
-    private EditText old_password;
-    private EditText new_password;
-    private EditText confirm_new_password;
+    private TextInputLayout old_password;
+    private TextInputLayout new_password;
+    private TextInputLayout confirm_new_password;
     private Button change_password;
+
+    private ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +46,11 @@ public class ChangePasswordPage extends AppCompatActivity {
         change_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String p_old = old_password.getText().toString().trim();
-                final String p_new = new_password.getText().toString().trim();
-                final String p_new_confirm = confirm_new_password.getText().toString().trim();
+
+                final String p_old = old_password.getEditText().getText().toString().trim();
+                final String p_new = new_password.getEditText().getText().toString().trim();
+
+                final String p_new_confirm = confirm_new_password.getEditText().getText().toString().trim();
                 if (emptyFields(p_old, p_new, p_new_confirm)) {
                     Toast.makeText(ChangePasswordPage.this,
                             "Please fill in all fields",
@@ -54,6 +67,12 @@ public class ChangePasswordPage extends AppCompatActivity {
                     final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                     AuthCredential credential = EmailAuthProvider.getCredential(currentUser.getEmail(), p_old);
 
+                    //Setting Details of Loading Screen
+                    progressBar.setTitle("Changing Password");
+                    progressBar.setMessage("Please wait while we change your password");
+                    progressBar.setCanceledOnTouchOutside(false);
+                    progressBar.show();
+
                     currentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -62,13 +81,16 @@ public class ChangePasswordPage extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            progressBar.dismiss();
                                             Toast.makeText(ChangePasswordPage.this,
                                                     "Password changed successfully",
                                                     Toast.LENGTH_SHORT).show();
                                             Intent nextActivity = new Intent(ChangePasswordPage.this, PostLoginPage.class);
+                                            nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(nextActivity);
                                             finish();
                                         } else {
+                                            progressBar.dismiss();
                                             Toast.makeText(ChangePasswordPage.this,
                                                     "Password change failed, please contact administrator",
                                                     Toast.LENGTH_SHORT).show();
@@ -77,6 +99,7 @@ public class ChangePasswordPage extends AppCompatActivity {
                                     }
                                 });
                             } else {
+                                progressBar.dismiss();
                                 Toast.makeText(ChangePasswordPage.this,
                                         "Old password is incorrect",
                                         Toast.LENGTH_SHORT).show();
@@ -90,10 +113,29 @@ public class ChangePasswordPage extends AppCompatActivity {
     }
 
     private void initialise() {
-        old_password = findViewById(R.id.etOldPassword);
-        new_password = findViewById(R.id.etNewPassword);
-        confirm_new_password = findViewById(R.id.etConfirmNewPassword);
+        initialiseActionBar();
+        progressBar = new ProgressDialog(ChangePasswordPage.this);
+        old_password = findViewById(R.id.tilChangeOldPassword);
+        new_password = findViewById(R.id.tilChangeNewPassword);
+        confirm_new_password = findViewById(R.id.tilChangeConfirmNewPassword);
         change_password = findViewById(R.id.btnConfirmChangePassword);
+    }
+
+    //Action Bar Settings
+    private void initialiseActionBar() {
+        ActionBar top_bar = getSupportActionBar();
+
+        //Setting background colour
+        ColorDrawable light_green = new ColorDrawable(Color.parseColor("#00ffce"));
+        top_bar.setBackgroundDrawable(light_green);
+
+        //Setting Title text
+        top_bar.setTitle(Html.fromHtml("<font color='#202124'>Settings </font>"));
+
+        //Setting Top left logo
+        final Drawable upArrow =  ContextCompat.getDrawable(ChangePasswordPage.this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(ContextCompat.getColor(ChangePasswordPage.this, R.color.baseBlack), PorterDuff.Mode.SRC_ATOP);
+        ChangePasswordPage.this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }
 
     private boolean emptyFields(String s1, String s2, String s3) {
