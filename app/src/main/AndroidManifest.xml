@@ -10,13 +10,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FirstTimeUserPage"/>
-        <activity android:name=".ChangePasswordPage" />
-        <activity android:name=".ForgotPasswordPage" />
+        <activity
+            android:name=".LoginPage"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".FirstTimeUserPage" />
+        <activity android:name=".ChangePasswordPage"
+            android:parentActivityName=".PostLoginPage"/>
+        <activity
+            android:name=".ForgotPasswordPage"
+            android:parentActivityName=".LoginPage" />
         <activity android:name=".PostActivitiesPage" />
         <activity android:name=".FindActivitiesPage" />
         <activity android:name=".PostingPage" />
-        <activity android:name=".RegisterPage" />
+        <activity
+            android:name=".RegisterPage"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".PostLoginPage"
             android:theme="@style/AppTheme.NoActionBar" />

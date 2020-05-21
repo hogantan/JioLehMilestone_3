@@ -5,30 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#202124"
-    tools:context=".ChangePasswordPage">
-
-    <Button
-        android:id="@+id/btnConfirmChangePassword"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:background="#00ffce"
-        android:text="Change Password"
-        android:textColor="#202124"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilChangeConfirmNewPassword"
-        app:layout_constraintVertical_bias="0.031" />
+    tools:context=".LoginPage">
 
     <TextView
-        android:id="@+id/tvChangePassword"
+        android:id="@+id/tvLoginSubHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#fff"
         android:textSize="24sp"
-        android:text="Change Password"
+        android:text="Sign in to your account"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
@@ -37,12 +22,12 @@
         app:layout_constraintVertical_bias="0.051" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilChangeOldPassword"
+        android:id="@+id/tilLoginEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textColorHint="#fff"
-        app:layout_constraintTop_toBottomOf="@+id/tvChangePassword"
+        app:layout_constraintTop_toBottomOf="@+id/tvLoginSubHeader"
         tools:layout_editor_absoluteX="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -51,42 +36,52 @@
             android:layout_gravity="center"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:hint="Old Password" />
+            android:hint="Email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilChangeNewPassword"
+        android:id="@+id/tilLoginPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textColorHint="#fff"
-        app:layout_constraintTop_toBottomOf="@+id/tilChangeOldPassword"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintTop_toBottomOf="@+id/tilLoginEmail"
+        tools:layout_editor_absoluteX="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="#fff"
-            android:textColorHint="#fff"
-            android:hint="New Password" />
+            android:hint="Password" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilChangeConfirmNewPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <Button
+        android:id="@+id/btnLoginSignIn"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
         android:layout_marginTop="20dp"
-        android:textColorHint="#fff"
-        app:layout_constraintTop_toBottomOf="@+id/tilChangeNewPassword"
-        tools:layout_editor_absoluteX="1dp">
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#00ffce"
+        android:text="Sign In"
+        android:textSize="18sp"
+        android:textColor="#202124"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilLoginPassword"
+        app:layout_constraintVertical_bias="0.031" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="#fff"
-            android:textColorHint="#fff"
-            android:hint="Confirm New Password" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/tvForgotPasswordLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password?"
+        android:textColor="#fff"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoginSignIn"
+        app:layout_constraintVertical_bias="0.125" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,11 +2,19 @@ package com.example.jioleh;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +27,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -34,11 +43,13 @@ import java.util.Map;
 
 public class RegisterPage extends AppCompatActivity {
 
-    private EditText email;
-    private EditText username; //to be included in profile database
-    private EditText password;
+    private TextInputLayout email;
+    private TextInputLayout username;
+    private TextInputLayout password;
     private Button register;
-    private TextView login;
+
+    private ProgressDialog progressBar;
+
     private FirebaseAuth database;
     private FirebaseFirestore fireStore;
     private boolean isNewUser = true;
@@ -51,10 +62,10 @@ public class RegisterPage extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String userName = username.getText().toString();
+                final String userName = username.getEditText().getText().toString();
                 if (checkUserInputDetails()) {
-                    String user_email = email.getText().toString().trim();
-                    String user_password = password.getText().toString().trim();
+                    String user_email = email.getEditText().getText().toString().trim();
+                    String user_password = password.getEditText().getText().toString().trim();
                     database.createUserWithEmailAndPassword(user_email, user_password)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -87,30 +98,40 @@ public class RegisterPage extends AppCompatActivity {
                     }
                 }
             });
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nextActivity = new Intent(RegisterPage.this, MainActivity.class);
-                startActivity(nextActivity);
-                finish();
-            }
-        });
     }
 
     private void initialise() {
-        email = findViewById(R.id.etEmailRegister);
-        username = findViewById(R.id.etUsernameRegister);
-        password = findViewById(R.id.etPasswordRegister);
+        initialiseActionBar();
+        progressBar = new ProgressDialog(RegisterPage.this);
+        email = findViewById(R.id.tilRegisterEmail);
+        username = findViewById(R.id.tilRegisterUsername);
+        password = findViewById(R.id.tilRegisterPassword);
         register = findViewById(R.id.btnRegister);
-        login = findViewById(R.id.tvAlreadyHaveAcc);
         database = FirebaseAuth.getInstance();
         fireStore = FirebaseFirestore.getInstance();
     }
 
+    //Action Bar Settings
+    private void initialiseActionBar() {
+        ActionBar top_bar = getSupportActionBar();
+
+        //Setting background colour
+        ColorDrawable light_green = new ColorDrawable(Color.parseColor("#00ffce"));
+        top_bar.setBackgroundDrawable(light_green);
+
+        //Setting Title text
+        top_bar.setTitle(Html.fromHtml("<font color='#202124'>New Account </font>"));
+
+        //Setting Top left logo
+        final Drawable upArrow =  ContextCompat.getDrawable(RegisterPage.this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(ContextCompat.getColor(RegisterPage.this, R.color.baseBlack), PorterDuff.Mode.SRC_ATOP);
+        RegisterPage.this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    }
+
     private boolean checkUserInputDetails() {
-        String inputEmail = email.getText().toString();
-        String inputUsername = username.getText().toString();
-        String inputPassword = password.getText().toString();
+        String inputEmail = email.getEditText().getText().toString();
+        String inputUsername = username.getEditText().getText().toString();
+        String inputPassword = password.getEditText().getText().toString();
         if (inputPassword.isEmpty() || inputEmail.isEmpty()) {
             Toast.makeText(RegisterPage.this, "Please fill up all the required fields",
                     Toast.LENGTH_SHORT).show();
@@ -122,16 +143,26 @@ public class RegisterPage extends AppCompatActivity {
 
     private void sendEmailVerification() {
         FirebaseUser currentUser = database.getCurrentUser();
+
+        //Setting Details of Loading Screen
+        progressBar.setTitle("Creating Account");
+        progressBar.setMessage("Please wait while we register your account ");
+        progressBar.setCanceledOnTouchOutside(false);
+        progressBar.show();
+
         currentUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
+                    progressBar.dismiss();
                     openVerificationDialog();
                 } else if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                    progressBar.dismiss();
                     Toast.makeText(RegisterPage.this,
                             "Registration failed, email address is already registered",
                             Toast.LENGTH_LONG).show();
                 } else {
+                    progressBar.dismiss();
                     Toast.makeText(RegisterPage.this,
                             "Registration failed, please contact administrator",
                             Toast.LENGTH_LONG).show();
