@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".FirstTimeUserPage"/>
+        <activity android:name=".ChangePasswordPage" />
         <activity android:name=".ForgotPasswordPage" />
         <activity android:name=".PostActivitiesPage" />
         <activity android:name=".FindActivitiesPage" />

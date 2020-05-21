@@ -92,6 +92,7 @@ public class RegisterPage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent nextActivity = new Intent(RegisterPage.this, MainActivity.class);
                 startActivity(nextActivity);
+                finish();
             }
         });
     }
