@@ -26,14 +26,13 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
 
     private DrawerLayout drawer;
     private FirebaseAuth database;
-    private FirebaseFirestore fireStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_login_page);
-
         initialise();
+
 
         //this is the top bar that has the navigation drawer
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -49,27 +48,11 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // if start activity the first time show home
-        if(savedInstanceState == null) {
+
+
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_home);
-        }
-
-        String userID = database.getCurrentUser().getUid();
-        DocumentReference documentReference = FirebaseFirestore
-                .getInstance().collection("users").document(userID);
-
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                UserProfile user = documentSnapshot.toObject(UserProfile.class);
-                if(user.getIsNewUser()) {
-                    startActivity(new Intent(PostLoginPage.this,FirstTimeUserPage.class));
-                    finish();
-                }
-            }
-        });
 
     }
 
@@ -82,26 +65,19 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getItemId()) {
-            case R.id.nav_changepassword:
-                Intent nextActivity1 = new Intent(PostLoginPage.this, ChangePasswordPage.class);
-                startActivity(nextActivity1);
-                break;
             case R.id.nav_signout:
                 database.signOut();
-                Intent nextActivity2 = new Intent(PostLoginPage.this, MainActivity.class);
-                startActivity(nextActivity2);
+                startActivity(new Intent(PostLoginPage.this, MainActivity.class));
+                finish();
                 break;
             case R.id.nav_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new SettingFragment()).commit();
+                startActivity(new Intent(PostLoginPage.this,SettingsPage.class));
                 break;
             case R.id.nav_chat:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ChatFragment()).commit();
+                startActivity(new Intent(PostLoginPage.this, ChatPage.class));
                 break;
             case R.id.nav_profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ProfileFragment()).commit();
+                startActivity(new Intent(PostLoginPage.this,ProfilePage.class));
                 break;
             case R.id.nav_home:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -121,5 +97,7 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
             super.onBackPressed();
         }
     }
+
+
 
 }

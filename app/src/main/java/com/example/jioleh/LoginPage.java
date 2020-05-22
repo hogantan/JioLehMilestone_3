@@ -21,12 +21,15 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginPage extends AppCompatActivity {
@@ -107,8 +110,6 @@ public class LoginPage extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         progressBar.dismiss();
-                        Toast.makeText(LoginPage.this,
-                                "Login Successful", Toast.LENGTH_SHORT).show();
                         checkEmailVerification();
                     } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         progressBar.dismiss();
@@ -129,16 +130,42 @@ public class LoginPage extends AppCompatActivity {
     private void checkEmailVerification() {
         FirebaseUser currentUser = database.getCurrentUser();
         boolean isVerified = currentUser.isEmailVerified();
-        String userID = currentUser.getUid();
         if (isVerified) {
-            Intent nextActivity = new Intent(LoginPage.this, PostLoginPage.class);
-            nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);            startActivity(nextActivity);
-            finish();
+            Toast.makeText(LoginPage.this,
+                    "Login Successful", Toast.LENGTH_SHORT).show();
+            firstTimeUserCheck();
         } else {
             Toast.makeText(LoginPage.this,
                     "Account is not verified, please check email",
                     Toast.LENGTH_SHORT).show();
             database.signOut(); //sign out unverified user
         }
+    }
+
+    public void firstTimeUserCheck() {
+        String userID = database.getCurrentUser().getUid();
+        DocumentReference documentReference = FirebaseFirestore
+                .getInstance().collection("users").document(userID);
+
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                UserProfile user = documentSnapshot.toObject(UserProfile.class);
+                assert user != null;
+                if(user.getIsNewUser()) {
+                    Intent newUserActivity = new Intent(LoginPage.this,FirstTimeUserPage.class);
+                    newUserActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(newUserActivity);
+                    finish();
+                } else {
+                    Intent nextActivity = new Intent(LoginPage.this, PostLoginPage.class);
+                    nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(nextActivity);
+                    finish();
+                }
+            }
+        });
+
+
     }
 }

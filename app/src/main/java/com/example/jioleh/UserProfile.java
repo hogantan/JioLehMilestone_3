@@ -40,10 +40,6 @@ public class UserProfile {
         return this.isNewUser;
     }
 
-    public boolean isNewUser() {
-        return isNewUser;
-    }
-
     public String getContact() {
         return contact;
     }

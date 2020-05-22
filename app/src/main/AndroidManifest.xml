@@ -11,17 +11,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".SettingsPage"
+            android:label="@string/title_activity_settings_page"
+            android:parentActivityName=".PostLoginPage"/>
+        <activity android:name=".ChatPage" />
+        <activity android:name=".ProfilePage" />
+        <activity
             android:name=".LoginPage"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".FirstTimeUserPage" />
-        <activity android:name=".ChangePasswordPage"
-            android:parentActivityName=".PostLoginPage"/>
+        <activity
+            android:name=".ChangePasswordPage"
+            android:parentActivityName=".PostLoginPage" />
         <activity
             android:name=".ForgotPasswordPage"
             android:parentActivityName=".LoginPage" />
         <activity android:name=".PostActivitiesPage" />
         <activity android:name=".FindActivitiesPage" />
-        <activity android:name=".PostingPage" />
         <activity
             android:name=".RegisterPage"
             android:parentActivityName=".MainActivity" />

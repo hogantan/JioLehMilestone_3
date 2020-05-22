@@ -9,14 +9,10 @@
     tools:context=".PostLoginPage"
     tools:openDrawer="start">
 
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -38,5 +34,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_navigation" />
+        app:menu="@menu/drawer_navigation"/>
+
+
 </androidx.drawerlayout.widget.DrawerLayout>
