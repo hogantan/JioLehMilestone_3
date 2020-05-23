@@ -3,6 +3,7 @@ package com.example.jioleh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.app.ProgressDialog;
@@ -18,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +37,7 @@ public class LoginPage extends AppCompatActivity {
     private TextInputLayout password;
     private Button login;
     private TextView forgotpassword;
+    private Toolbar toolbar;
 
     private ProgressDialog progressBar;
 
@@ -48,6 +49,7 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
+        initialiseToolbar();
         initialise();
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +69,6 @@ public class LoginPage extends AppCompatActivity {
     }
 
     private void initialise() {
-        initialiseActionBar();
         progressBar = new ProgressDialog(LoginPage.this);
         email = findViewById(R.id.tilLoginEmail);
         password = findViewById(R.id.tilLoginPassword);
@@ -76,21 +77,10 @@ public class LoginPage extends AppCompatActivity {
         database = FirebaseAuth.getInstance();
     }
 
-    //Action Bar Settings
-    private void initialiseActionBar() {
-        ActionBar top_bar = getSupportActionBar();
-
-        //Setting background colour
-        ColorDrawable light_green = new ColorDrawable(Color.parseColor("#00ffce"));
-        top_bar.setBackgroundDrawable(light_green);
-
-        //Setting Title text
-        top_bar.setTitle(Html.fromHtml("<font color='#202124'>Login </font>"));
-
-        //Setting Top left logo
-        final Drawable upArrow =  ContextCompat.getDrawable(LoginPage.this, R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(ContextCompat.getColor(LoginPage.this, R.color.baseBlack), PorterDuff.Mode.SRC_ATOP);
-        LoginPage.this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    private void initialiseToolbar() {
+        toolbar = findViewById(R.id.tbLogin);
+        toolbar.setTitle("Login");
+        setSupportActionBar(toolbar);
     }
 
     private void checkUser(String email, String password) {

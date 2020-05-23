@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.app.ProgressDialog;
@@ -47,6 +48,7 @@ public class RegisterPage extends AppCompatActivity {
     private TextInputLayout username;
     private TextInputLayout password;
     private Button register;
+    private Toolbar toolbar;
 
     private ProgressDialog progressBar;
 
@@ -101,7 +103,7 @@ public class RegisterPage extends AppCompatActivity {
     }
 
     private void initialise() {
-        initialiseActionBar();
+        initialiseToolbar();
         progressBar = new ProgressDialog(RegisterPage.this);
         email = findViewById(R.id.tilRegisterEmail);
         username = findViewById(R.id.tilRegisterUsername);
@@ -111,21 +113,10 @@ public class RegisterPage extends AppCompatActivity {
         fireStore = FirebaseFirestore.getInstance();
     }
 
-    //Action Bar Settings
-    private void initialiseActionBar() {
-        ActionBar top_bar = getSupportActionBar();
-
-        //Setting background colour
-        ColorDrawable light_green = new ColorDrawable(Color.parseColor("#00ffce"));
-        top_bar.setBackgroundDrawable(light_green);
-
-        //Setting Title text
-        top_bar.setTitle(Html.fromHtml("<font color='#202124'>New Account </font>"));
-
-        //Setting Top left logo
-        final Drawable upArrow =  ContextCompat.getDrawable(RegisterPage.this, R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(ContextCompat.getColor(RegisterPage.this, R.color.baseBlack), PorterDuff.Mode.SRC_ATOP);
-        RegisterPage.this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    private void initialiseToolbar() {
+        toolbar = findViewById(R.id.tbRegister);
+        toolbar.setTitle("Register Account");
+        setSupportActionBar(toolbar);
     }
 
     private boolean checkUserInputDetails() {

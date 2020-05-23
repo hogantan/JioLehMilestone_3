@@ -4,6 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#202124"
     tools:context=".ChatPage">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbChatPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00ffce"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tlChatPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00ffce"
+        app:layout_constraintTop_toBottomOf="@+id/tbChatPage"
+        tools:layout_editor_absoluteX="-14dp">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tlChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chats" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tlFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friends" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tlRequests"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Friend Requests" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpChatPage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tlChatPage"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@ package com.example.jioleh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.app.ProgressDialog;
@@ -34,8 +35,9 @@ import org.w3c.dom.Text;
 // mean users do not have to click any verification confirmation to verify their account.
 public class ForgotPasswordPage extends AppCompatActivity {
 
-    TextInputLayout user_email;
-    Button reset_password;
+    private TextInputLayout user_email;
+    private Button reset_password;
+    private Toolbar toolbar;
 
     private ProgressDialog progressBar;
 
@@ -78,28 +80,17 @@ public class ForgotPasswordPage extends AppCompatActivity {
     }
 
     private void initialise() {
-        initialiseActionBar();
+        initialiseToolbar();
         progressBar = new ProgressDialog(ForgotPasswordPage.this);
         user_email = findViewById(R.id.tilForgotPasswordEmail);
         reset_password = findViewById(R.id.btnResetPassword);
         database = FirebaseAuth.getInstance();
     }
 
-    //Action Bar Settings
-    private void initialiseActionBar() {
-        ActionBar top_bar = getSupportActionBar();
-
-        //Setting background colour
-        ColorDrawable light_green = new ColorDrawable(Color.parseColor("#00ffce"));
-        top_bar.setBackgroundDrawable(light_green);
-
-        //Setting Title text
-        top_bar.setTitle(Html.fromHtml("<font color='#202124'>Password Reset </font>"));
-
-        //Setting Top left logo
-        final Drawable upArrow =  ContextCompat.getDrawable(ForgotPasswordPage.this, R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(ContextCompat.getColor(ForgotPasswordPage.this, R.color.baseBlack), PorterDuff.Mode.SRC_ATOP);
-        ForgotPasswordPage.this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    private void initialiseToolbar() {
+        toolbar = findViewById(R.id.tbForgotPassword);
+        toolbar.setTitle("Settings");
+        setSupportActionBar(toolbar);
     }
 
     // Pop-up window when reset button is pressed

@@ -7,6 +7,17 @@
     android:background="#202124"
     tools:context=".LoginPage">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00ffce"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="16dp" />
+
     <TextView
         android:id="@+id/tvLoginSubHeader"
         android:layout_width="wrap_content"
@@ -19,7 +30,8 @@
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.051" />
+        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintTop_toBottomOf="@+id/tbLogin" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilLoginEmail"
