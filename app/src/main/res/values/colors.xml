@@ -5,4 +5,7 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="baseBlack">#202124</color>
     <color name="baseGreen">#00ffce</color>
+    <color name="appGreen">#26FFCE</color>
+    <color name="appBlack">#273A3E</color>
+
 </resources>

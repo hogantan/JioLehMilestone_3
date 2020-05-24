@@ -12,8 +12,8 @@ public class UserProfile {
     public UserProfile(){}//must have for firestore
     //needs ALL getter methods implemented
 
-    UserProfile(String username, boolean isNewUser) {
-        this.username = username;
+    UserProfile(boolean isNewUser) {
+        this.username = "";
         this.isNewUser =  isNewUser;
         this.contact = "";
         this.gender = "";

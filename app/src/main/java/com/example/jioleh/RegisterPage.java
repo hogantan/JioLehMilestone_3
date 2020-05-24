@@ -44,7 +44,6 @@ import java.util.Map;
 public class RegisterPage extends AppCompatActivity {
 
     private TextInputLayout email;
-    private TextInputLayout username;
     private TextInputLayout password;
     private Button register;
 
@@ -62,7 +61,13 @@ public class RegisterPage extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String userName = username.getEditText().getText().toString();
+
+                //Setting Details of Loading Screen
+                progressBar.setTitle("Creating Account");
+                progressBar.setMessage("Please wait while we register your account ");
+                progressBar.setCanceledOnTouchOutside(false);
+                progressBar.show();
+
                 if (checkUserInputDetails()) {
                     String user_email = email.getEditText().getText().toString().trim();
                     String user_password = password.getEditText().getText().toString().trim();
@@ -73,7 +78,7 @@ public class RegisterPage extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         final String userID = database.getCurrentUser().getUid();
                                         DocumentReference documentReference = fireStore.collection("users").document(userID);
-                                        UserProfile user = new UserProfile(userName, isNewUser);
+                                        UserProfile user = new UserProfile(isNewUser);
                                         documentReference.set(user)
                                                 .onSuccessTask(new SuccessContinuation<Void, Void>() {
                                             @NonNull
@@ -104,7 +109,6 @@ public class RegisterPage extends AppCompatActivity {
         initialiseActionBar();
         progressBar = new ProgressDialog(RegisterPage.this);
         email = findViewById(R.id.tilRegisterEmail);
-        username = findViewById(R.id.tilRegisterUsername);
         password = findViewById(R.id.tilRegisterPassword);
         register = findViewById(R.id.btnRegister);
         database = FirebaseAuth.getInstance();
@@ -130,7 +134,6 @@ public class RegisterPage extends AppCompatActivity {
 
     private boolean checkUserInputDetails() {
         String inputEmail = email.getEditText().getText().toString();
-        String inputUsername = username.getEditText().getText().toString();
         String inputPassword = password.getEditText().getText().toString();
         if (inputPassword.isEmpty() || inputEmail.isEmpty()) {
             Toast.makeText(RegisterPage.this, "Please fill up all the required fields",
@@ -143,12 +146,6 @@ public class RegisterPage extends AppCompatActivity {
 
     private void sendEmailVerification() {
         FirebaseUser currentUser = database.getCurrentUser();
-
-        //Setting Details of Loading Screen
-        progressBar.setTitle("Creating Account");
-        progressBar.setMessage("Please wait while we register your account ");
-        progressBar.setCanceledOnTouchOutside(false);
-        progressBar.show();
 
         currentUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

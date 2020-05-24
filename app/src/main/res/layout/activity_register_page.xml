@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#202124"
+    android:background="@color/appBlack"
     tools:context=".RegisterPage">
 
     <Button
@@ -12,15 +12,15 @@
         android:layout_width="200dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:textSize="18sp"
-        android:background="#00ffce"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/btn_round_rectangle"
         android:text="Create Account"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilRegisterPassword"
-        app:layout_constraintVertical_bias="0.031"  />
+        app:layout_constraintVertical_bias="0.043" />
 
     <TextView
         android:id="@+id/tvRegisterNewAccount"
@@ -43,16 +43,7 @@
         android:layout_marginTop="20dp"
         android:textColorHint="#fff"
         app:layout_constraintTop_toBottomOf="@+id/tvRegisterNewAccount"
-        tools:layout_editor_absoluteX="0dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:hint="Username"
-            android:textColor="#fff"
-            android:textColorHint="#fff" />
-    </com.google.android.material.textfield.TextInputLayout>
+        tools:layout_editor_absoluteX="0dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilRegisterEmail"
