@@ -144,9 +144,8 @@ public class LoginPage extends AppCompatActivity {
                 assert user != null;
                 if(user.getIsNewUser()) {
                     Intent newUserActivity = new Intent(LoginPage.this,FirstTimeUserPage.class);
-                    newUserActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    //newUserActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(newUserActivity);
-                    finish();
                 } else {
                     Intent nextActivity = new Intent(LoginPage.this, PostLoginPage.class);
                     nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -155,7 +154,6 @@ public class LoginPage extends AppCompatActivity {
                 }
             }
         });
-
 
     }
 }
