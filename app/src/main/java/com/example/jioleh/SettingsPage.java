@@ -26,6 +26,7 @@ public class SettingsPage extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.settings, new SettingsFragment())
                 .commit();
+    
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
