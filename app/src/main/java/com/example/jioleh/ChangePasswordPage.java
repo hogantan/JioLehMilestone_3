@@ -3,6 +3,7 @@ package com.example.jioleh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import android.app.ProgressDialog;
@@ -33,6 +34,7 @@ public class ChangePasswordPage extends AppCompatActivity {
     private TextInputLayout new_password;
     private TextInputLayout confirm_new_password;
     private Button change_password;
+    private Toolbar toolbar;
 
     private ProgressDialog progressBar;
 
@@ -113,7 +115,7 @@ public class ChangePasswordPage extends AppCompatActivity {
     }
 
     private void initialise() {
-        initialiseActionBar();
+        initialiseToolbar();
         progressBar = new ProgressDialog(ChangePasswordPage.this);
         old_password = findViewById(R.id.tilChangeOldPassword);
         new_password = findViewById(R.id.tilChangeNewPassword);
@@ -121,21 +123,10 @@ public class ChangePasswordPage extends AppCompatActivity {
         change_password = findViewById(R.id.btnConfirmChangePassword);
     }
 
-    //Action Bar Settings
-    private void initialiseActionBar() {
-        ActionBar top_bar = getSupportActionBar();
-
-        //Setting background colour
-        ColorDrawable light_green = new ColorDrawable(Color.parseColor("#00ffce"));
-        top_bar.setBackgroundDrawable(light_green);
-
-        //Setting Title text
-        top_bar.setTitle(Html.fromHtml("<font color='#202124'>Settings </font>"));
-
-        //Setting Top left logo
-        final Drawable upArrow =  ContextCompat.getDrawable(ChangePasswordPage.this, R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(ContextCompat.getColor(ChangePasswordPage.this, R.color.baseBlack), PorterDuff.Mode.SRC_ATOP);
-        ChangePasswordPage.this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+    private void initialiseToolbar() {
+        toolbar = findViewById(R.id.tbChangePassword);
+        toolbar.setTitle("Settings");
+        setSupportActionBar(toolbar);
     }
 
     private boolean emptyFields(String s1, String s2, String s3) {

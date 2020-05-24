@@ -22,7 +22,7 @@
         <activity android:name=".FirstTimeUserPage" />
         <activity
             android:name=".ChangePasswordPage"
-            android:parentActivityName=".PostLoginPage" />
+            android:parentActivityName=".SettingsPage" />
         <activity
             android:name=".ForgotPasswordPage"
             android:parentActivityName=".LoginPage" />
