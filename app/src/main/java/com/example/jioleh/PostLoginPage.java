@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,6 +28,7 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
 
     private DrawerLayout drawer;
     private FirebaseAuth database;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +52,25 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
         toggle.syncState();
 
 
-
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_home);
+
+            String UID = database.getCurrentUser().getUid();
+            firebaseFirestore.collection("users").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    UserProfile userProfile = documentSnapshot.toObject(UserProfile.class);
+                        populateUserDetailsToNavHeader(userProfile);
+                }
+            });
 
     }
 
     private void initialise() {
         drawer = findViewById(R.id.drawer_layout);
         database = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
     //different actions based on what item is selected on the navigation bar
@@ -96,6 +108,18 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void populateUserDetailsToNavHeader(UserProfile userProfile) {
+        TextView nav_header_username = findViewById(R.id.nav_header_username);
+        TextView nav_header_email = findViewById(R.id.nav_header_email);
+        ImageView nav_header_profilePic = findViewById(R.id.nav_header_profile_pic);
+
+        nav_header_username.setText(userProfile.getUsername());
+        nav_header_email.setText(database.getCurrentUser().getEmail());
+
+
+
     }
 
 

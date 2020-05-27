@@ -83,6 +83,8 @@ public class LoginPage extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+
+
     private void checkUser(String email, String password) {
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(LoginPage.this,
