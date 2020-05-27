@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,12 +24,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 public class PostLoginPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
     private FirebaseAuth database;
     private FirebaseFirestore firebaseFirestore;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +120,11 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
 
         nav_header_username.setText(userProfile.getUsername());
         nav_header_email.setText(database.getCurrentUser().getEmail());
+
+        //if there is uploaded image url then retrieve
+        if (userProfile.getImageUrl()!="" && userProfile.getImageUrl()!=null) {
+            Picasso.get().load(userProfile.getImageUrl()).into(nav_header_profilePic);
+        }
 
 
 
