@@ -1,20 +1,22 @@
 package com.example.jioleh;
 
 public class UserProfile {
-    String username;
-    boolean isNewUser;
-    String contact;
-    String gender;
-    String age;
-    String bio;
+    private String username;
+    private boolean isNewUser;
+    private String contact;
+    private String gender;
+    private String age;
+    private String bio;
+    private String imageUrl;
 
 
-    public UserProfile(){}//must have for firestore
+    public UserProfile() {
+    }//must have for firestore
     //needs ALL getter methods implemented
 
     UserProfile(boolean isNewUser) {
         this.username = "";
-        this.isNewUser =  isNewUser;
+        this.isNewUser = isNewUser;
         this.contact = "";
         this.gender = "";
         this.age = "";
@@ -29,14 +31,22 @@ public class UserProfile {
         this.gender = gender;
         this.age = age;
         this.bio = bio;
+        this.imageUrl ="";
+    }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public boolean getIsNewUser(){
+    public boolean getIsNewUser() {
         return this.isNewUser;
     }
 
