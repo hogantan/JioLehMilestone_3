@@ -48,7 +48,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
     //identifier for image upload
     private final int PICK_IMAGE_REQUEST = 1;
 
-    private Uri mImageUri;
+    private Uri mImageUri = null;
 
     //Firebase Storage
     private StorageReference storageReference;

@@ -21,6 +21,7 @@ public class UserProfile {
         this.gender = "";
         this.age = "";
         this.bio = "";
+        this.imageUrl="";
     }
 
     UserProfile(String username, String contact, String gender, String age,
