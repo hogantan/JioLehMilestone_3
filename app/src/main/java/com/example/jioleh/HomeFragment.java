@@ -24,7 +24,7 @@ public class HomeFragment extends Fragment {
 
         findActivities = view.findViewById(R.id.btn_findActivities);
         postActivities = view.findViewById(R.id.btn_postActivities);
-        findNearBy = view.findViewById(R.id.btn_findNearby);
+        //findNearBy = view.findViewById(R.id.btn_findNearby);
 
         findActivities.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +40,7 @@ public class HomeFragment extends Fragment {
                 startActivity(postingPage);
             }
         });
+
 
         return view;
     }

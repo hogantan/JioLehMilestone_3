@@ -85,9 +85,6 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
                 startActivity(new Intent(PostLoginPage.this, MainActivity.class));
                 finish();
                 break;
-            case R.id.nav_settings:
-                startActivity(new Intent(PostLoginPage.this,SettingsPage.class));
-                break;
             case R.id.nav_chat:
                 startActivity(new Intent(PostLoginPage.this, ChatPage.class));
                 break;

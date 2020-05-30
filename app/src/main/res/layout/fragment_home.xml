@@ -6,33 +6,29 @@
 
 
     <Button
-        android:id="@+id/btn_findNearby"
-        android:layout_width="178sp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_postActivities"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="100dip"
-
-        android:text="Find Nearby" />
-
-    <Button
         android:id="@+id/btn_postActivities"
         android:layout_width="178sp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_findActivities"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="100dip"
-        android:text="Post Activities" />
+        android:layout_marginTop="120dp"
+        android:background="@android:color/transparent" />
 
     <Button
         android:id="@+id/btn_findActivities"
         android:layout_width="178dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/home_frag"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="100dip"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="115dp"
+        android:layout_marginLeft="115dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginEnd="118dp"
+        android:layout_marginRight="118dp"
         android:text="Find Activities" />
 
     <TextView
