@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ public class ProfilePage extends AppCompatActivity {
     private TextView tv_bio;
     private ImageView iv_userProfileImage;
     private Toolbar toolbar;
+    private Button btn_settings;
 
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth firebaseAuth;
@@ -40,6 +43,12 @@ public class ProfilePage extends AppCompatActivity {
         initialise();
         initialiseToolbar();
         fillWithUserDetails();
+        btn_settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfilePage.this, SettingsPage.class));
+            }
+        });
     }
 
     public void initialise() {
@@ -50,6 +59,7 @@ public class ProfilePage extends AppCompatActivity {
         tv_contact = findViewById(R.id.tv_profilePageContact);
         tv_bio = findViewById(R.id.tv_profilePageBio);
         iv_userProfileImage = findViewById(R.id.iv_userProfilePageImage);
+        btn_settings = findViewById(R.id.btn_settings);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
