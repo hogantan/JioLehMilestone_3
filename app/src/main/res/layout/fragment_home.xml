@@ -6,13 +6,25 @@
     android:background="#202124">
 
     <Button
+        android:id="@+id/btn_findNearby"
+        android:layout_width="178sp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_postActivities"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="100dip"
+
+        android:text="Find Nearby" />
+
+    <Button
         android:id="@+id/btn_postActivities"
         android:layout_width="178sp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_findActivities"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="120dp"
-        android:background="@android:color/transparent" />
+        android:layout_marginTop="100dip"
+        android:text="Post Activities" />
 
     <Button
         android:id="@+id/btn_findActivities"
