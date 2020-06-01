@@ -27,9 +27,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Picasso;
 
-public class PostLoginPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class PostLoginPage extends AppCompatActivity {
 
     private Toolbar toolbar;
     //private DrawerLayout drawer;
@@ -96,9 +95,10 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
 
 
 
+        /*
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_home);
+            //navigationView.setCheckedItem(R.id.nav_home);
 
             String UID = database.getCurrentUser().getUid();
             firebaseFirestore.collection("users").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -108,6 +108,8 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
                         populateUserDetailsToNavHeader(userProfile);
                 }
             });
+
+         */
 
 
     }
@@ -128,6 +130,7 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
 
     }
 
+    /*
     //different actions based on what item is selected on the navigation bar
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -157,6 +160,8 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+     */
+
     /*
     //if drawer open we press back, simply close the drawer
     @Override
@@ -170,6 +175,7 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
 
      */
 
+    /*
 
     private void populateUserDetailsToNavHeader(UserProfile userProfile) {
         TextView nav_header_username = findViewById(R.id.nav_header_username);
@@ -183,11 +189,6 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
         if (userProfile.getImageUrl()!="" && userProfile.getImageUrl()!=null) {
             Picasso.get().load(userProfile.getImageUrl()).into(nav_header_profilePic);
         }
-
-
+     */
 
     }
-
-
-
-}
