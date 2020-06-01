@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jioleh">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name="androidx.multidex.MultiDexApplication"
         android:allowBackup="true"
@@ -19,6 +21,7 @@
             android:name=".SettingsPage"
             android:label="@string/title_activity_settings_page"
             android:parentActivityName=".PostLoginPage" />
+
         <activity android:name=".ProfilePage" />
         <activity
             android:name=".LoginPage"

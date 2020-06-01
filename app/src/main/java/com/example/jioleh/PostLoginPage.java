@@ -9,10 +9,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,13 +27,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 public class PostLoginPage extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     //private DrawerLayout drawer;
     private FirebaseAuth database;
+
     private BottomNavigationView bottom_nav_view;
+
+    private FirebaseFirestore firebaseFirestore;
+
 
 
     @Override
@@ -53,6 +61,7 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new HomeFragment()).commit();
         //navigationView.setCheckedItem(R.id.nav_home);
@@ -84,11 +93,29 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
                 return true;
             }
         });
+
+
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new HomeFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_home);
+
+            String UID = database.getCurrentUser().getUid();
+            firebaseFirestore.collection("users").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    UserProfile userProfile = documentSnapshot.toObject(UserProfile.class);
+                        populateUserDetailsToNavHeader(userProfile);
+                }
+            });
+
+
     }
 
     private void initialise() {
         //drawer = findViewById(R.id.drawer_layout);
         database = FirebaseAuth.getInstance();
+
         bottom_nav_view = findViewById(R.id.bnvBtmNavBar);
     }
 
@@ -96,6 +123,9 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
         toolbar = findViewById(R.id.tbTopBar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
     }
 
     //different actions based on what item is selected on the navigation bar
@@ -107,8 +137,13 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
                 startActivity(new Intent(PostLoginPage.this, MainActivity.class));
                 finish();
                 break;
+
             case R.id.nav_settings:
                 startActivity(new Intent(PostLoginPage.this,SettingsPage.class));
+
+            case R.id.nav_chat:
+                startActivity(new Intent(PostLoginPage.this, ChatPage.class));
+
                 break;
             case R.id.nav_profile:
                 startActivity(new Intent(PostLoginPage.this,ProfilePage.class));
@@ -132,5 +167,27 @@ public class PostLoginPage extends AppCompatActivity implements NavigationView.O
             super.onBackPressed();
         }
     }
+
      */
+
+
+    private void populateUserDetailsToNavHeader(UserProfile userProfile) {
+        TextView nav_header_username = findViewById(R.id.nav_header_username);
+        TextView nav_header_email = findViewById(R.id.nav_header_email);
+        ImageView nav_header_profilePic = findViewById(R.id.nav_header_profile_pic);
+
+        nav_header_username.setText(userProfile.getUsername());
+        nav_header_email.setText(database.getCurrentUser().getEmail());
+
+        //if there is uploaded image url then retrieve
+        if (userProfile.getImageUrl()!="" && userProfile.getImageUrl()!=null) {
+            Picasso.get().load(userProfile.getImageUrl()).into(nav_header_profilePic);
+        }
+
+
+
+    }
+
+
+
 }
