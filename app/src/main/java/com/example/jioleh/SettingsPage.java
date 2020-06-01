@@ -45,7 +45,7 @@ public class SettingsPage extends AppCompatActivity {
     }
 
     private void initialiseToolbar() {
-        toolbar = findViewById(R.id.tbSettings);
+        toolbar = findViewById(R.id.tbTempTopBar);
         toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
     }

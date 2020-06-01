@@ -124,7 +124,7 @@ public class ChangePasswordPage extends AppCompatActivity {
     }
 
     private void initialiseToolbar() {
-        toolbar = findViewById(R.id.tbChangePassword);
+        toolbar = findViewById(R.id.tbTempTopBar);
         toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
     }

@@ -78,8 +78,8 @@ public class LoginPage extends AppCompatActivity {
     }
 
     private void initialiseToolbar() {
-        toolbar = findViewById(R.id.tbLogin);
-        toolbar.setTitle("Login");
+        toolbar = findViewById(R.id.tbTempTopBar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
     }
 

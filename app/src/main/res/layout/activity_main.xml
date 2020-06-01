@@ -4,50 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#202124"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/btnSignIn"
-        android:background="#00ffce"
-        android:textColor="#202124"
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="45dp"
+        android:background="@drawable/btn_round_rectangle"
         android:text="@string/common_signin_button_text"
+        android:textColor="#202124"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSampleText"
-        app:layout_constraintVertical_bias="0.1" />
+        app:layout_constraintTop_toBottomOf="@+id/tvMainWelcomeMsg"
+        app:layout_constraintVertical_bias="0.7" />
 
     <Button
         android:id="@+id/btnNeedAAccount"
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="45dp"
-        android:background="#fff"
-        android:textColor="#202124"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_edge_button_white"
         android:text="Sign Up For An Account"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#202124"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSignIn"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
 
     <TextView
-        android:id="@+id/tvSampleText"
-        android:layout_width="402dp"
-        android:layout_height="364dp"
+        android:id="@+id/tvMainWelcomeMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="SAMPLE TEXT"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#fff"
-        android:textSize="100sp"
+        android:text="Welcome to"
+        android:textColor="#202124"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.315" />
+        app:layout_constraintVertical_bias="0.136" />
+
+    <TextView
+        android:id="@+id/tvMainMessageSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="JioLeh"
+        android:textColor="@color/baseBlack"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvMainWelcomeMsg" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
