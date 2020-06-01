@@ -12,9 +12,12 @@
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="188dp"
-        android:textColorHint="@color/appGreen"
+
+        android:layout_marginTop="148dp"
+        android:textColorHint="@color/baseGreen"
+
+        
+
         app:errorEnabled="true"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
@@ -42,7 +45,7 @@
         android:id="@+id/contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/appGreen"
+        android:textColorHint="@color/baseGreen"
         tools:layout_editor_absoluteX="0dp"
         android:layout_below="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/username"
@@ -65,8 +68,10 @@
         android:id="@+id/gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/appGreen"
-        android:layout_below="@+id/contact"
+
+        android:textColorHint="@color/baseGreen"
+
+
         app:layout_constraintTop_toBottomOf="@+id/contact"
         app:errorEnabled="true">
 
@@ -86,9 +91,9 @@
         android:id="@+id/age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/appGreen"
-        android:layout_below="@+id/gender"
-        app:errorEnabled="true"
+
+        android:textColorHint="@color/baseGreen"
+
         app:layout_constraintTop_toBottomOf="@+id/gender"
         tools:layout_editor_absoluteX="0dp">
 
@@ -106,9 +111,9 @@
         android:id="@+id/bio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/appGreen"
-        android:layout_below="@+id/age"
-        app:errorEnabled="true"
+
+        android:textColorHint="@color/baseGreen"
+
         app:layout_constraintTop_toBottomOf="@+id/age"
         tools:layout_editor_absoluteX="0dp">
 
@@ -120,7 +125,11 @@
             android:hint="Bio"
             android:inputType="textPersonName"
             android:textColor="#fff"
-            android:textColorHint="@color/appGreen" />
+
+            android:textColorHint="@color/baseGreen"/>
+
+          
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -129,8 +138,11 @@
         android:layout_height="49dp"
         android:background="@drawable/btn_round_rectangle"
         android:text="Create Profile"
-        android:layout_below="@+id/bio"
-        android:layout_centerHorizontal="true"
+
+        android:textColor="@color/baseBlack"
+        android:textStyle="bold"
+
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"

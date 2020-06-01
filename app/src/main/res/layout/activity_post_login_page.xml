@@ -13,31 +13,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+
+        <include
+            android:id="@+id/tbTopBar"
+            layout="@layout/top_app_bar_noback" />
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#00ffce"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Light"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+            android:layout_height="1dp"
+            android:background="@color/baseGreen">
+        </View>
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bnvBtmNavBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="0dp"
+                android:background="#202124"
+                android:layout_gravity="bottom"
+                app:labelVisibilityMode="unlabeled"
+                app:menu="@menu/bottom_appbar_navigation" />
         </FrameLayout>
     </LinearLayout>
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#202124"
-        app:itemTextColor="#fff"
-        app:itemIconTint="#fff"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_navigation"/>
-
-
 </androidx.drawerlayout.widget.DrawerLayout>

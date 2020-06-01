@@ -88,8 +88,8 @@ public class ForgotPasswordPage extends AppCompatActivity {
     }
 
     private void initialiseToolbar() {
-        toolbar = findViewById(R.id.tbForgotPassword);
-        toolbar.setTitle("Settings");
+        toolbar = findViewById(R.id.tbTempTopBar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
     }
 

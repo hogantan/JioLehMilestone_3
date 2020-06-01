@@ -66,4 +66,25 @@ public class UserProfile {
     public String getBio() {
         return bio;
     }
+
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 }

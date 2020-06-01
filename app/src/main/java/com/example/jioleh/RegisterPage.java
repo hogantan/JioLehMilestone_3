@@ -118,8 +118,8 @@ public class RegisterPage extends AppCompatActivity {
     }
 
     private void initialiseToolbar() {
-        toolbar = findViewById(R.id.tbRegister);
-        toolbar.setTitle("Register Account");
+        toolbar = findViewById(R.id.tbTempTopBar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
     }
 

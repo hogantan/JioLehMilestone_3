@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#202124"
+    tools:context=".MessagePage">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbMessageTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/baseBlack"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        android:textColor="#fff">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/btn_round_rectangle"
+            android:id="@+id/ivMessageImage"
+            android:layout_marginRight="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvMessageUsername"
+            android:textSize="18sp"
+            android:layout_marginLeft="25dp"
+            android:textColor="@color/baseGreen"
+            android:text="HERE"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rvMessageList"
+        android:layout_below="@+id/tbMessageTopBar"
+        android:layout_above="@+id/rlMessageBar"/>
+
+    <RelativeLayout
+        android:id="@+id/rlMessageBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:background="#202124"
+        android:layout_alignParentBottom="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/ibSendButton"
+            android:layout_centerVertical="true"
+            android:hint="Message"
+            android:textColorHint="#fff"
+            android:textColor="#fff"
+            android:backgroundTint="#202124"
+            android:id="@+id/etSendMessage">
+        </EditText>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_send_white"
+            android:id="@+id/ibSendButton"
+            android:layout_alignParentRight="true">
+        </ImageButton>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

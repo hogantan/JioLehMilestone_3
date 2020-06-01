@@ -4,30 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/appBlack"
+    android:background="#202124"
     tools:context=".RegisterPage">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tbRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00ffce"
-        app:navigationIcon="?attr/homeAsUpIndicator"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="16dp" />
+    <include
+        android:id="@+id/tbTempTopBar"
+        layout="@layout/top_app_bar" />
 
     <Button
         android:id="@+id/btnRegister"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/btn_round_rectangle"
         android:text="Create Account"
-        android:textSize="18sp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/baseBlack"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilRegisterPassword"
@@ -38,15 +33,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create a New Account"
-        android:textColor="#fff"
-        android:textSize="24sp"
+        android:textColor="@color/baseGreen"
+        android:textSize="28sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tbRegister"
-        app:layout_constraintVertical_bias="0.15"/>
+        app:layout_constraintTop_toBottomOf="@+id/tbTempTopBar"
+        app:layout_constraintVertical_bias="0.061" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilRegisterUsername"
@@ -71,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="#fff"
+            android:inputType="textEmailAddress"
             android:hint="Email" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="#fff"
+            android:inputType="textPersonName"
             android:hint="Password" />
     </com.google.android.material.textfield.TextInputLayout>
 
