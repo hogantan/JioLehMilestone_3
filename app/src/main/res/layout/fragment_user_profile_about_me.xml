@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserProfileAboutMeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/bio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15sp"
+            android:text="Biography"
+            android:textColor="@color/offGreen"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/bio_fill"
+            android:layout_width="379dp"
+            android:layout_height="110dp"
+            android:layout_below="@+id/bio"
+            android:layout_centerHorizontal="true"
+            android:autoSizeTextType="uniform"
+            android:textColor="@color/baseBlack"
+            android:paddingLeft="10sp"
+            android:paddingRight="5sp"
+            android:background="@drawable/round_text_box"
+            />
+
+        <TextView
+            android:id="@+id/Interests"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bio_fill"
+            android:layout_marginLeft="15sp"
+            android:text="Interests"
+            android:textColor="@color/offGreen"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/Interest"
+            android:layout_width="379dp"
+            android:layout_height="110dp"
+            android:layout_below="@+id/Interests"
+            android:layout_centerHorizontal="true"
+            android:autoSizeTextType="uniform"
+            android:background="@drawable/round_text_box"
+            android:paddingLeft="20sp"
+            android:paddingRight="20sp"
+            />
+
+    </RelativeLayout>
+
+
+</ScrollView>

@@ -18,12 +18,6 @@
             android:id="@+id/tbTopBar"
             layout="@layout/top_app_bar_noback" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/baseGreen">
-        </View>
-
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"

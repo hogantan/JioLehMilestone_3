@@ -4,6 +4,7 @@ package com.example.jioleh;
 
         import androidx.annotation.NonNull;
         import androidx.annotation.Nullable;
+        import androidx.appcompat.app.AppCompatActivity;
         import androidx.appcompat.widget.Toolbar;
         import androidx.fragment.app.Fragment;
         import androidx.recyclerview.widget.LinearLayoutManager;
@@ -67,5 +68,13 @@ public class ChatFragment extends Fragment {
         users_list.setHasFixedSize(true);
         users_list.setLayoutManager(new LinearLayoutManager(this.getContext()));
         users_list.setAdapter(adapter);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            activity.getSupportActionBar().show();
+        }
     }
 }

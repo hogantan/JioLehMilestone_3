@@ -7,12 +7,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 public class PostLoginPage extends AppCompatActivity {
 
@@ -38,33 +41,30 @@ public class PostLoginPage extends AppCompatActivity {
 
     private FirebaseFirestore firebaseFirestore;
 
+    final Fragment frag1 = new HomeFragment();
+    final Fragment frag2 = new ChatFragment();
+    final Fragment frag3 = new FavouriteFragment();
+    final Fragment frag4 = new PostFragment();
+    final Fragment frag5 = new ProfileFragment();
+    final FragmentManager fm = getSupportFragmentManager();
+
+    Fragment active = frag1;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_login_page);
+        initialiseFragments();
         initialise();
         initialiseToolbar();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new HomeFragment()).commit();
+            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+              //      new HomeFragment()).commit();
 
-        /*
-        //put the navigation drawer
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
-        //actionBar Toggle i.e. it will turn
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new HomeFragment()).commit();
-        //navigationView.setCheckedItem(R.id.nav_home);
-         */
 
         bottom_nav_view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -73,51 +73,39 @@ public class PostLoginPage extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.bab_home:
-                        selectedFragment = new HomeFragment();
+                        selectedFragment = frag1;
+                        PostLoginPage.this.getSupportActionBar().show();
                         break;
                     case R.id.bab_chat:
-                        selectedFragment = new ChatFragment();
+                        selectedFragment = frag2;
+                        PostLoginPage.this.getSupportActionBar().show();
                         break;
                     case R.id.bab_favourite:
-                        selectedFragment = new FavouriteFragment();
-                        break;
-                    case R.id.bab_profile:
-                        selectedFragment = new ProfileFragment();
+                        selectedFragment = frag3;
+                        PostLoginPage.this.getSupportActionBar().show();
                         break;
                     case R.id.bab_post:
-                        selectedFragment = new PostFragment();
+                        selectedFragment = frag4;
+                        PostLoginPage.this.getSupportActionBar().show();
+                        break;
+                    case R.id.bab_profile:
+                        selectedFragment = frag5;
+                        PostLoginPage.this.getSupportActionBar().hide();
                         break;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                fm.beginTransaction().hide(active).show(selectedFragment).commit();
+                active = selectedFragment;
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 return true;
             }
         });
 
 
-
-        /*
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new HomeFragment()).commit();
-            //navigationView.setCheckedItem(R.id.nav_home);
-
-            String UID = database.getCurrentUser().getUid();
-            firebaseFirestore.collection("users").document(UID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    UserProfile userProfile = documentSnapshot.toObject(UserProfile.class);
-                        populateUserDetailsToNavHeader(userProfile);
-                }
-            });
-
-         */
-
-
     }
 
     private void initialise() {
-        //drawer = findViewById(R.id.drawer_layout);
         database = FirebaseAuth.getInstance();
-
+        firebaseFirestore = FirebaseFirestore.getInstance();
         bottom_nav_view = findViewById(R.id.bnvBtmNavBar);
     }
 
@@ -126,69 +114,15 @@ public class PostLoginPage extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
     }
 
-    /*
-    //different actions based on what item is selected on the navigation bar
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch(menuItem.getItemId()) {
-            case R.id.nav_signout:
-                database.signOut();
-                startActivity(new Intent(PostLoginPage.this, MainActivity.class));
-                finish();
-                break;
-
-            case R.id.nav_settings:
-                startActivity(new Intent(PostLoginPage.this,SettingsPage.class));
-
-            case R.id.nav_chat:
-                startActivity(new Intent(PostLoginPage.this, ChatPage.class));
-
-                break;
-            case R.id.nav_profile:
-                startActivity(new Intent(PostLoginPage.this,ProfilePage.class));
-                break;
-            case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new HomeFragment()).commit();
-                break;
-        }
-        //drawer.closeDrawer(GravityCompat.START);
-        return true;
+    private void initialiseFragments() {
+        fm.beginTransaction().add(R.id.fragment_container, frag5, "5").hide(frag5).commit();
+        fm.beginTransaction().add(R.id.fragment_container, frag4, "4").hide(frag4).commit();
+        fm.beginTransaction().add(R.id.fragment_container, frag3, "3").hide(frag3).commit();
+        fm.beginTransaction().add(R.id.fragment_container, frag2, "2").hide(frag2).commit();
+        fm.beginTransaction().add(R.id.fragment_container,frag1, "1").commit();
     }
 
-     */
 
-    /*
-    //if drawer open we press back, simply close the drawer
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-     */
-
-    /*
-
-    private void populateUserDetailsToNavHeader(UserProfile userProfile) {
-        TextView nav_header_username = findViewById(R.id.nav_header_username);
-        TextView nav_header_email = findViewById(R.id.nav_header_email);
-        ImageView nav_header_profilePic = findViewById(R.id.nav_header_profile_pic);
-
-        nav_header_username.setText(userProfile.getUsername());
-        nav_header_email.setText(database.getCurrentUser().getEmail());
-
-        //if there is uploaded image url then retrieve
-        if (userProfile.getImageUrl()!="" && userProfile.getImageUrl()!=null) {
-            Picasso.get().load(userProfile.getImageUrl()).into(nav_header_profilePic);
-        }
-     */
-
-    }
+}
