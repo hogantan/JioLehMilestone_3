@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#202124"
-    android:padding="16dp"
+    android:background="@color/offGreen"
     tools:context=".FirstTimeUserPage">
+    <!--android:background="#202124"-->
 
+
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@color/appBlack" />
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/frame">
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_marginTop="148dp"
-        android:textColorHint="@color/baseGreen"
-
-        
-
+        android:textColorHint="@color/baseBlack"
         app:errorEnabled="true"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp">
@@ -29,13 +36,7 @@
             android:ems="10"
             android:hint="Username"
             android:inputType="textPersonName"
-            android:textColor="#fff"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.08"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.331">
+            android:textColor="#000000">
 
         </com.google.android.material.textfield.TextInputEditText>
 
@@ -45,7 +46,7 @@
         android:id="@+id/contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/baseGreen"
+        android:textColorHint="@color/baseBlack"
         tools:layout_editor_absoluteX="0dp"
         android:layout_below="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/username"
@@ -68,11 +69,8 @@
         android:id="@+id/gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:textColorHint="@color/baseGreen"
-
-
-        app:layout_constraintTop_toBottomOf="@+id/contact"
+        android:textColorHint="@color/baseBlack"
+        android:layout_below="@+id/contact"
         app:errorEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -91,10 +89,8 @@
         android:id="@+id/age"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:textColorHint="@color/baseGreen"
-
-        app:layout_constraintTop_toBottomOf="@+id/gender"
+        android:textColorHint="@color/baseBlack"
+        android:layout_below="@+id/gender"
         tools:layout_editor_absoluteX="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -111,10 +107,8 @@
         android:id="@+id/bio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:textColorHint="@color/baseGreen"
-
-        app:layout_constraintTop_toBottomOf="@+id/age"
+        android:textColorHint="@color/baseBlack"
+        android:layout_below="@+id/age"
         tools:layout_editor_absoluteX="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -126,49 +120,50 @@
             android:inputType="textPersonName"
             android:textColor="#fff"
 
-            android:textColorHint="@color/baseGreen"/>
+            android:textColorHint="@color/baseGreen" />
 
-          
 
     </com.google.android.material.textfield.TextInputLayout>
+
+
 
     <Button
         android:id="@+id/btn_createProfile"
         android:layout_width="172dp"
         android:layout_height="49dp"
         android:background="@drawable/btn_round_rectangle"
+        android:layout_below="@+id/bio"
+        android:layout_centerHorizontal="true"
         android:text="Create Profile"
-
         android:textColor="@color/baseBlack"
-        android:textStyle="bold"
-
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.954" />
-
-    <ImageView
+        android:textStyle="bold" />
+</RelativeLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_view"
-        android:layout_width="213dp"
-        android:layout_height="137dp"
+        android:layout_width="171dp"
+        android:layout_height="132dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:background="@drawable/border_user_image"
         android:onClick="addImage"
-        android:scaleType="fitXY"/>
+        android:src="@drawable/default_picture"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp" />
+
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/appBlack"
+        android:textColor="@color/White"
         android:text="Press here to add Profile Pic"
         android:layout_alignTop="@+id/image_view"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="150dp"
         />
 
+
+
+
+
 </RelativeLayout>
+
