@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,11 +35,11 @@ import com.google.firebase.firestore.auth.User;
 public class PostLoginPage extends AppCompatActivity {
 
     private Toolbar toolbar;
-    //private DrawerLayout drawer;
-    private FirebaseAuth database;
-
+    private FloatingActionButton jio;
+    private TextView toolbar_title;
     private BottomNavigationView bottom_nav_view;
 
+    private FirebaseAuth database;
     private FirebaseFirestore firebaseFirestore;
 
     final Fragment frag1 = new HomeFragment();
@@ -64,7 +65,13 @@ public class PostLoginPage extends AppCompatActivity {
             //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
               //      new HomeFragment()).commit();
 
-
+        jio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
+                startActivity(nextActivity);
+            }
+        });
 
         bottom_nav_view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -74,27 +81,33 @@ public class PostLoginPage extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.bab_home:
                         selectedFragment = frag1;
+                        toolbar_title.setText("JioLeh");
                         PostLoginPage.this.getSupportActionBar().show();
                         break;
                     case R.id.bab_chat:
                         selectedFragment = frag2;
+                        toolbar_title.setText("Messages");
                         PostLoginPage.this.getSupportActionBar().show();
                         break;
                     case R.id.bab_favourite:
                         selectedFragment = frag3;
+                        toolbar_title.setText("Favourites");
                         PostLoginPage.this.getSupportActionBar().show();
                         break;
                     case R.id.bab_post:
-                        selectedFragment = frag4;
-                        PostLoginPage.this.getSupportActionBar().show();
+                        Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
+                        startActivity(nextActivity);
                         break;
                     case R.id.bab_profile:
                         selectedFragment = frag5;
+                        toolbar_title.setText("My Profile");
                         PostLoginPage.this.getSupportActionBar().hide();
                         break;
                 }
-                fm.beginTransaction().hide(active).show(selectedFragment).commit();
-                active = selectedFragment;
+                if (selectedFragment != null) {
+                    fm.beginTransaction().hide(active).show(selectedFragment).commit();
+                    active = selectedFragment;
+                }
                 //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                 return true;
             }
@@ -107,6 +120,8 @@ public class PostLoginPage extends AppCompatActivity {
         database = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         bottom_nav_view = findViewById(R.id.bnvBtmNavBar);
+        toolbar_title = findViewById(R.id.tbTitle);
+        jio = findViewById(R.id.btnJio);
     }
 
     private void initialiseToolbar() {
