@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -215,7 +216,12 @@ public class MessagePage extends AppCompatActivity {
     private void initialiseToolbar() {
         toolbar = findViewById(R.id.tbMessageTopBar);
         toolbar.setTitle("");
-        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void initialiseRecyclerView() {

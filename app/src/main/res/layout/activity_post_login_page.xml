@@ -26,12 +26,25 @@
                 android:id="@+id/bnvBtmNavBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="0dp"
-                android:background="#202124"
+                android:background="@drawable/btm_nav_nar_background"
                 android:layout_gravity="bottom"
                 app:labelVisibilityMode="unlabeled"
                 app:menu="@menu/bottom_appbar_navigation" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnJio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_add_baseblack"
+                app:backgroundTint="@color/baseGreen"
+                android:outlineAmbientShadowColor="@color/baseBlack"
+                app:elevation="8dp">
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
         </FrameLayout>
     </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
