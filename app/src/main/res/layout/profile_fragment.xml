@@ -1,18 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#202124">
+    tools:context=".UserProfile">
 
-    <TextView
+    <FrameLayout
+        android:id="@+id/userProfile_top_frame"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:background="@drawable/user_prof_top" >
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/userProfile_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:tabTextColor="@color/White">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/userProfile_tabItem_AboutMe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Me" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/userProfile_tabItem_Listings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Listings" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/userProfile_tabItem_Reviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reviews" />
+        </com.google.android.material.tabs.TabLayout>
+
+
+
+    </FrameLayout>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbProfilePage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Profile Fragment"
-        android:textColor="#fff"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:minHeight="?attr/actionBarSize" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btn_settings"
+        android:layout_width="38dp"
+        android:layout_height="34dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5sp"
+        android:background="@drawable/ic_settings_profile_white" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_userProfilePageImage"
+        android:layout_width="171dp"
+        android:layout_height="132dp"
+        android:layout_below="@+id/tbProfilePage"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/default_picture"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp" />
+
+    <TextView
+        android:id="@+id/tv_profilePageUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tbProfilePage"
+        android:layout_toRightOf="@+id/iv_userProfilePageImage"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/tv_profilePageAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:textColor="@color/White"
+        android:layout_toRightOf="@+id/iv_userProfilePageImage"
+        android:layout_below="@+id/tv_profilePageUsername"
+        android:textSize="20sp"
+         />
+
+    <TextView
+        android:id="@+id/tv_profilePageGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5sp"
+        android:layout_below="@+id/tv_profilePageAge"
+        android:layout_toRightOf="@+id/iv_userProfilePageImage"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_profilePageLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/White"
+        android:layout_toRightOf="@+id/iv_userProfilePageImage"
+        android:layout_marginTop="5sp"
+        android:layout_below="@+id/tv_profilePageGender"
+        android:textSize="20sp"
+         />
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/userProfile_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/userProfile_top_frame" />
+</RelativeLayout>

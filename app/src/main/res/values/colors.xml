@@ -7,4 +7,6 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="appGreen">#26FFCE</color>
     <color name="appBlack">#273A3E</color>
+    <color name="White">#EEF4F5</color>
+    <color name="offGreen">#D1EBFF</color>
 </resources>

@@ -43,23 +43,26 @@ public class ProfilePage extends AppCompatActivity {
         initialise();
         initialiseToolbar();
         fillWithUserDetails();
+        /*
         btn_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ProfilePage.this, SettingsPage.class));
             }
         });
+
+         */
     }
 
     public void initialise() {
         tv_username = findViewById(R.id.tv_profilePageUsername);
-        tv_email = findViewById(R.id.tv_profilePageEmail);
+        //tv_email = findViewById(R.id.tv_profilePageEmail);
         tv_age = findViewById(R.id.tv_profilePageAge);
         tv_gender = findViewById(R.id.tv_profilePageGender);
-        tv_contact = findViewById(R.id.tv_profilePageContact);
-        tv_bio = findViewById(R.id.tv_profilePageBio);
+        //tv_contact = findViewById(R.id.tv_profilePageContact);
+        //tv_bio = findViewById(R.id.tv_profilePageBio);
         iv_userProfileImage = findViewById(R.id.iv_userProfilePageImage);
-        btn_settings = findViewById(R.id.btn_settings);
+        //btn_settings = findViewById(R.id.btn_settings);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
@@ -79,7 +82,7 @@ public class ProfilePage extends AppCompatActivity {
         FirebaseUser currUser = firebaseAuth.getCurrentUser();
         String currUserUID = currUser.getUid();
         String currUserEmail = currUser.getEmail();
-        tv_email.setText(currUserEmail);
+        //tv_email.setText(currUserEmail);
 
         DocumentReference docRef = firebaseFirestore.collection("users").document(currUserUID);
 
@@ -91,8 +94,8 @@ public class ProfilePage extends AppCompatActivity {
                     assert userProfile != null;
                     tv_age.setText(userProfile.getAge());
                     tv_username.setText(userProfile.getUsername());
-                    tv_contact.setText(userProfile.getContact());
-                    tv_bio.setText(userProfile.getBio());
+                    //tv_contact.setText(userProfile.getContact());
+                    //tv_bio.setText(userProfile.getBio());
                     tv_gender.setText(userProfile.getGender());
 
                     if (userProfile.getImageUrl()!="" && userProfile.getImageUrl()!=null) {

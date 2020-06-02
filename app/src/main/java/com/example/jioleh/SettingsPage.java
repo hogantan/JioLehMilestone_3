@@ -3,6 +3,7 @@ package com.example.jioleh;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,5 +49,11 @@ public class SettingsPage extends AppCompatActivity {
         toolbar = findViewById(R.id.tbTempTopBar);
         toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 }
