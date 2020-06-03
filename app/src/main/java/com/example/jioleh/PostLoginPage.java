@@ -65,14 +65,6 @@ public class PostLoginPage extends AppCompatActivity {
             //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
               //      new HomeFragment()).commit();
 
-        jio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
-                startActivity(nextActivity);
-            }
-        });
-
         bottom_nav_view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

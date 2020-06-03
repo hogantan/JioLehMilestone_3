@@ -13,9 +13,12 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.Preference.OnPreferenceClickListener;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class SettingsPage extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private static FirebaseAuth database = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +36,25 @@ public class SettingsPage extends AppCompatActivity {
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            Preference pref = findPreference("changepassword");
-            pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            Preference settings_pref = findPreference("changepassword");
+            settings_pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     startActivity(new Intent(SettingsFragment.this.getActivity(),ChangePasswordPage.class));
+                    return true;
+                }
+            });
+
+            Preference signout_pref = findPreference("signout");
+            signout_pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    database.signOut();
+                    Intent nextActivity = new Intent(SettingsFragment.this.getActivity(),MainActivity.class);
+                    nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(nextActivity);
                     return true;
                 }
             });
