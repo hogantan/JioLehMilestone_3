@@ -1,5 +1,6 @@
 package com.example.jioleh;
 
+import java.net.URI;
 import java.util.ArrayList;
 
 public class JioActivity {
@@ -10,8 +11,10 @@ public class JioActivity {
     private String type_of_activity;
     private String host_uid;
     private String pre_deadline;
-    private String deadline;
+    private String event_date;
+    private String event_time;
     private String details;
+    private String imageUrl;
     private int current_participants;
     private int min_participants;
     private int max_participants;
@@ -39,17 +42,18 @@ public class JioActivity {
         }
     }
 
-    public JioActivity(String title,String location, String type_of_activity, String host_uid,
-                       String pre_deadline, String deadline, String details, int min_participants,
-                       int max_participants) {
+    public JioActivity(String title, String location, String type_of_activity, String host_uid,
+                       String pre_deadline, String event_date, String event_time, String details,
+                       String imageUrl, int min_participants, int max_participants) {
         this.title = title;
-        this.time_created = time_created;
         this.location = location;
         this.type_of_activity = type_of_activity;
         this.host_uid = host_uid;
         this.pre_deadline = pre_deadline;
-        this.deadline = deadline;
+        this.event_date = event_date;
+        this.event_time = event_time;
         this.details = details;
+        this.imageUrl = imageUrl;
         this.min_participants = min_participants;
         this.max_participants = max_participants;
     }
@@ -104,14 +108,6 @@ public class JioActivity {
         this.pre_deadline = pre_deadline;
     }
 
-    public String getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
-    }
-
     public String getDetails() {
         return details;
     }
@@ -144,4 +140,19 @@ public class JioActivity {
         this.max_participants = max_participants;
     }
 
+    public String getEvent_date() {
+        return event_date;
+    }
+
+    public void setEvent_date(String event_date) {
+        this.event_date = event_date;
+    }
+
+    public String getEvent_time() {
+        return event_time;
+    }
+
+    public void setEvent_time(String event_time) {
+        this.event_time = event_time;
+    }
 }
