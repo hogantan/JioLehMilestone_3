@@ -38,8 +38,12 @@ public class SettingsPage extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            Preference settings_pref = findPreference("changepassword");
-            settings_pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+            Preference changePassword = findPreference("changePassword");
+            Preference editProfile = findPreference("editProfile");
+            Preference signout_pref = findPreference("signout");
+
+            changePassword.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     startActivity(new Intent(SettingsFragment.this.getActivity(),ChangePasswordPage.class));
@@ -47,7 +51,16 @@ public class SettingsPage extends AppCompatActivity {
                 }
             });
 
-            Preference signout_pref = findPreference("signout");
+
+            editProfile.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(SettingsFragment.this.getActivity(),EditProfilePage.class));
+                  return true;
+                }
+            });
+
+            
             signout_pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {

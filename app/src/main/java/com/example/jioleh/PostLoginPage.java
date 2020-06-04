@@ -42,12 +42,12 @@ public class PostLoginPage extends AppCompatActivity {
     private FirebaseAuth database;
     private FirebaseFirestore firebaseFirestore;
 
-    final Fragment frag1 = new HomeFragment();
-    final Fragment frag2 = new ChatFragment();
-    final Fragment frag3 = new FavouriteFragment();
-    final Fragment frag4 = new PostFragment();
-    final Fragment frag5 = new ProfileFragment();
-    final FragmentManager fm = getSupportFragmentManager();
+    Fragment frag1 = new HomeFragment();
+    Fragment frag2 = new ChatFragment();
+    Fragment frag3 = new FavouriteFragment();
+    Fragment frag4 = new PostFragment();
+    Fragment frag5 = new ProfileFragment();
+    FragmentManager fm = getSupportFragmentManager();
 
     Fragment active = frag1;
 
@@ -60,7 +60,12 @@ public class PostLoginPage extends AppCompatActivity {
         setContentView(R.layout.activity_post_login_page);
         initialiseFragments();
         initialise();
+        checkIfFromEditProfile();
         initialiseToolbar();
+
+
+
+
 
             //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
               //      new HomeFragment()).commit();
@@ -91,8 +96,8 @@ public class PostLoginPage extends AppCompatActivity {
                         startActivity(nextActivity);
                         break;
                     case R.id.bab_profile:
-                        selectedFragment = frag5;
-                        toolbar_title.setText("My Profile");
+                        selectedFragment =frag5;
+                        //toolbar_title.setText("My Profile");
                         PostLoginPage.this.getSupportActionBar().hide();
                         break;
                 }
@@ -131,5 +136,18 @@ public class PostLoginPage extends AppCompatActivity {
         fm.beginTransaction().add(R.id.fragment_container,frag1, "1").commit();
     }
 
+    private void checkIfFromEditProfile() {
+        String intentFragment = getIntent().getStringExtra("loadProfileFrag");
+        if(intentFragment != null && intentFragment.equals("profilePage")) {
+            fm.beginTransaction().hide(active).show(frag5).commit();
+            active = frag5;
 
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

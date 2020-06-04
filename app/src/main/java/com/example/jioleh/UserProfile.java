@@ -7,6 +7,8 @@ public class UserProfile {
     private String gender;
     private String age;
     private String bio;
+    private String interests;
+    private String location;
     private String imageUrl;
 
 
@@ -22,16 +24,20 @@ public class UserProfile {
         this.age = "";
         this.bio = "";
         this.imageUrl="";
+        this.interests = "";
+        this.location="";
     }
 
     UserProfile(String username, String contact, String gender, String age,
-                String bio) {
+                String bio, String interests, String location) {
         this.username = username;
         this.isNewUser = false;
         this.contact = contact;
         this.gender = gender;
         this.age = age;
         this.bio = bio;
+        this.interests = interests;
+        this.location = location;
         this.imageUrl ="";
     }
 
@@ -67,6 +73,10 @@ public class UserProfile {
         return bio;
     }
 
+    public String getInterests() { return interests;}
+
+    public String getLocation() { return location;
+    }
 
     public void setUsername(String username) {
         this.username = username;

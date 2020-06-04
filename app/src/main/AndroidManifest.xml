@@ -12,8 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PostingPage"></activity>
-        <activity android:name=".MessagePage"></activity>
+        <activity android:name=".EditProfilePage"></activity>
+        <activity android:name=".PostingPage" />
+        <activity android:name=".MessagePage" />
         <activity
             android:name=".SettingsPage"
             android:label="@string/title_activity_settings_page"
