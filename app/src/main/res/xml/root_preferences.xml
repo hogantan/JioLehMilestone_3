@@ -38,6 +38,10 @@
             android:key="changepassword"
             android:title="Change password" />
 
+        <Preference
+            android:key="signout"
+            android:title="Sign out" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -31,8 +31,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button sign_in;
-    Button sign_up;
+    private Button sign_in;
+    private Button sign_up;
+
+    private FirebaseAuth database = FirebaseAuth.getInstance();
+    private FirebaseUser currentUser = database.getCurrentUser();
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //Auto-Login
+        if (currentUser != null) {
+            Intent nextActivity = new Intent(MainActivity.this, PostLoginPage.class);
+            nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            finish();
+            startActivity(nextActivity);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
