@@ -18,7 +18,7 @@
         android:layout_height="fill_parent"
         android:layout_marginTop="56dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tbTopBar">
 
@@ -30,9 +30,10 @@
                 android:id="@+id/tvPostFirstHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="20dp"
                 android:text="Display Information"
+                android:textColor="@color/baseGreen"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -45,9 +46,22 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/ic_add_box_green"
+                android:src="@drawable/ic_add_box_green"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvPostFirstHeader" />
+
+            <ImageButton
+                android:id="@+id/ibtnRemoveImage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="52dp"
+                android:src="@drawable/ic_baseline_indeterminate_check_box_24"
+                app:layout_constraintStart_toEndOf="@+id/ivPostDisplayImage"
+                app:layout_constraintTop_toBottomOf="@+id/tilDisplayTitle">
+
+            </ImageButton>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilDisplayTitle"
@@ -80,6 +94,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="35dp"
                 android:text="Activity Information"
+                android:textColor="@color/baseGreen"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -92,7 +107,7 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="20dp"
-                android:text="Type of Activity"
+                android:text="Type of Activity:"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvPostSecondHeader" />
@@ -117,7 +132,7 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="35dp"
-                android:text="Location"
+                android:text="Location:"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spTypeActivity" />
@@ -143,10 +158,22 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="25dp"
-                android:text="Time and Date"
+                android:text="Time and Date:"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etLocation" />
+
+            <TextView
+                android:id="@+id/tvActivityTimeDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginTop="10dp"
+                android:text="Actual activity:"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
 
             <TextView
                 android:id="@+id/tvTime"
@@ -154,26 +181,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/edit_text_background_postingpage"
                 android:gravity="center_horizontal"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.15"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
+                app:layout_constraintTop_toBottomOf="@+id/tvActivityTimeDate" />
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/edit_text_background_postingpage"
                 android:text=""
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/btnSetTime"
-                app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
+                app:layout_constraintTop_toBottomOf="@+id/tvActivityTimeDate" />
 
             <Button
                 android:id="@+id/btnSetTime"
@@ -181,10 +208,10 @@
                 android:layout_height="18dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/ic_access_time_white"
                 app:layout_constraintStart_toEndOf="@+id/tvTime"
-                app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
+                app:layout_constraintTop_toBottomOf="@+id/tvActivityTimeDate" />
 
             <Button
                 android:id="@+id/btnSetDate"
@@ -192,10 +219,60 @@
                 android:layout_height="18dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/ic_date_range_white"
                 app:layout_constraintStart_toEndOf="@+id/tvDate"
-                app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
+                app:layout_constraintTop_toBottomOf="@+id/tvActivityTimeDate" />
+
+            <TextView
+                android:id="@+id/tvConfirmationDeadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="45dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginTop="20dp"
+                android:text="Confirmation deadline:"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+
+            <TextView
+                android:id="@+id/tvDeadlineTime"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_text_background_postingpage"
+                android:gravity="center_horizontal"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.15"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvConfirmationDeadline" />
+
+            <Button
+                android:id="@+id/btnSetTimeDeadline"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/ic_access_time_white"
+                app:layout_constraintStart_toEndOf="@+id/tvTime"
+                app:layout_constraintTop_toBottomOf="@+id/tvConfirmationDeadline" />
+
+            <TextView
+                android:id="@+id/tvDeadlineDate"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/edit_text_background_postingpage"
+                android:text=""
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/btnSetTime"
+                app:layout_constraintTop_toBottomOf="@+id/tvConfirmationDeadline" />
 
             <TextView
                 android:id="@+id/tvNumberParticipants"
@@ -204,10 +281,21 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="35dp"
-                android:text="Number of Participants"
+                android:text="Number of Participants:"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+                app:layout_constraintTop_toBottomOf="@+id/tvDeadlineTime" />
+
+            <Button
+                android:id="@+id/btnSetDateDeadline"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/ic_date_range_white"
+                app:layout_constraintStart_toEndOf="@+id/tvDate"
+                app:layout_constraintTop_toBottomOf="@+id/tvConfirmationDeadline" />
 
             <TextView
                 android:id="@+id/tvMinParticipants"
@@ -270,13 +358,13 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="35dp"
-                android:text="Additional Details"
+                android:text="Additional Details:"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMinParticipants" />
 
             <EditText
-                android:id="@+id/etDetails"
+                android:id="@+id/etAdditionalDetails"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"

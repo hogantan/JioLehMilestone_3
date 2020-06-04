@@ -1,61 +1,46 @@
 package com.example.jioleh;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class JioActivity {
 
     private String title;
-    private String time_created;
     private String location;
     private String type_of_activity;
     private String host_uid;
-    private String pre_deadline;
     private String event_date;
     private String event_time;
+    private String deadline_date;
+    private String deadline_time;
     private String details;
     private String imageUrl;
     private int current_participants;
     private int min_participants;
     private int max_participants;
-    private boolean isFull;
     private ArrayList<String> participants;
+    @ServerTimestamp
+    private Date time_created;
 
-    public boolean isFull() {
-        if (current_participants == max_participants) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public boolean isCancelled() {
-        if (current_participants < min_participants) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void addParticipant(String uid) {
-        if (!isFull()) {
-            this.participants.add(uid);
-        }
-    }
-
-    public JioActivity(String title, String location, String type_of_activity, String host_uid,
-                       String pre_deadline, String event_date, String event_time, String details,
-                       String imageUrl, int min_participants, int max_participants) {
+    public JioActivity(String title, String location, String type_of_activity,
+                       String host_uid, String event_date, String event_time, String deadline_date,
+                       String deadline_time, String details, int min_participants,
+                       int max_participants) {
         this.title = title;
         this.location = location;
         this.type_of_activity = type_of_activity;
         this.host_uid = host_uid;
-        this.pre_deadline = pre_deadline;
         this.event_date = event_date;
         this.event_time = event_time;
+        this.deadline_date = deadline_date;
+        this.deadline_time = deadline_time;
         this.details = details;
-        this.imageUrl = imageUrl;
         this.min_participants = min_participants;
         this.max_participants = max_participants;
+        this.imageUrl = "";
     }
 
     public JioActivity(){}
@@ -66,14 +51,6 @@ public class JioActivity {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getTime_created() {
-        return time_created;
-    }
-
-    public void setTime_created(String time_created) {
-        this.time_created = time_created;
     }
 
     public String getLocation() {
@@ -100,14 +77,6 @@ public class JioActivity {
         this.host_uid = host_uid;
     }
 
-    public String getPre_deadline() {
-        return pre_deadline;
-    }
-
-    public void setPre_deadline(String pre_deadline) {
-        this.pre_deadline = pre_deadline;
-    }
-
     public String getDetails() {
         return details;
     }
@@ -118,6 +87,14 @@ public class JioActivity {
 
     public int getCurrent_participants() {
         return current_participants;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setCurrent_participants(int current_participants) {
@@ -154,5 +131,30 @@ public class JioActivity {
 
     public void setEvent_time(String event_time) {
         this.event_time = event_time;
+    }
+
+
+    public String getDeadline_date() {
+        return deadline_date;
+    }
+
+    public void setDeadline_date(String deadline_date) {
+        this.deadline_date = deadline_date;
+    }
+
+    public String getDeadline_time() {
+        return deadline_time;
+    }
+
+    public void setDeadline_time(String deadline_time) {
+        this.deadline_time = deadline_time;
+    }
+
+    public Date getTime_created() {
+        return time_created;
+    }
+
+    public void setTime_created(Date time_created) {
+        this.time_created = time_created;
     }
 }
