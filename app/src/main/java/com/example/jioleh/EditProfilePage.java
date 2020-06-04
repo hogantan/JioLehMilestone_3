@@ -4,24 +4,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -30,22 +32,21 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-public class FirstTimeUserPage extends AppCompatActivity {
-
+public class EditProfilePage extends AppCompatActivity {
 
     private TextInputLayout til_username;
     private TextInputLayout til_contact;
     private TextInputLayout til_gender;
     private TextInputLayout til_age;
     private TextInputLayout til_bio;
-    private Button btn_CreateProfile;
-    private ImageView iv_ImageView;
-    private ImageButton ic_camera;
     private TextInputLayout til_location;
     private TextInputLayout til_interests;
+    private Button btn_EditProfile;
+    private ImageView iv_ImageView;
+    private ImageButton ic_camera;
 
-
-    private UserProfile userProfile;
+    private UserProfile oldUserProfile;
+    private UserProfile newUserProfile;
     private FirebaseUser firebaseUser;
 
     //identifier for image upload
@@ -59,33 +60,28 @@ public class FirstTimeUserPage extends AppCompatActivity {
 
     StorageTask uploadTask;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_time_user_page);
         initialise();
+        getUserProfile();
 
         ic_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addImage(v);
+               openFileChooser();
             }
         });
 
-        btn_CreateProfile.setOnClickListener(new View.OnClickListener() {
+        btn_EditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //prevent users from accidentally clicking button and upload duplicate image
-                if (uploadTask != null && uploadTask.isInProgress()) {
-                    Toast.makeText(FirstTimeUserPage.this, "upload in progress", Toast.LENGTH_SHORT).show();
-                } else {
-                    createProfile();
-                }
+                EditProfile();
             }
         });
-
     }
+
 
     private void initialise() {
         til_username = findViewById(R.id.username);
@@ -93,18 +89,20 @@ public class FirstTimeUserPage extends AppCompatActivity {
         til_gender = findViewById(R.id.gender);
         til_age = findViewById(R.id.age);
         til_bio = findViewById(R.id.bio);
-        btn_CreateProfile = findViewById(R.id.btn_createProfile);
+        btn_EditProfile = findViewById(R.id.btn_createProfile);
+        btn_EditProfile.setText("Edit Profile");
         iv_ImageView = findViewById(R.id.image_view);
         ic_camera = findViewById(R.id.ic_camera);
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         til_interests = findViewById(R.id.Interest);
         til_location = findViewById(R.id.Location);
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //the storage file for userProfileImage
         storageReference = FirebaseStorage.getInstance().getReference("userProfileImage");
     }
 
-    public void createProfile() {
+    private void EditProfile() {
         String username = til_username.getEditText().getText().toString();
         String contact = til_contact.getEditText().getText().toString();
         String gender = til_gender.getEditText().getText().toString();
@@ -117,26 +115,21 @@ public class FirstTimeUserPage extends AppCompatActivity {
                 | !validateFields(til_location) | !validateFields(til_bio) | !validateFields(til_interests)) {
             alertDialog();
         } else {
-            userProfile = new UserProfile(username, contact, gender
+            newUserProfile = new UserProfile(username, contact, gender
                     , age, bio, interests, location);
 
-            uploadFile(userProfile, mImageUri);
+            if (mImageUri == null && oldUserProfile.getImageUrl()!=null) {
+                newUserProfile.setImageUrl(oldUserProfile.getImageUrl());
+                putInFirestore(newUserProfile);
+            } else {
+
+                uploadFile(newUserProfile, mImageUri);
+            }
         }
     }
-
-    public boolean validateFields(TextInputLayout til) {
-        if (til.getEditText().getText().toString().isEmpty()) {
-            til.getEditText().setError("Field cannot be empty");
-            return false;
-        } else {
-            til.getEditText().setError(null);
-            return true;
-        }
-    }
-
 
     public void alertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(FirstTimeUserPage.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditProfilePage.this);
 
         builder.setMessage("Please fill up the required fields")
                 .setTitle("Setup Profile");
@@ -147,6 +140,15 @@ public class FirstTimeUserPage extends AppCompatActivity {
         AlertDialog dialog = builder.create();
 
         dialog.show();
+    }
+    public boolean validateFields(TextInputLayout til) {
+        if (til.getEditText().getText().toString().isEmpty()) {
+            til.getEditText().setError("Field cannot be empty");
+            return false;
+        } else {
+            til.getEditText().setError(null);
+            return true;
+        }
     }
 
     //onClick for the ImageView
@@ -163,13 +165,54 @@ public class FirstTimeUserPage extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
-    //remove default background image on userProfile imageView
-    public void removeDefaultProfilePic() {
-        iv_ImageView.setBackgroundResource(android.R.color.transparent);
+    public void getUserProfile() {
+        String uid = firebaseUser.getUid();
+        DocumentReference docRef = FirebaseFirestore
+                .getInstance()
+                .collection("users")
+                .document(uid);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    UserProfile currUserProfile = task.getResult().toObject(UserProfile.class);
+                    fill(currUserProfile);
+                } else {
+                    Toast.makeText(EditProfilePage.this,
+                            "User details cannot be found please check with admin",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        });
     }
 
-    //getting data from the file choosen
-    @Override
+    public void fill(UserProfile profile){
+        oldUserProfile = profile;
+        til_username.getEditText().setText(profile.getUsername());
+        til_age.getEditText().setText(profile.getAge());
+        til_gender.getEditText().setText(profile.getGender());
+        til_contact.getEditText().setText(profile.getContact());
+        til_bio.getEditText().setText(profile.getBio());
+        til_location.getEditText().setText(profile.getLocation());
+        til_interests.getEditText().setText(profile.getLocation());
+
+        if (!profile.getImageUrl().equals("") && profile.getImageUrl()!=null) {
+            Picasso.get().load(profile.getImageUrl()).into(iv_ImageView);
+        }
+    }
+
+    public void startNextActivity() {
+        Intent intent = new Intent(EditProfilePage.this, PostLoginPage.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("loadProfileFrag", "profilePage");
+        startActivity(intent);
+
+    }
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -180,32 +223,9 @@ public class FirstTimeUserPage extends AppCompatActivity {
             //get image uri
             mImageUri = data.getData();
 
-            //remove default pic
-            removeDefaultProfilePic();
-
             //load into imageView on app
             Picasso.get().load(mImageUri).into(iv_ImageView);
         }
-    }
-
-    //get file extension for image i.e. the file type (.jpn, .jpeg etc)
-    private String getFileExtension(Uri uri) {
-        ContentResolver cr = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cr.getType(uri));
-    }
-
-    public void putInFirestore(UserProfile user) {
-        String uid = firebaseUser.getUid();
-        FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(uid)
-                .set(user, SetOptions.merge());
-        startNextActivity();
-    }
-
-    public void startNextActivity() {
-        startActivity(new Intent(FirstTimeUserPage.this, PostLoginPage.class));
     }
 
     public void uploadFile(final UserProfile userProf, Uri mImageUri) {
@@ -221,7 +241,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
             uploadTask = fileRef.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(FirstTimeUserPage.this, "Upload success", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditProfilePage.this, "Upload success", Toast.LENGTH_LONG).show();
 
                     //get the download url so that we can store in the userProfile object and retrieve when needed
                     fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -242,7 +262,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(FirstTimeUserPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfilePage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -250,5 +270,12 @@ public class FirstTimeUserPage extends AppCompatActivity {
             putInFirestore(userProf);
         }
     }
-
+    public void putInFirestore(UserProfile user) {
+        String uid = firebaseUser.getUid();
+        FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(uid)
+                .set(user, SetOptions.merge());
+        startNextActivity();
+    }
 }

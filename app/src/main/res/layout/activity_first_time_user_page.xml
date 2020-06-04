@@ -1,169 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/offGreen"
+    android:background="@color/baseBlack"
     tools:context=".FirstTimeUserPage">
     <!--android:background="#202124"-->
 
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <FrameLayout
         android:id="@+id/frame"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/appBlack" />
+        android:layout_height="156dp"
+        android:background="@color/White">
 
-    <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/frame">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/baseBlack"
-        app:errorEnabled="true"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
-
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
+            android:id="@+id/editText2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:ems="10"
-            android:hint="Username"
-            android:inputType="textPersonName"
-            android:textColor="#000000">
+            android:gravity="start|top"
+            android:inputType="textMultiLine" />
+    </FrameLayout>
 
-        </com.google.android.material.textfield.TextInputEditText>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/frame">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40sp"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/contact"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/baseBlack"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_below="@+id/username"
-        app:layout_constraintTop_toBottomOf="@+id/username"
-        android:layout_gravity="center"
-        app:errorEnabled="true">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:hint="Username"
+                    android:inputType="textPersonName">
 
-        <com.google.android.material.textfield.TextInputEditText
+                </com.google.android.material.textfield.TextInputEditText>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ems="10"
-            android:hint="contact"
-            android:inputType="textPersonName"
-            android:textColor="#fff"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/gender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/baseBlack"
-        android:layout_below="@+id/contact"
-        app:errorEnabled="true">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username"
+                android:layout_gravity="center"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toBottomOf="@+id/username"
+                tools:layout_editor_absoluteX="0dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="#fff"
-            android:ems="10"
-            android:hint="gender"
-            android:inputType="textPersonName"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:hint="Contact"
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/age"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/baseBlack"
-        android:layout_below="@+id/gender"
-        tools:layout_editor_absoluteX="0dp">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/contact"
+                app:errorEnabled="true">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ems="10"
-            android:hint="age"
-            android:inputType="textPersonName"
-            android:textColor="#fff" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/bio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColorHint="@color/baseBlack"
-        android:layout_below="@+id/age"
-        tools:layout_editor_absoluteX="0dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ems="10"
-            android:hint="Bio"
-            android:inputType="textPersonName"
-            android:textColor="#fff"
-
-            android:textColorHint="@color/baseGreen" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:hint="Gender"
+                    android:inputType="textPersonName" />
 
 
-    </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/gender"
+                tools:layout_editor_absoluteX="0dp"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:hint="Age"
+                    android:inputType="textPersonName"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/age"
+                tools:layout_editor_absoluteX="0dp"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:hint="Location"
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/Location"
+                tools:layout_editor_absoluteX="0dp"
+                app:errorEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:hint="Bio"
+                    android:inputType="textMultiLine" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Interest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/bio"
+                tools:layout_editor_absoluteX="0dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="Interest"
+                    android:inputType="textMultiLine" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/btn_createProfile"
+                android:layout_width="172dp"
+                android:layout_height="49dp"
+                android:layout_below="@id/Interest"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_round_rectangle"
+                android:text="Create Profile"
+                android:layout_marginTop="20sp"
+                android:layout_marginBottom="20sp"
+                android:textColor="@color/appBlack"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
 
 
 
-    <Button
-        android:id="@+id/btn_createProfile"
-        android:layout_width="172dp"
-        android:layout_height="49dp"
-        android:background="@drawable/btn_round_rectangle"
-        android:layout_below="@+id/bio"
-        android:layout_centerHorizontal="true"
-        android:text="Create Profile"
-        android:textColor="@color/baseBlack"
-        android:textStyle="bold" />
-</RelativeLayout>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_view"
-        android:layout_width="171dp"
-        android:layout_height="132dp"
+        android:layout_width="180dp"
+        android:layout_height="142dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50sp"
         android:onClick="addImage"
         android:src="@drawable/default_picture"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp" />
 
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/White"
-        android:text="Press here to add Profile Pic"
-        android:layout_alignTop="@+id/image_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
-        />
-
-
-
+    <ImageButton
+        android:id="@+id/ic_camera"
+        android:layout_width="45dp"
+        android:layout_height="46dp"
+        android:layout_alignEnd="@+id/image_view"
+        android:layout_alignRight="@+id/image_view"
+        android:layout_marginTop="160sp"
+        android:layout_marginRight="24sp"
+        android:background="@drawable/ic_camera_white" />
 
 
 </RelativeLayout>
+    </ScrollView>
 

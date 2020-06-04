@@ -74,11 +74,6 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
-    }
 
     public void attachViewPagerWithFragments(View view) {
         ViewPager2 vp2 = view.findViewById(R.id.userProfile_viewPager);
@@ -127,9 +122,6 @@ public class ProfileFragment extends Fragment {
     private void fillWithUserDetails() {
         FirebaseUser currUser = firebaseAuth.getCurrentUser();
         String currUserUID = currUser.getUid();
-        String currUserEmail = currUser.getEmail();
-
-
         DocumentReference docRef = firebaseFirestore.collection("users").document(currUserUID);
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -141,7 +133,7 @@ public class ProfileFragment extends Fragment {
                     tv_age.setText(userProfile.getAge());
                     tv_username.setText(userProfile.getUsername());
                     //tv_contact.setText(userProfile.getContact());
-                    //tv_bio.setText(userProfile.getBio());
+
                     tv_gender.setText(userProfile.getGender());
 
                     if (userProfile.getImageUrl()!="" && userProfile.getImageUrl()!=null) {

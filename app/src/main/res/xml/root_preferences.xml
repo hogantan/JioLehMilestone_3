@@ -1,42 +1,31 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="Profile and Privacy">
+        <Preference
+            android:key="editProfile"
+            android:title="Edit Profile"/>
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat
+            android:title="Show Email"
+            android:summary="Anyone can see your email"
+            app:key="showEmail">
+        </SwitchPreferenceCompat>
 
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat
+            android:title="Show Contact"
+            android:summary="Anyone can see your contact"
+            app:key="showEmail">
+        </SwitchPreferenceCompat>
+
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    </PreferenceCategory>
 
     <PreferenceCategory app:title="Password and Security">
         <Preference
-            android:key="changepassword"
-            android:title="Change password" />
+            android:key="changePassword"
+            android:title="Change Password" />
 
     </PreferenceCategory>
 
