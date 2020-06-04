@@ -13,9 +13,12 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.Preference.OnPreferenceClickListener;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class SettingsPage extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private static FirebaseAuth database = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +36,12 @@ public class SettingsPage extends AppCompatActivity {
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
             Preference changePassword = findPreference("changePassword");
             Preference editProfile = findPreference("editProfile");
+            Preference signout_pref = findPreference("signout");
 
             changePassword.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
@@ -45,10 +51,23 @@ public class SettingsPage extends AppCompatActivity {
                 }
             });
 
+
             editProfile.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     startActivity(new Intent(SettingsFragment.this.getActivity(),EditProfilePage.class));
+                  return true;
+                }
+            });
+
+            
+            signout_pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    database.signOut();
+                    Intent nextActivity = new Intent(SettingsFragment.this.getActivity(),MainActivity.class);
+                    nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(nextActivity);
                     return true;
                 }
             });

@@ -28,4 +28,28 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_user_self_view_profile_page">userSelfViewProfilePage</string>
+
+    <string-array name="type_activity">
+        <item>Please select one</item>
+        <item>Sports</item>
+        <item>Dance</item>
+        <item>Music</item>
+        <item>Board Games</item>
+        <item>Online Games</item>
+        <item>Cooking and Baking</item>
+        <item>Arts and Crafts</item>
+        <item>Gardening</item>
+        <item>Party</item>
+        <item>Relax</item>
+        <item>Getting a Meal</item>
+        <item>Just Chatting</item>
+        <item>Discussion</item>
+        <item>Motorsports</item>
+        <item>Study</item>
+        <item>Movies</item>
+        <item>Shopping</item>
+        <item>Outdoor Adventure</item>
+        <item>Others</item>
+    </string-array>
+
 </resources>

@@ -8,6 +8,4 @@
     android:minHeight="?attr/actionBarSize"
     app:navigationIcon="?attr/homeAsUpIndicator"
     app:layout_constraintTop_toTopOf="parent">
-
-
 </androidx.appcompat.widget.Toolbar>
