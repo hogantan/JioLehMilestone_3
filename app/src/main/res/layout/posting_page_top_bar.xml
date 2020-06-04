@@ -24,6 +24,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="@drawable/ic_check_white"
-        android:layout_marginLeft="170dp">
+        android:layout_marginLeft="160dp"
+        android:clickable="true">
     </Button>
 </androidx.appcompat.widget.Toolbar>
