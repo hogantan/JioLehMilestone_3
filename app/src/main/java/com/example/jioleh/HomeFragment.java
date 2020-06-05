@@ -7,47 +7,53 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private Button findActivities;
-    private Button postActivities;
-    private Button findNearBy;
+
+    private EditText searchBar;
+    private Button searchIcon;
+    private RecyclerView activity_list;
+
+    private FirebaseFirestore datastore;
+    private ActivityAdapter adapter;
+    private View currentView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        final View view = inflater.inflate(R.layout.fragment_home,container,false);
-
-        findActivities = view.findViewById(R.id.btn_findActivities);
-        postActivities = view.findViewById(R.id.btn_postActivities);
-        //findNearBy = view.findViewById(R.id.btn_findNearby);
-
-        findActivities.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent postingPage = new Intent(getActivity(), FindActivitiesPage.class);
-                startActivity(postingPage);
-            }
-        });
-        postActivities.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent postingPage = new Intent(getActivity(), PostActivitiesPage.class);
-                startActivity(postingPage);
-            }
-        });
+        currentView = inflater.inflate(R.layout.fragment_home,container,false);
+        initialise();
+        initialiseRecyclerView();
 
 
-        return view;
+        return currentView;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getActivities();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -55,5 +61,35 @@ public class HomeFragment extends Fragment {
         if (activity != null) {
             activity.getSupportActionBar().show();
         }
+    }
+
+    private void initialise() {
+        searchBar = currentView.findViewById(R.id.etSearchActivity);
+        datastore = FirebaseFirestore.getInstance();
+    }
+
+    private void getActivities() {
+        datastore.collection("activities")
+                .orderBy("time_created", Query.Direction.DESCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                        } else {
+                            List<JioActivity> activities
+                                    = queryDocumentSnapshots.toObjects(JioActivity.class);
+                            adapter.setData(activities);
+                            //activity_list.smoothScrollToPosition(adapter.getItemCount() - 1);
+                        }
+                    }
+                });
+    }
+
+    private void initialiseRecyclerView() {
+        adapter = new ActivityAdapter();
+        activity_list = currentView.findViewById(R.id.rvActivityList);
+        activity_list.setHasFixedSize(true);
+        activity_list.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        activity_list.setAdapter(adapter);
     }
 }

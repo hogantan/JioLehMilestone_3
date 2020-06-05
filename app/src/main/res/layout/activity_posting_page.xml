@@ -82,7 +82,7 @@
                     android:layout_gravity="center"
                     android:hint="Title of post"
                     android:inputType="textPersonName"
-                    android:maxLength="21"
+                    android:maxLength="40"
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 

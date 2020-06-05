@@ -1,56 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#202124">
 
-    <Button
-        android:id="@+id/btn_findNearby"
-        android:layout_width="178sp"
+    <EditText
+        android:id="@+id/etSearchActivity"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_postActivities"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="100dip"
-
-        android:text="Find Nearby" />
-
-    <Button
-        android:id="@+id/btn_postActivities"
-        android:layout_width="178sp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_findActivities"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="100dip"
-        android:text="Post Activities" />
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="50dp"
+        android:ems="10"
+        android:hint="Search JioLeh"
+        android:inputType="textPersonName"
+        android:background="@drawable/rectangle_outline_text_box"
+        android:textSize="14sp"
+        android:padding="8dp"
+        android:textColor="@color/baseBlack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.175"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btn_findActivities"
-        android:layout_width="178dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/home_frag"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="115dp"
-        android:layout_marginLeft="115dp"
-        android:layout_marginTop="65dp"
-        android:layout_marginEnd="118dp"
-        android:layout_marginRight="118dp"
-        android:text="Find Activities" />
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="300dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/ic_baseline_search_basegreen"
+        app:layout_constraintBottom_toBottomOf="@+id/etSearchActivity"
+        app:layout_constraintEnd_toEndOf="@+id/etSearchActivity"
+        app:layout_constraintStart_toStartOf="@+id/etSearchActivity"
+        app:layout_constraintTop_toTopOf="@+id/etSearchActivity" />
 
-    <TextView
-        android:id="@+id/home_frag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dip"
-        android:text="Home Fragment"
-        android:textColor="#fff"
-        android:textSize="30sp" />
-</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#fff"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/etSearchActivity">
+
+    </View>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvActivityList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="48dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/etSearchActivity"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>
