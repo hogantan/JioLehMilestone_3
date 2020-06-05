@@ -40,6 +40,7 @@ public class JioActivity {
         this.details = details;
         this.min_participants = min_participants;
         this.max_participants = max_participants;
+        this.current_participants = 0;
         this.imageUrl = "";
     }
 

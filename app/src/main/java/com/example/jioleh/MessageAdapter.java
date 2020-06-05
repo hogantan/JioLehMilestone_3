@@ -37,7 +37,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
 
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private List<MessageChat> messages;
-    private SimpleDateFormat format = new SimpleDateFormat("hh;mm;ss a, dd-MM-yy");
 
     MessageAdapter() {
         messages = new ArrayList<>();
