@@ -1,36 +1,26 @@
 package com.example.jioleh;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomappbar.BottomAppBar;
+import com.example.jioleh.chat.ChatFragment;
+import com.example.jioleh.favourites.FavouriteFragment;
+import com.example.jioleh.listings.HomeFragment;
+import com.example.jioleh.post.PostingPage;
+import com.example.jioleh.post.PostFragment;
+import com.example.jioleh.userprofile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.auth.User;
 
 public class PostLoginPage extends AppCompatActivity {
 
@@ -64,12 +54,6 @@ public class PostLoginPage extends AppCompatActivity {
         initialiseToolbar();
 
 
-
-
-
-            //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-              //      new HomeFragment()).commit();
-
         bottom_nav_view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -79,17 +63,17 @@ public class PostLoginPage extends AppCompatActivity {
                     case R.id.bab_home:
                         selectedFragment = frag1;
                         toolbar_title.setText("JioLeh");
-                        PostLoginPage.this.getSupportActionBar().show();
+
                         break;
                     case R.id.bab_chat:
                         selectedFragment = frag2;
                         toolbar_title.setText("Messages");
-                        PostLoginPage.this.getSupportActionBar().show();
+
                         break;
                     case R.id.bab_favourite:
                         selectedFragment = frag3;
                         toolbar_title.setText("Favourites");
-                        PostLoginPage.this.getSupportActionBar().show();
+
                         break;
                     case R.id.bab_post:
                         Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
@@ -97,8 +81,7 @@ public class PostLoginPage extends AppCompatActivity {
                         break;
                     case R.id.bab_profile:
                         selectedFragment =frag5;
-                        //toolbar_title.setText("My Profile");
-                        PostLoginPage.this.getSupportActionBar().hide();
+                        toolbar_title.setText("My Profile");
                         break;
                 }
                 if (selectedFragment != null) {
@@ -141,13 +124,7 @@ public class PostLoginPage extends AppCompatActivity {
         if(intentFragment != null && intentFragment.equals("profilePage")) {
             fm.beginTransaction().hide(active).show(frag5).commit();
             active = frag5;
-
         }
-
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 }
