@@ -12,33 +12,33 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditProfilePage"></activity>
-        <activity android:name=".PostingPage" />
-        <activity android:name=".MessagePage" />
+        <activity android:name=".settings.EditProfilePage">
+
+        </activity>
+        <activity android:name=".post.PostingPage" />
+        <activity android:name=".chat.MessagePage" />
         <activity
-            android:name=".SettingsPage"
+            android:name=".settings.SettingsPage"
             android:label="@string/title_activity_settings_page"
             android:parentActivityName=".PostLoginPage" />
-        <activity android:name=".ProfilePage" />
+        <activity android:name=".userprofile.ProfilePage" />
         <activity
-            android:name=".LoginPage"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".FirstTimeUserPage" />
+            android:name=".login.LoginPage"
+            android:parentActivityName=".login.MainActivity" />
+        <activity android:name=".login.FirstTimeUserPage" />
         <activity
-            android:name=".ChangePasswordPage"
-            android:parentActivityName=".SettingsPage" />
+            android:name=".settings.ChangePasswordPage"
+            android:parentActivityName=".settings.SettingsPage" />
         <activity
-            android:name=".ForgotPasswordPage"
-            android:parentActivityName=".LoginPage" />
-        <activity android:name=".PostActivitiesPage" />
-        <activity android:name=".FindActivitiesPage" />
+            android:name=".login.ForgotPasswordPage"
+            android:parentActivityName=".login.LoginPage" />
         <activity
-            android:name=".RegisterPage"
-            android:parentActivityName=".MainActivity" />
+            android:name=".login.RegisterPage"
+            android:parentActivityName=".login.MainActivity" />
         <activity
             android:name=".PostLoginPage"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".login.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

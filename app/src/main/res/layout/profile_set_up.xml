@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/offGreen"
     android:orientation="vertical"
-    tools:context=".FirstTimeUserPage">
+    tools:context=".login.FirstTimeUserPage">
     <!--android:background="#202124"-->
 
 
