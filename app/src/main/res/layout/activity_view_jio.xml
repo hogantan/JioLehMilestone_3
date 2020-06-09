@@ -334,23 +334,11 @@
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/vBtmLine"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/slightly_rounded_basegreen_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/baseBlack"
         android:textColor="@color/baseBlack"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
+        android:textStyle="bold"
         android:text="Attend">
     </Button>
 
-    <Button
-        android:id="@+id/btnViewMark"
-        android:layout_width="170dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/slightly_rounded_white_button"
-        app:layout_constraintTop_toBottomOf="@+id/vBtmLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginRight="15dp"
-        android:text="Mark as favourite"
-        android:textColor="@color/baseBlack">
-    </Button>
 </androidx.constraintlayout.widget.ConstraintLayout>
