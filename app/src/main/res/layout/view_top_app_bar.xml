@@ -19,4 +19,16 @@
         android:textColor="@color/baseGreen">
     </TextView>
 
+    <Button
+        android:id="@+id/btnTopBarLike"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:drawableLeft="@drawable/ic_baseline_thumb_up_white"
+        android:text="Like"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:hint="Like"
+        android:layout_marginLeft="200dp">
+    </Button>
+
 </androidx.appcompat.widget.Toolbar>
