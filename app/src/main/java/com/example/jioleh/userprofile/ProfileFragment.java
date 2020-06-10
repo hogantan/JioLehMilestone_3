@@ -57,11 +57,14 @@ public class ProfileFragment extends Fragment {
         setHasOptionsMenu(true);
 
         initialise(view);
-
+        
+        //must come before viewpager coz we using uid to create the viewPager
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        
         //viewPager for different tabs on profile page
         attachViewPagerWithFragments(view);
 
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        
 
         viewModel.getUser(uid).observe(getViewLifecycleOwner(), new Observer<UserProfile>() {
             @Override
