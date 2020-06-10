@@ -3,6 +3,8 @@ package com.example.jioleh.userprofile;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +35,18 @@ public class UserProfileAboutMeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private TextView tv_bio;
+    private TextView tv_interests;
+
+    private String uid;
+
     public UserProfileAboutMeFragment() {
         // Required empty public constructor
+    }
+
+    public UserProfileAboutMeFragment(String uid) {
+        // this is for user profile other view
+        this.uid = uid;
     }
 
     /**
@@ -67,24 +79,29 @@ public class UserProfileAboutMeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = currentUser.getUid();
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(uid);
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_profile_about_me, container, false);
-        final TextView tv_bio = view.findViewById(R.id.bio_fill);
-        final TextView tv_interests = view.findViewById(R.id.Interest_box);
 
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        tv_bio = view.findViewById(R.id.bio_fill);
+        tv_interests = view.findViewById(R.id.Interest_box);
+
+
+        userProfileViewModel viewModel = new ViewModelProvider(this).get(userProfileViewModel.class);
+
+        viewModel.getUser(uid).observe(getViewLifecycleOwner(), new Observer<UserProfile>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                UserProfile userProfile = documentSnapshot.toObject(UserProfile.class);
-                tv_bio.setText(userProfile.getBio());
-                tv_interests.setText(userProfile.getInterests());
-
+            public void onChanged(UserProfile userProfile) {
+                //fill up Bio and Interest box
+                fillBioAndInterest(userProfile);
             }
         });
 
+
         return view;
+    }
+
+    private void fillBioAndInterest(UserProfile userProfile) {
+        tv_bio.setText(userProfile.getBio());
+        tv_interests.setText(userProfile.getInterests());
+
     }
 }
