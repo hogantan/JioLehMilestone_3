@@ -36,6 +36,7 @@ public class OtherUserView extends AppCompatActivity {
         setContentView(R.layout.activity_other_user_view);
         initialise();
         initialiseToolbar();
+         
 
         Intent intent = getIntent();
         uid = intent.getStringExtra("user_id");
@@ -47,6 +48,8 @@ public class OtherUserView extends AppCompatActivity {
                 fill(userProfile);
             }
         });
+        
+        initialiaseViewPagerAndTab()
 
 
 
