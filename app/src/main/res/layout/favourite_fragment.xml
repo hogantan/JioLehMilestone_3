@@ -7,16 +7,8 @@
     android:layout_height="match_parent"
     android:background="#202124">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Favourite Fragment"
-        android:textColor="#fff"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tlJoinedLiked"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,15 +16,36 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItemJoined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Attending" />
+            android:text="Joined" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabItemLiked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Liked" />
 
     </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpFavouriteViewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/btmLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tlJoinedLiked"></androidx.viewpager.widget.ViewPager>
+
+    <View
+        android:id="@+id/btmLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#fff"
+        android:layout_marginBottom="56dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+    </View>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
