@@ -20,11 +20,14 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth database = FirebaseAuth.getInstance();
     private FirebaseUser currentUser = database.getCurrentUser();
 
+
     @Override
     protected void onStart() {
         super.onStart();
 
         //Auto-Login
+        //10/6 buggy interaction when deleting account from firebase eg. if i sign in as account A
+        //then close the app and delete account A in firebase then i still can auto login but keeps crashing
         if (currentUser != null) {
             Intent nextActivity = new Intent(MainActivity.this, PostLoginPage.class);
             nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

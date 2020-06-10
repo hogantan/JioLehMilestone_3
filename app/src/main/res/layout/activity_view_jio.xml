@@ -9,7 +9,7 @@
     <include
         android:id="@+id/tbTopBar"
         layout="@layout/view_top_app_bar"
-        app:layout_constraintTop_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -209,7 +209,7 @@
                 android:id="@+id/tvViewDisplayAbout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayConfirmDateTime"
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayMinimum"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
@@ -232,7 +232,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/tvViewDisplayAbout"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayConfirmDateTime">
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayMinimum">
             </ImageView>
 
             <TextView
@@ -251,12 +251,12 @@
                 android:id="@+id/tvViewDisplayWho"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayDetails"
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayConfirmDateTime"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:text="Attendees"
+                android:text="Participants:"
                 android:textSize="18sp"
                 android:textStyle="bold">
             </TextView>
@@ -265,29 +265,24 @@
                 android:id="@+id/ivViewDisplayParticipantsLogo"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginRight="200dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
                 android:src="@drawable/ic_baseline_person_basegreen"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@id/tvViewDisplayWho"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayDetails">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWho">
             </ImageView>
 
             <TextView
                 android:id="@+id/tvViewDisplayParticipantsCounter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/ivViewDisplayParticipantsLogo"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayDetails"
-                android:layout_marginTop="30dp"
-                android:text="100/100"
-                android:textSize="18sp"
-                android:textStyle="bold">
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWho"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="2dp"
+                android:text="100/100">
             </TextView>
 
             <TextView
@@ -298,19 +293,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="40dp"
                 android:text="Minimum Required">
             </TextView>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvViewDisplayCurrentParticipants"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayMinimum"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="15dp"/>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -328,7 +315,7 @@
     </View>
 
     <Button
-        android:id="@+id/btnViewAttend"
+        android:id="@+id/btnViewJoin"
         android:layout_width="170dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"

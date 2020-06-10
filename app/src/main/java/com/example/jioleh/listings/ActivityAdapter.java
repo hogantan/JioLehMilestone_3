@@ -29,7 +29,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
 
     private List<JioActivity> activities;
 
-    ActivityAdapter() {
+    public ActivityAdapter() {
         activities = new ArrayList<>();
     }
 
