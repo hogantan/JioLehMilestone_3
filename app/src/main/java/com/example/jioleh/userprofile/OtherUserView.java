@@ -49,9 +49,7 @@ public class OtherUserView extends AppCompatActivity {
             }
         });
         
-        initialiaseViewPagerAndTab()
-
-
+        initialiaseViewPagerAndTab();
 
     }
 
