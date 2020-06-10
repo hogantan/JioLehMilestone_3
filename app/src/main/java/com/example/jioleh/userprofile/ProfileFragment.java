@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
@@ -39,37 +41,43 @@ import com.squareup.picasso.Picasso;
 public class ProfileFragment extends Fragment {
 
     private ViewPager2 viewPager2;
-    private TextView tv_username, tv_email, tv_age, tv_gender, tv_contact, tv_bio, tv_location;
+    private TextView tv_username, tv_age, tv_gender, tv_location;
     private ImageView iv_userProfileImage;
 
-    FirebaseFirestore firebaseFirestore;
-    FirebaseAuth firebaseAuth;
 
+    private userProfileViewModel viewModel;
+    private String uid;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.profile_fragment,container, false);
+        View view = inflater.inflate(R.layout.profile_fragment, container, false);
 
         //has option menu for action bar
         setHasOptionsMenu(true);
 
         initialise(view);
 
-        //get data fill up the blanks
-        fillWithUserDetails();
-
         //viewPager for different tabs on profile page
         attachViewPagerWithFragments(view);
+
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        viewModel.getUser(uid).observe(getViewLifecycleOwner(), new Observer<UserProfile>() {
+            @Override
+            public void onChanged(UserProfile userProfile) {
+                //fill blanks with user details
+                fillWithUserDetails(userProfile);
+            }
+        });
 
         return view;
     }
 
 
-
     public void attachViewPagerWithFragments(View view) {
 
-        viewPager2.setAdapter(new UserProfileViewPagerAdapter(this));
+        viewPager2.setAdapter(new UserProfileViewPagerAdapter(this, uid));
 
         TabLayout tabLayout = view.findViewById(R.id.userProfile_tabLayout);
 
@@ -99,52 +107,35 @@ public class ProfileFragment extends Fragment {
 
     public void initialise(View view) {
         tv_username = view.findViewById(R.id.tv_profilePageUsername);
-        //tv_email = findViewById(R.id.tv_profilePageEmail);
         tv_age = view.findViewById(R.id.tv_profilePageAge);
         tv_gender = view.findViewById(R.id.tv_profilePageGender);
         tv_location = view.findViewById(R.id.tv_profilePageLocation);
-        //tv_contact = findViewById(R.id.tv_profilePageContact);
-        //tv_bio = view.findViewById(R.id.textView4);
         iv_userProfileImage = view.findViewById(R.id.iv_userProfilePageImage);
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         viewPager2 = view.findViewById(R.id.userProfile_viewPager);
+        viewModel = new ViewModelProvider(this).get(userProfileViewModel.class);
     }
 
-    private void fillWithUserDetails() {
-        FirebaseUser currUser = firebaseAuth.getCurrentUser();
-        assert currUser != null;
-        String currUserUID = currUser.getUid();
-        DocumentReference docRef = firebaseFirestore.collection("users").document(currUserUID);
+    private void fillWithUserDetails(UserProfile userProfile) {
 
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    UserProfile userProfile = task.getResult().toObject(UserProfile.class);
-                    assert userProfile != null;
-                    tv_age.setText(userProfile.getAge());
-                    tv_username.setText(userProfile.getUsername());
-                    tv_location.setText(userProfile.getLocation());
-                    tv_gender.setText(userProfile.getGender());
+        assert userProfile != null;
+        tv_age.setText(userProfile.getAge());
+        tv_username.setText(userProfile.getUsername());
+        tv_location.setText(userProfile.getLocation());
+        tv_gender.setText(userProfile.getGender());
 
-                    if (userProfile.getImageUrl()!="" && userProfile.getImageUrl()!=null) {
-                        Picasso.get().load(userProfile.getImageUrl()).into(iv_userProfileImage);
-                    }
+        if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl() != null) {
+            Picasso.get().load(userProfile.getImageUrl()).into(iv_userProfileImage);
+        } else {
+            Toast.makeText(ProfileFragment.this.getActivity(),
+                    "user details cannot be found", Toast.LENGTH_LONG).show();
 
-                } else {
-                    Toast.makeText(ProfileFragment.this.getActivity(),
-                            "user details cannot be found",Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
+        }
     }
 
     //to put in the settings icon on the top right of the action bar
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.app_bar_menu,menu);
+        inflater.inflate(R.menu.app_bar_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -152,7 +143,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.settings){
+        if (id == R.id.settings) {
             startActivity(new Intent(getActivity(), SettingsPage.class));
         }
         return super.onOptionsItemSelected(item);

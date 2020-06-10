@@ -8,8 +8,8 @@
 
     <FrameLayout
         android:id="@+id/userProfile_top_frame"
-        android:layout_width="401dp"
-        android:layout_height="203dp"
+        android:layout_width="match_parent"
+        android:layout_height="201dp"
         android:background="@color/baseBlack">
 
         <com.google.android.material.tabs.TabLayout

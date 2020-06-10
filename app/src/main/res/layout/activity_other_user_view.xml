@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".userprofile.OtherUserView">
+
+    <include
+        android:id="@+id/include_top_app_bar"
+        layout="@layout/top_app_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/include_top_app_bar">
+
+        <FrameLayout
+            android:id="@+id/userProfile_top_frame"
+            android:layout_width="match_parent"
+            android:layout_height="257dp"
+            android:background="@color/baseBlack">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/userProfile_tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:tabTextColor="@color/White">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/userProfile_tabItem_AboutMe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="About Me" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/userProfile_tabItem_Listings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Listings" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/userProfile_tabItem_Reviews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reviews" />
+            </com.google.android.material.tabs.TabLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_userProfilePageImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8sp"
+            android:paddingStart="7sp"
+            android:paddingEnd="7sp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <Button
+                android:id="@+id/message_other_user"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Message" />
+
+            <Button
+                android:id="@+id/write_review_other_user"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Review" />
+
+            <Button
+                android:id="@+id/report_other_user"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Report" />
+        </LinearLayout>
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_userProfilePageImage"
+            android:layout_width="171dp"
+            android:layout_height="132dp"
+            android:layout_marginTop="20sp"
+
+            android:src="@drawable/default_picture"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp"
+            android:layout_marginStart="-10sp"
+            android:layout_marginLeft="-10sp"/>
+
+        <TextView
+            android:id="@+id/tv_profilePageUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="20sp"
+            android:layout_toEndOf="@+id/iv_userProfilePageImage"
+            android:layout_toRightOf="@+id/iv_userProfilePageImage"
+            android:text="UsernameTest"
+            android:textColor="@color/White"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_profilePageAge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_profilePageUsername"
+            android:layout_marginTop="5sp"
+            android:layout_toRightOf="@+id/iv_userProfilePageImage"
+            android:text="Age Test"
+            android:textColor="@color/White"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_profilePageGender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_profilePageAge"
+            android:layout_marginTop="5sp"
+            android:layout_toRightOf="@+id/iv_userProfilePageImage"
+            android:text="GenderTest"
+            android:textColor="@color/White"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_profilePageLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_profilePageGender"
+            android:layout_marginTop="5sp"
+            android:layout_toRightOf="@+id/iv_userProfilePageImage"
+            android:text="LocationTest"
+            android:textColor="@color/White"
+            android:textSize="20sp" />
+
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/userProfile_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/userProfile_top_frame"
+            android:layout_marginTop="0dp"
+            android:background="@color/appBlack" />
+    </RelativeLayout>
+
+</RelativeLayout>
