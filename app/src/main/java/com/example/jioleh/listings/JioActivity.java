@@ -41,6 +41,7 @@ public class JioActivity {
         this.details = details;
         this.min_participants = min_participants;
         this.max_participants = max_participants;
+        this.participants = new ArrayList<>();
         this.current_participants = 0;
         this.imageUrl = "";
     }
@@ -71,6 +72,14 @@ public class JioActivity {
     }
 
     public JioActivity(){}
+
+    public ArrayList<String> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(ArrayList<String> participants) {
+        this.participants = participants;
+    }
 
     public boolean isSameId(JioActivity other) {
         return this.activityId.equals(other.activityId);

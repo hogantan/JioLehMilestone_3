@@ -12,8 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".userprofile.OtherUserView"></activity>
         <activity android:name=".settings.EditProfilePage"></activity>
+
+        <activity android:name=".listings.ViewJioActivity"></activity>
+        <activity android:name=".settings.EditProfilePage" />
+
         <activity android:name=".post.PostingPage" />
         <activity android:name=".chat.MessagePage" />
         <activity
