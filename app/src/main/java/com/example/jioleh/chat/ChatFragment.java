@@ -4,9 +4,7 @@ package com.example.jioleh.chat;
 
         import androidx.annotation.NonNull;
         import androidx.annotation.Nullable;
-        import androidx.appcompat.app.AppCompatActivity;
         import androidx.fragment.app.Fragment;
-        import androidx.recyclerview.widget.GridLayoutManager;
         import androidx.recyclerview.widget.LinearLayoutManager;
         import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,26 +13,17 @@ package com.example.jioleh.chat;
         import android.view.ViewGroup;
 
         import com.example.jioleh.R;
-        import com.example.jioleh.chat.UsersAdapter;
-        import com.example.jioleh.favourites.FavouritesAdapter;
-        import com.example.jioleh.listings.JioActivity;
         import com.example.jioleh.userprofile.UserProfile;
-        import com.firebase.ui.firestore.FirestoreRecyclerOptions;
         import com.google.android.gms.tasks.OnSuccessListener;
         import com.google.android.gms.tasks.Task;
         import com.google.android.gms.tasks.Tasks;
-        import com.google.api.Distribution;
         import com.google.firebase.auth.FirebaseAuth;
         import com.google.firebase.auth.FirebaseUser;
-        import com.google.firebase.firestore.CollectionReference;
         import com.google.firebase.firestore.DocumentSnapshot;
         import com.google.firebase.firestore.EventListener;
         import com.google.firebase.firestore.FirebaseFirestore;
         import com.google.firebase.firestore.FirebaseFirestoreException;
-        import com.google.firebase.firestore.Query;
         import com.google.firebase.firestore.QuerySnapshot;
-
-        import org.w3c.dom.Document;
 
         import java.util.ArrayList;
         import java.util.List;
