@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jioleh.R;
+import com.example.jioleh.chat.MessagePage;
+import com.example.jioleh.userprofile.OtherUserView;
 import com.example.jioleh.userprofile.UserProfile;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,17 +57,23 @@ public class ViewJioActivity extends AppCompatActivity {
     private TextView location;
     private TextView host_name;
     private ImageView host_image;
-    private TextView actual_datetime;
-    private TextView confirm_datetime;
+    private TextView actual_date;
+    private TextView actual_time;
+    private TextView confirm_date;
+    private TextView confirm_time;
     private TextView details;
     private TextView participants_counter;
     private TextView minimum;
+    private View displayHost;
+    private View displayParticipants;
     //private RecyclerView current_participants;
     private Button join;
     private Button like;
 
     private Intent intent;
     private String activity_id;
+    private String host_uid;
+    private String host_imageUrl;
 
     private FirebaseFirestore datastore;
     private FirebaseUser currentUser;
@@ -81,6 +89,7 @@ public class ViewJioActivity extends AppCompatActivity {
     //Use to determine how to update activity participants
     private static final int ADD = 1;
     private static final int REMOVE = 2;
+    private int max_participants;
     private int current_participants;
     private ArrayList<String> list_of_participants;
 
@@ -90,7 +99,10 @@ public class ViewJioActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_jio);
         initialise();
         initialiseToolbar();
+        //getStatus is called onCreate to determine what the visuals of the buttons are as well as to determine isFirstTime
         getActivityInfo();
+        getButtonStatus(JOIN);
+        getButtonStatus(LIKE);
 
         join.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,20 +125,29 @@ public class ViewJioActivity extends AppCompatActivity {
                 if (like.getHint().toString().equals("Unlike")) {
                     deleteActivity(LIKE);
                     setButtonVisuals(POSITIVE, like, LIKE);
-                    System.out.println("here2");
                 } else {
                     setActivity(LIKE);
                     setButtonVisuals(NEGATIVE, like, LIKE);
-                    System.out.println("here3");
                 }
             }
         });
 
-        participants_counter.setOnClickListener(new View.OnClickListener() {
+        displayParticipants.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent nextActivity = new Intent(ViewJioActivity.this, ViewParticipants.class);
                 nextActivity.putExtra("activity_id", activity_id);
+                startActivity(nextActivity);
+            }
+        });
+
+        displayHost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent(ViewJioActivity.this, MessagePage.class);
+                nextActivity.putExtra("username", host_name.getText().toString());
+                nextActivity.putExtra("user_id", host_uid);
+                nextActivity.putExtra("image_url", host_imageUrl);
                 startActivity(nextActivity);
             }
         });
@@ -139,10 +160,13 @@ public class ViewJioActivity extends AppCompatActivity {
         location = findViewById(R.id.tvViewDisplayLocation);
         host_name = findViewById(R.id.tvViewDisplayHostName);
         host_image = findViewById(R.id.civViewDisplayHostImage);
-        actual_datetime = findViewById(R.id.tvViewDisplayActualDateTime);
-        confirm_datetime = findViewById(R.id.tvViewDisplayConfirmDateTime);
+        actual_date = findViewById(R.id.tvViewDisplayActualDate);
+        actual_time = findViewById(R.id.tvViewDisplayActualTime);
+        confirm_date = findViewById(R.id.tvViewDisplayConfirmDate);
+        confirm_time = findViewById(R.id.tvViewDisplayConfirmTime);
         details = findViewById(R.id.tvViewDisplayDetails);
-        //current_participants = findViewById(R.id.rvViewDisplayCurrentParticipants);
+        displayHost = findViewById(R.id.vViewDisplayHost);
+        displayParticipants = findViewById(R.id.vViewDisplayParticipants);
         participants_counter = findViewById(R.id.tvViewDisplayParticipantsCounter);
         minimum = findViewById(R.id.tvViewDisplayMinimum);
         join = findViewById(R.id.btnViewJoin);
@@ -154,10 +178,6 @@ public class ViewJioActivity extends AppCompatActivity {
         //Fetching activity id from activity holder from the activity adapter class
         intent = getIntent();
         activity_id = intent.getStringExtra("activity_id");
-
-        //getStatus is called onCreate to determine what the visuals of the buttons are as well as to determine isFirstTime
-        getStatusJoinOrLike(JOIN);
-        getStatusJoinOrLike(LIKE);
     }
 
     private void initialiseToolbar() {
@@ -169,6 +189,24 @@ public class ViewJioActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    //to prevent more than maximum participants
+    //disables and enables the join button accordingly
+    private void checkIsFull() {
+        if (join.getText().toString().equals("Join")) {
+            if (current_participants == max_participants) {
+                join.setEnabled(false);
+                join.setText("Full");
+                join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegrey_button));
+            }
+        } else {
+            if (current_participants < max_participants) {
+                join.setEnabled(true);
+                join.setText("Join");
+                join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegreen_button));
+            }
+        }
     }
 
     //Update number of current participants as well as the list of participants in the activity
@@ -234,8 +272,8 @@ public class ViewJioActivity extends AppCompatActivity {
     }
 
     //To retrieve the user's current relationship with the activity and to set the
-    //visuals of the like and joing buttons accordingly
-    private void getStatusJoinOrLike(final int type) {
+    //visuals of the like and join buttons accordingly
+    private void getButtonStatus(final int type) {
         String collection_path = null;
         Button button = null;
         if (type == JOIN) {
@@ -259,6 +297,7 @@ public class ViewJioActivity extends AppCompatActivity {
                             setButtonVisuals(NEGATIVE, finalButton, type);
                         } else {
                             setButtonVisuals(POSITIVE, finalButton, type);
+                            checkIsFull(); //after knowing the status of a button
                         }
                     }
                 });
@@ -280,19 +319,22 @@ public class ViewJioActivity extends AppCompatActivity {
                         //live update of current participants as it listens for change in data
                         current_participants = current_activity.getCurrent_participants();
                         list_of_participants = current_activity.getParticipants();
+                        max_participants = current_activity.getMax_participants();
 
                         displayTitle.setText(current_activity.getTitle());
                         type_of_activity.setText(current_activity.getType_of_activity());
                         location.setText(current_activity.getLocation());
-                        actual_datetime.setText("Date: " + convertDateFormat(current_activity.getEvent_date())
-                                + "\n" + "\n" + "Time: " +current_activity.getEvent_time());
-                        confirm_datetime.setText("Date: " + convertDateFormat(current_activity.getDeadline_date())
-                                + "\n" + "\n" + "Time: " + current_activity.getEvent_time());
+                        actual_date.setText(convertDateFormat(current_activity.getEvent_date()));
+                        actual_time.setText(current_activity.getEvent_time());
+                        confirm_date.setText(convertDateFormat(current_activity.getDeadline_date()));
+                        confirm_time.setText("Time: " + current_activity.getEvent_time());
                         details.setText(current_activity.getDetails());
-                        participants_counter.setText(current_activity.getCurrent_participants() + "/" + current_activity.getMax_participants());
+                        participants_counter.setText(current_activity.getCurrent_participants() + "/" + max_participants);
                         minimum.setText("Minimum required: " + current_activity.getMin_participants() + "/" + current_activity.getMax_participants());
 
-                        setUpHostInfo(current_activity.getHost_uid());
+                        host_uid = current_activity.getHost_uid();
+                        setUpHostInfo(host_uid);
+                        checkIsFull(); //this will respond to live changes from the database
                     }
                 });
     }
@@ -306,6 +348,7 @@ public class ViewJioActivity extends AppCompatActivity {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                         UserProfile current_user = documentSnapshot.toObject(UserProfile.class);
+                        host_imageUrl = current_user.getImageUrl();
 
                         if (!current_user.getImageUrl().equals("") && current_user.getImageUrl()!=null) {
                             Picasso.get().load(current_user.getImageUrl()).into(host_image);

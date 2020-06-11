@@ -11,7 +11,6 @@ public class UserProfile {
     private String location;
     private String imageUrl;
 
-
     public UserProfile() {
     }//must have for firestore
     //needs ALL getter methods implemented

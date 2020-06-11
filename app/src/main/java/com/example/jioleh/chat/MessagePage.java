@@ -12,10 +12,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jioleh.R;
+import com.example.jioleh.userprofile.OtherUserView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -27,15 +29,19 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagePage extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TextView username;
     private ImageButton send;
+    private ImageView receiverImage;
     private EditText input_message;
     private RecyclerView recyclerView;
 
@@ -58,52 +64,27 @@ public class MessagePage extends AppCompatActivity {
         username = findViewById(R.id.tvMessageUsername);
         String updateUsername = intent.getStringExtra("username");
         username.setText(updateUsername);
+        String imageUrl = intent.getStringExtra("image_url");
+        Picasso.get().load(imageUrl).into(receiverImage);
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onClickSend();
+            }
+        });
 
-                final String input = input_message.getText().toString();
+        receiverImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToUserProfile();
+            }
+        });
 
-                //does not allow sending empty text
-                if(!input.isEmpty()) {
-                    //checking to see whether there exists a chat channel between the two users
-                    datastore.collection("users")
-                            .document(currentUser.getUid())
-                            .collection("openchats")
-                            .document(intent.getStringExtra("user_id"))
-                            .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                //if the chat channel exists
-                                if (document.exists()) {
-                                    MessageChat message = new MessageChat(currentUser.getUid(),
-                                            intent.getStringExtra("user_id"), input,
-                                            document.get("channelId").toString());
-                                    sendMessage(message);
-                                }
-                                //if the chat channel does not exist
-                                else {
-                                    String chatChannelID = openChatChannel();
-                                    MessageChat message = new MessageChat(currentUser.getUid(),
-                                            intent.getStringExtra("user_id"), input, chatChannelID);
-                                    sendMessage(message);
-                                }
-                                //to as to display text send on first send
-                                getMessages();
-                            } else {
-                                Toast.makeText(MessagePage.this, "Error", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } else {
-                    Toast.makeText(MessagePage.this,
-                            "Cannot send empty message", Toast.LENGTH_SHORT).show();
-                }
-                //to clear input message after sending
-                input_message.setText("");
+        username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToUserProfile();
             }
         });
     }
@@ -112,6 +93,55 @@ public class MessagePage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         getMessages(); // this is to ensure if both users are chatting in realtime, then sent messages will appear on screen immediately
+    }
+
+    private void goToUserProfile() {
+        Intent nextActivity = new Intent(MessagePage.this, OtherUserView.class);
+        nextActivity.putExtra("username", username.getText().toString());
+        nextActivity.putExtra("user_id", intent.getStringExtra("user_id"));
+        startActivity(nextActivity);
+    }
+
+    private void onClickSend() {
+        final String input = input_message.getText().toString();
+        //does not allow sending empty text
+        if(!input.isEmpty()) {
+            //checking to see whether there exists a chat channel between the two users
+            datastore.collection("users")
+                    .document(currentUser.getUid())
+                    .collection("openchats")
+                    .document(intent.getStringExtra("user_id"))
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        //if the chat channel exists
+                        if (document.exists()) {
+                            MessageChat message = new MessageChat(currentUser.getUid(),
+                                    intent.getStringExtra("user_id"), input,
+                                    document.get("channelId").toString());
+                            sendMessage(message);
+                        }
+                        //if the chat channel does not exist
+                        else {
+                            String chatChannelID = openChatChannel();
+                            MessageChat message = new MessageChat(currentUser.getUid(),
+                                    intent.getStringExtra("user_id"), input, chatChannelID);
+                            sendMessage(message);
+                        }
+                        //to as to display text send on first send
+                        getMessages();
+                    } else {
+                        Toast.makeText(MessagePage.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
+                    input_message.setText("");
+                }
+            });
+        } else {
+            Toast.makeText(MessagePage.this,
+                    "Cannot send empty message", Toast.LENGTH_SHORT).show();
+        }
     }
 
     //Goes into specific chat channel and adds the message in
@@ -199,6 +229,7 @@ public class MessagePage extends AppCompatActivity {
     private void initialise() {
         send = findViewById(R.id.ibSendButton);
         input_message = findViewById(R.id.etSendMessage);
+        receiverImage = findViewById(R.id.civMessageImage);
         intent = getIntent();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         datastore = FirebaseFirestore.getInstance();

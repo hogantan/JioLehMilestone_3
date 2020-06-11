@@ -10,10 +10,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jioleh.R;
+import com.example.jioleh.chat.MessagePage;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.auth.User;
@@ -25,6 +27,7 @@ public class OtherUserView extends AppCompatActivity {
     private userProfileViewModel viewModel;
     private TextView tv_username, tv_age, tv_gender, tv_location;
     private ImageView iv_ProfilePic;
+    private Button message;
     private Toolbar toolbar;
 
     private UserProfileViewPagerAdapter pagerAdapter;
@@ -51,6 +54,21 @@ public class OtherUserView extends AppCompatActivity {
         
         initialiaseViewPagerAndTab();
 
+        //Implementing a message button in user profile creates a cyclic effect
+        //e.g click on user profile --> click chat --> click user profile --> click chat
+        //shifted message to ViewParticipants as the access point to chatting which makes more
+        //sense because this is the only way to see another users profile in the first place
+        /*
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
+                nextActivity.putExtra("username", tv_username.getText().toString());
+                nextActivity.putExtra("user_id", uid);
+                startActivity(nextActivity);
+            }
+        });
+         */
     }
 
     public void fill(UserProfile userProfile) {
@@ -70,7 +88,7 @@ public class OtherUserView extends AppCompatActivity {
         tv_gender = findViewById(R.id.tv_profilePageGender);
         tv_location = findViewById(R.id.tv_profilePageLocation);
         iv_ProfilePic = findViewById(R.id.iv_userProfilePageImage);
-
+        message = findViewById(R.id.message_other_user);
     }
 
     private void initialiseToolbar() {

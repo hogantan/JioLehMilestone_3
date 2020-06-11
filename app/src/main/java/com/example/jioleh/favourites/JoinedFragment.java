@@ -3,6 +3,7 @@ package com.example.jioleh.favourites;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +35,7 @@ public class JoinedFragment extends Fragment {
     private View currentView;
     private TextView emptyText;
     private RecyclerView recyclerView;
-    private ActivityAdapter adapter;
+    private FavouritesAdapter adapter;
 
     private FirebaseUser currentUser;
     private FirebaseFirestore datastore;
@@ -119,10 +120,10 @@ public class JoinedFragment extends Fragment {
     }
 
     private void initialiseRecyclerView() {
-        adapter = new ActivityAdapter();
+        adapter = new FavouritesAdapter();
         recyclerView = currentView.findViewById(R.id.rvFavouriteJoined);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
     }
 }
