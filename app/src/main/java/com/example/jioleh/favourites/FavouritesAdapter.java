@@ -1,4 +1,4 @@
-package com.example.jioleh.listings;
+package com.example.jioleh.favourites;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
+import com.example.jioleh.listings.JioActivity;
+import com.example.jioleh.listings.ViewJioActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -24,26 +26,25 @@ import java.util.List;
 
 
 
-public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ActivityHolder> {
-
+public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouritesHolder> {
 
     private List<JioActivity> activities;
 
-    public ActivityAdapter() {
+    public FavouritesAdapter() {
         activities = new ArrayList<>();
     }
 
     @NonNull
     @Override
-    public ActivityAdapter.ActivityHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavouritesAdapter.FavouritesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View activityBox = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.single_activity_layout, parent, false);
-        return new ActivityHolder(activityBox);
+                .inflate(R.layout.favourites_item_left, parent, false);;
+        return new FavouritesHolder(activityBox);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull ActivityAdapter.ActivityHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FavouritesAdapter.FavouritesHolder holder, int position) {
         JioActivity activity = activities.get(position);
         holder.activity_id = activity.getActivityId();
         holder.setUpView(activity);
@@ -54,41 +55,33 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
         return activities.size();
     }
 
+    //Used to determine who the receiver or sender is depending on current user
 
     public void setData(List<JioActivity> jioActivities) {
-
-            this.activities = jioActivities;
-
-        //can do a submitList with listAdapter to diff changes
-        //so that only item that change is updated
-        //current implementation is that the whole list will be refreshed
-
-        //notifying data changes done in observer in fragment
-        //notifyDataSetChanged();
+        this.activities = jioActivities;
+        notifyDataSetChanged();
     }
 
 
 
 
-    static class ActivityHolder extends RecyclerView.ViewHolder {
+    static class FavouritesHolder extends RecyclerView.ViewHolder {
 
         private ImageView displayImage;
         private TextView displayTitle;
         private TextView date;
         private TextView time;
         private TextView location;
-        private TextView currentParticipants;
         private String activity_id;
 
         //Initialising the holder
-        ActivityHolder(@NonNull final View itemView) {
+        FavouritesHolder(@NonNull final View itemView) {
             super(itemView);
-            displayImage = itemView.findViewById(R.id.ivHomeActivityDisplayImage);
-            displayTitle = itemView.findViewById(R.id.tvHomeActivityDisplayTitle);
-            date = itemView.findViewById(R.id.tvHomeActivityDisplayDate);
-            time = itemView.findViewById(R.id.tvHomeActivityDisplayTime);
-            location = itemView.findViewById(R.id.tvHomeActivityDisplayLocation);
-            currentParticipants = itemView.findViewById(R.id.tvHomeActivityCurrentParticipants);
+            displayImage = itemView.findViewById(R.id.ivFavouritesImage);
+            displayTitle = itemView.findViewById(R.id.tvFavouritesTitle);
+            date = itemView.findViewById(R.id.tvFavouritesDate);
+            time = itemView.findViewById(R.id.tvFavouritesTime);
+            location = itemView.findViewById(R.id.tvFavouritesLocation);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,11 +102,10 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
             date.setText(convertDateFormat(jioActivity.getEvent_date()));
             time.setText(jioActivity.getEvent_time());
             location.setText(jioActivity.getLocation());
-            currentParticipants.setText(jioActivity.getCurrent_participants() + "/" + jioActivity.getMax_participants());
         }
 
         private String convertDateFormat(String date) {
-            Date new_date = new Date();
+            Date new_date;
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             DateFormat formatter2 = new SimpleDateFormat("dd MMMM yyyy");
             try {

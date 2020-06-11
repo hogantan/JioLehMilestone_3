@@ -6,6 +6,7 @@ package com.example.jioleh.chat;
         import androidx.annotation.Nullable;
         import androidx.appcompat.app.AppCompatActivity;
         import androidx.fragment.app.Fragment;
+        import androidx.recyclerview.widget.GridLayoutManager;
         import androidx.recyclerview.widget.LinearLayoutManager;
         import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,61 +16,114 @@ package com.example.jioleh.chat;
 
         import com.example.jioleh.R;
         import com.example.jioleh.chat.UsersAdapter;
+        import com.example.jioleh.favourites.FavouritesAdapter;
+        import com.example.jioleh.listings.JioActivity;
         import com.example.jioleh.userprofile.UserProfile;
         import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+        import com.google.android.gms.tasks.OnSuccessListener;
+        import com.google.android.gms.tasks.Task;
+        import com.google.android.gms.tasks.Tasks;
+        import com.google.api.Distribution;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
         import com.google.firebase.firestore.CollectionReference;
+        import com.google.firebase.firestore.DocumentSnapshot;
+        import com.google.firebase.firestore.EventListener;
         import com.google.firebase.firestore.FirebaseFirestore;
+        import com.google.firebase.firestore.FirebaseFirestoreException;
         import com.google.firebase.firestore.Query;
+        import com.google.firebase.firestore.QuerySnapshot;
+
+        import org.w3c.dom.Document;
+
+        import java.util.ArrayList;
+        import java.util.List;
 
 //Temporary view of Chat fragment
 public class ChatFragment extends Fragment {
 
-    private RecyclerView users_list;
-    private FirebaseFirestore firestore;
-    private CollectionReference reference;
-    private UsersAdapter adapter;
+    private RecyclerView recyclerView;
     private View currentView;
+    private OpenChatsAdapter adapter;
+
+
+    private FirebaseFirestore datastore;
+    private FirebaseUser currentUser;
+
+    private ArrayList<UserProfile> list_of_profiles = new ArrayList<>();
+    private ArrayList<Task<DocumentSnapshot>> list_of_task = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.chat_fragment,container,false);
         initialise();
-        setUpRecyclerView();
+        initialiseRecyclerView();
+        getUsers();
         return currentView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
-
     private void initialise() {
-        users_list = currentView.findViewById(R.id.rvUsersList);
-        firestore = FirebaseFirestore.getInstance();
-        reference = firestore.collection("users");
+        recyclerView = currentView.findViewById(R.id.rvUsersList);
+        datastore = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    private void setUpRecyclerView() {
+    private void initialiseRecyclerView() {
+        adapter = new OpenChatsAdapter();
+        recyclerView = currentView.findViewById(R.id.rvUsersList);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+    }
 
-        Query query = reference.orderBy("username", Query.Direction.DESCENDING);
-        FirestoreRecyclerOptions<UserProfile> options
-                = new FirestoreRecyclerOptions.Builder<UserProfile>()
-                .setQuery(query, UserProfile.class)
-                .build();
+    private void getUsers() {
+        datastore.collection("users")
+                .document(currentUser.getUid())
+                .collection("openchats")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        list_of_task.clear();
+                        list_of_profiles.clear();
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                            updateView(list_of_documents);
+                        }
+                    }
+                });
+    }
 
-        adapter = new UsersAdapter(options);
+    private void updateView(List<DocumentSnapshot> list_of_documents) {
+        final ArrayList<String> list_of_uid = new ArrayList<>();
 
-        users_list.setHasFixedSize(true);
-        users_list.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        users_list.setAdapter(adapter);
+        for(DocumentSnapshot documentSnapshot : list_of_documents) {
+            list_of_uid.add(documentSnapshot.getId());
+        }
+
+        for(String uid : list_of_uid) {
+            list_of_task.add(getUser(uid));
+        }
+
+        Tasks.whenAllSuccess(list_of_task).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
+            @Override
+            public void onSuccess(List<? super DocumentSnapshot> snapShots) {
+                for (int i = 0; i < list_of_task.size(); i++) {
+                    DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
+                    UserProfile userProfile = snapshot.toObject(UserProfile.class);
+                    list_of_profiles.add(userProfile);
+                }
+                adapter.setData(list_of_profiles, list_of_uid);
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    //Get a completable future task
+    private Task<DocumentSnapshot> getUser(String uid) {
+        return datastore.collection("users")
+                .document(uid)
+                .get();
     }
 
 }

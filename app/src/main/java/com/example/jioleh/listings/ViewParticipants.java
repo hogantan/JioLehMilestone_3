@@ -67,7 +67,7 @@ public class ViewParticipants extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         JioActivity currentActivity = documentSnapshot.toObject(JioActivity.class);
 
-                        ArrayList<String> list_of_uid = currentActivity.getParticipants();
+                        final ArrayList<String> list_of_uid = currentActivity.getParticipants();
 
                         //adding completable futures into list of tasks
                         for (String uid : list_of_uid) {
@@ -83,7 +83,7 @@ public class ViewParticipants extends AppCompatActivity {
                                     UserProfile userProfile = snapshot.toObject(UserProfile.class);
                                     list_of_participants.add(userProfile);
                                 }
-                                adapter.setData(list_of_participants);
+                                adapter.setData(list_of_participants, list_of_uid);
                             }
                         });
                     }

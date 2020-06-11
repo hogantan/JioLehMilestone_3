@@ -6,6 +6,7 @@
     <color name="baseGreen">#00ffce</color>
     <color name="baseRed">#D50000</color>
     <color name="baseWhite">#FFF</color>
+    <color name="baseGrey">#9E9E9E</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="appGreen">#26FFCE</color>
     <color name="appBlack">#273A3E</color>

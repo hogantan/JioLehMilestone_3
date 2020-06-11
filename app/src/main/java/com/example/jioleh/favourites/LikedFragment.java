@@ -35,7 +35,7 @@ public class LikedFragment extends Fragment {
     private View currentView;
     private TextView emptyText;
     private RecyclerView recyclerView;
-    private ActivityAdapter adapter;
+    private FavouritesAdapter adapter;
 
     private FirebaseUser currentUser;
     private FirebaseFirestore datastore;
@@ -107,7 +107,7 @@ public class LikedFragment extends Fragment {
     }
 
     private void initialiseRecyclerView() {
-        adapter = new ActivityAdapter();
+        adapter = new FavouritesAdapter();
         recyclerView = currentView.findViewById(R.id.rvFavouriteLiked);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
