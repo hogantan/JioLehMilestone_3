@@ -191,6 +191,8 @@ public class ViewJioActivity extends AppCompatActivity {
         });
     }
 
+    //to prevent more than maximum participants
+    //disables and enables the join button accordingly
     private void checkIsFull() {
         if (join.getText().toString().equals("Join")) {
             if (current_participants == max_participants) {
@@ -295,7 +297,7 @@ public class ViewJioActivity extends AppCompatActivity {
                             setButtonVisuals(NEGATIVE, finalButton, type);
                         } else {
                             setButtonVisuals(POSITIVE, finalButton, type);
-                            checkIsFull();
+                            checkIsFull(); //after knowing the status of a button
                         }
                     }
                 });
@@ -332,7 +334,7 @@ public class ViewJioActivity extends AppCompatActivity {
 
                         host_uid = current_activity.getHost_uid();
                         setUpHostInfo(host_uid);
-                        checkIsFull();
+                        checkIsFull(); //this will respond to live changes from the database
                     }
                 });
     }

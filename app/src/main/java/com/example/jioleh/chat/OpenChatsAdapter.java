@@ -99,5 +99,4 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
             username.setText(userProfile.getUsername());
         }
     }
-
 }
