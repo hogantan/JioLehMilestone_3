@@ -35,14 +35,4 @@
         android:layout_marginLeft="14dp"
         android:layout_alignParentLeft="true" />
 
-    <Button
-        android:id="@+id/btnSingleViewChat"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="310dp"
-        android:layout_marginTop="22dp"
-        android:background="@drawable/slightly_rounded_basegreen_button"
-        android:text="Chat"
-        android:textColor="@color/baseBlack"/>
 </RelativeLayout>

@@ -41,7 +41,7 @@ import com.squareup.picasso.Picasso;
 public class ProfileFragment extends Fragment {
 
     private ViewPager2 viewPager2;
-    private TextView tv_username, tv_age, tv_gender, tv_location;
+    private TextView tv_username, tv_age, tv_gender;
     private ImageView iv_userProfileImage;
 
 
@@ -112,7 +112,6 @@ public class ProfileFragment extends Fragment {
         tv_username = view.findViewById(R.id.tv_profilePageUsername);
         tv_age = view.findViewById(R.id.tv_profilePageAge);
         tv_gender = view.findViewById(R.id.tv_profilePageGender);
-        tv_location = view.findViewById(R.id.tv_profilePageLocation);
         iv_userProfileImage = view.findViewById(R.id.iv_userProfilePageImage);
         viewPager2 = view.findViewById(R.id.userProfile_viewPager);
         viewModel = new ViewModelProvider(this).get(userProfileViewModel.class);
@@ -123,7 +122,6 @@ public class ProfileFragment extends Fragment {
         assert userProfile != null;
         tv_age.setText(userProfile.getAge());
         tv_username.setText(userProfile.getUsername());
-        tv_location.setText(userProfile.getLocation());
         tv_gender.setText(userProfile.getGender());
 
         if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl() != null) {
