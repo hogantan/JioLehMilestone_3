@@ -18,16 +18,20 @@ import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.firestore.auth.User;
 import com.squareup.picasso.Picasso;
 
 public class OtherUserView extends AppCompatActivity {
 
-    private String uid;
+    private String profileUID;
+    private String profileUsername;
     private userProfileViewModel viewModel;
     private TextView tv_username, tv_age, tv_gender, tv_location;
     private ImageView iv_ProfilePic;
+
     private Button message;
+
+    private Button btn_message, btn_review, btn_report;
+
     private Toolbar toolbar;
 
     private UserProfileViewPagerAdapter pagerAdapter;
@@ -42,17 +46,42 @@ public class OtherUserView extends AppCompatActivity {
          
 
         Intent intent = getIntent();
-        uid = intent.getStringExtra("user_id");
-        viewModel= new ViewModelProvider(this).get(userProfileViewModel.class);
+        //the intent that opens this must put extra as "user_id" the user's id
+        //this is the current profile user id not the current user
+        profileUID = intent.getStringExtra("user_id");
+        profileUsername = intent.getStringExtra("username");
 
-        viewModel.getUser(uid).observe(this, new Observer<UserProfile>() {
+
+
+        viewModel= new ViewModelProvider(this).get(userProfileViewModel.class);
+        viewModel.getUser(profileUID).observe(this, new Observer<UserProfile>() {
             @Override
             public void onChanged(UserProfile userProfile) {
                 fill(userProfile);
             }
         });
-        
-        initialiaseViewPagerAndTab();
+
+        initialiaseViewPagerAndTab(profileUID);
+
+        btn_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToMessagePage = new Intent(OtherUserView.this, MessagePage.class);
+                goToMessagePage.putExtra("user_id",profileUID);
+                goToMessagePage.putExtra("username",profileUsername);
+                startActivity(goToMessagePage);
+            }
+        });
+
+        btn_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent reviewPage = new Intent(OtherUserView.this, ReviewPage.class);
+                reviewPage.putExtra("username",profileUsername);
+                reviewPage.putExtra("user_id",profileUID);
+                startActivity(reviewPage);
+            }
+        });
 
         //Implementing a message button in user profile creates a cyclic effect
         //e.g click on user profile --> click chat --> click user profile --> click chat
@@ -69,6 +98,8 @@ public class OtherUserView extends AppCompatActivity {
             }
         });
          */
+
+
     }
 
     public void fill(UserProfile userProfile) {
@@ -88,7 +119,9 @@ public class OtherUserView extends AppCompatActivity {
         tv_gender = findViewById(R.id.tv_profilePageGender);
         tv_location = findViewById(R.id.tv_profilePageLocation);
         iv_ProfilePic = findViewById(R.id.iv_userProfilePageImage);
-        message = findViewById(R.id.message_other_user);
+        btn_message = findViewById(R.id.message_other_user);
+        btn_review = findViewById(R.id.write_review_other_user);
+        btn_report = findViewById(R.id.report_other_user);
     }
 
     private void initialiseToolbar() {
@@ -102,7 +135,7 @@ public class OtherUserView extends AppCompatActivity {
         });
     }
 
-    private void initialiaseViewPagerAndTab() {
+    private void initialiaseViewPagerAndTab(String uid) {
         viewPager2 = findViewById(R.id.userProfile_viewPager);
         pagerAdapter = new UserProfileViewPagerAdapter(this,uid);
         viewPager2.setAdapter(pagerAdapter);
@@ -125,7 +158,6 @@ public class OtherUserView extends AppCompatActivity {
                         break;
                     }
                 }
-
             }
         });
 

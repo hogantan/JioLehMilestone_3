@@ -2,65 +2,87 @@ package com.example.jioleh.userprofile;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jioleh.R;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserProfileReviewsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class UserProfileReviewsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private  String uid;
+    private List<Review> lst;
 
     public UserProfileReviewsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserProfileReviewsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static UserProfileReviewsFragment newInstance(String param1, String param2) {
-        UserProfileReviewsFragment fragment = new UserProfileReviewsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public UserProfileReviewsFragment(String uid) {
+        // Required empty public constructor
+        this.uid = uid;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+
+    RecyclerView Rv_Review;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile_reviews, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_profile_reviews, container, false);
+
+        Rv_Review = view.findViewById(R.id.review_recyclerView);
+
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //initRv();
+    }
+
+    public void initRv() {
+        Rv_Review.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        FirebaseFirestore.getInstance().collection("users")
+                .document(this.uid)
+                .collection("Reviews")
+                .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if(e!=null){
+
+                        } else if(queryDocumentSnapshots !=null){
+                            lst = new ArrayList<>();
+                            List<DocumentSnapshot> lst1 = queryDocumentSnapshots.getDocuments();
+
+                            for (DocumentSnapshot dc: lst1) {
+                                Review review = dc.toObject(Review.class);
+                                if(review!=null) {
+                                    lst.add(review);
+                                }
+                            }
+                        }
+                    }
+                });
+        ReviewAdapter reviewAdapter = new ReviewAdapter(lst);
+        Rv_Review.setAdapter(reviewAdapter);
+
     }
 }

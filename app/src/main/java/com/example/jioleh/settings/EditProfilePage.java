@@ -199,7 +199,7 @@ public class EditProfilePage extends AppCompatActivity {
         til_contact.getEditText().setText(profile.getContact());
         til_bio.getEditText().setText(profile.getBio());
         til_location.getEditText().setText(profile.getLocation());
-        til_interests.getEditText().setText(profile.getLocation());
+        til_interests.getEditText().setText(profile.getInterests());
 
         if (!profile.getImageUrl().equals("") && profile.getImageUrl()!=null) {
             Picasso.get().load(profile.getImageUrl()).into(iv_ImageView);
