@@ -4,69 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userprofile.ReviewPage">
+    tools:context=".userprofile.ReportUserPage">
 
     <include
-        android:id="@+id/review_top_bar"
-        layout="@layout/user_profile_top_bar"
-        />
+        android:id="@+id/report_user_top_bar"
+        layout="@layout/user_profile_top_bar">
+
+    </include>
 
     <TextView
-        android:id="@+id/review_header"
-        android:layout_width="wrap_content"
         android:textColor="@color/White"
+        android:id="@+id/report_header"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60sp"
-        android:text="How would you rate "
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        android:text="What would you like to report about "
         android:textSize="32sp"
         />
     <TextView
-        android:textColor="@color/White"
-        android:id="@+id/review_username"
+        android:id="@+id/report_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20sp"
         android:layout_centerHorizontal="true"
         android:textSize="32sp"
+        android:textColor="@color/White"
         android:text="username123"
-        android:layout_below="@+id/review_header"/>
+        android:layout_below="@+id/report_header"/>
 
-    <RatingBar
-        android:id="@+id/review_rating_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/review_username"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40sp"
-        android:numStars="5"
-        android:stepSize=".5"
-        android:theme="@style/RatingBar"/>
 
     <EditText
-        android:id="@+id/review_words"
+        android:id="@+id/report_words"
         android:layout_width="294dp"
         android:layout_height="211dp"
         android:background="@drawable/review_edit_text"
-        android:layout_below="@id/review_rating_bar"
+        android:layout_below="@id/report_username"
         android:layout_marginTop="20sp"
         android:paddingTop="4sp"
         android:paddingLeft="8sp"
         android:paddingRight="8sp"
         android:gravity="top|start"
         android:layout_centerHorizontal="true"
-        android:hint="Write your review here!"/>
+        android:hint="Tell us about what happen"/>
 
     <Button
-        android:id="@+id/review_submit"
+        android:id="@+id/report_submit"
         android:layout_width="126dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/review_words"
+        android:layout_below="@+id/report_words"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40sp"
         android:background="@drawable/btn_round_rectangle"
-        android:text="Submit"
+        android:text="Report"
         android:textColor="@color/appBlack"/>
 
 </RelativeLayout>

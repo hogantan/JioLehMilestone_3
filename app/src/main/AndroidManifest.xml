@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".userprofile.ReviewPage"></activity>
+        <activity android:name=".userprofile.ReportUserPage"></activity>
+        <activity android:name=".userprofile.ReviewPage" />
         <activity android:name=".listings.ViewParticipants" />
         <activity android:name=".listings.ViewJioActivity" />
         <activity android:name=".userprofile.OtherUserView" />

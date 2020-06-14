@@ -2,6 +2,7 @@ package com.example.jioleh.userprofile;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,8 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 
 import com.example.jioleh.R;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,23 +25,25 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class UserProfileReviewsFragment extends Fragment {
-    private  String uid;
+    private String uid;
     private List<Review> lst;
+    private float avg;
 
     public UserProfileReviewsFragment() {
         // Required empty public constructor
     }
 
     public UserProfileReviewsFragment(String uid) {
-        // Required empty public constructor
         this.uid = uid;
     }
 
 
     RecyclerView Rv_Review;
+    RatingBar rb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +54,7 @@ public class UserProfileReviewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_profile_reviews, container, false);
 
         Rv_Review = view.findViewById(R.id.review_recyclerView);
+        initRv();
 
         return view;
     }
@@ -54,35 +62,45 @@ public class UserProfileReviewsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //initRv();
+
     }
 
     public void initRv() {
+        Rv_Review.setHasFixedSize(true);
         Rv_Review.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        lst = new ArrayList<>();
 
         FirebaseFirestore.getInstance().collection("users")
                 .document(this.uid)
                 .collection("Reviews")
-                .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if(e!=null){
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                        } else if(queryDocumentSnapshots !=null){
-                            lst = new ArrayList<>();
-                            List<DocumentSnapshot> lst1 = queryDocumentSnapshots.getDocuments();
-
-                            for (DocumentSnapshot dc: lst1) {
+                        if (task.isSuccessful()) {
+                            for (DocumentSnapshot dc : task.getResult()) {
                                 Review review = dc.toObject(Review.class);
-                                if(review!=null) {
+                                if (review != null) {
                                     lst.add(review);
                                 }
                             }
+
                         }
                     }
+                })
+                .continueWithTask(new Continuation<QuerySnapshot, Task<Review>>() {
+                    @Override
+                    public Task<Review> then(@NonNull Task<QuerySnapshot> task) throws Exception {
+                        ReviewAdapter reviewAdapter = new ReviewAdapter();
+                        reviewAdapter.setData(lst);
+                        Rv_Review.setAdapter(reviewAdapter);
+                        return null;
+                    }
                 });
-        ReviewAdapter reviewAdapter = new ReviewAdapter(lst);
-        Rv_Review.setAdapter(reviewAdapter);
+
 
     }
+
+
 }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
@@ -42,7 +43,7 @@ public class OtherUserView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_user_view);
         initialise();
-        initialiseToolbar();
+
          
 
         Intent intent = getIntent();
@@ -51,6 +52,7 @@ public class OtherUserView extends AppCompatActivity {
         profileUID = intent.getStringExtra("user_id");
         profileUsername = intent.getStringExtra("username");
 
+        initialiseToolbar();
 
 
         viewModel= new ViewModelProvider(this).get(userProfileViewModel.class);
@@ -83,22 +85,16 @@ public class OtherUserView extends AppCompatActivity {
             }
         });
 
-        //Implementing a message button in user profile creates a cyclic effect
-        //e.g click on user profile --> click chat --> click user profile --> click chat
-        //shifted message to ViewParticipants as the access point to chatting which makes more
-        //sense because this is the only way to see another users profile in the first place
-        /*
-        message.setOnClickListener(new View.OnClickListener() {
+        btn_report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
-                nextActivity.putExtra("username", tv_username.getText().toString());
-                nextActivity.putExtra("user_id", uid);
-                startActivity(nextActivity);
+
+                Intent reportPage = new Intent(OtherUserView.this,ReportUserPage.class);
+                reportPage.putExtra("username",profileUsername);
+                reportPage.putExtra("user_id",profileUID);
+                startActivity(reportPage);
             }
         });
-         */
-
 
     }
 
@@ -127,6 +123,7 @@ public class OtherUserView extends AppCompatActivity {
     private void initialiseToolbar() {
         toolbar = findViewById(R.id.include_top_app_bar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle(this.profileUsername);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

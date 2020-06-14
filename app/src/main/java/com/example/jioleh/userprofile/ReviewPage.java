@@ -2,9 +2,11 @@ package com.example.jioleh.userprofile;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.example.jioleh.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +33,7 @@ public class ReviewPage extends AppCompatActivity {
     private RatingBar ratingBar;
     private EditText review_words;
     private Button btn_submit_review;
+    private Toolbar tb_user_profile;
 
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -43,6 +47,7 @@ public class ReviewPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_page);
         initialise();
+        initTb();
 
         Intent intent = getIntent();
         String other_username = intent.getStringExtra("username");
@@ -101,6 +106,17 @@ public class ReviewPage extends AppCompatActivity {
         ratingBar = findViewById(R.id.review_rating_bar);
         review_words = findViewById(R.id.review_words);
         btn_submit_review = findViewById(R.id.review_submit);
+        tb_user_profile = findViewById(R.id.review_top_bar);
+    }
+
+    public void initTb() {
+        tb_user_profile.setTitle("Review");
+        tb_user_profile.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     public LiveData<UserProfile> fetchCurrentUserDetails(String currentUserId) {
