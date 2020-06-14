@@ -48,8 +48,6 @@
         android:layout_marginLeft="10sp"
         android:layout_marginTop="20sp"
         android:src="@drawable/default_picture"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp"
         android:layout_marginStart="10sp" />
 
     <TextView
@@ -58,9 +56,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="40sp"
         android:textColor="@color/White"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:layout_toEndOf="@+id/iv_userProfilePageImage"
         android:layout_toRightOf="@+id/iv_userProfilePageImage" />
     <TextView
@@ -72,8 +70,7 @@
         android:textColor="@color/White"
         android:layout_toRightOf="@+id/iv_userProfilePageImage"
         android:layout_below="@+id/tv_profilePageUsername"
-        android:textSize="20sp"
-         />
+        android:textSize="14sp" />
 
     <TextView
         android:text="TestingAbc123"
@@ -84,22 +81,11 @@
         android:layout_below="@+id/tv_profilePageAge"
         android:layout_toRightOf="@+id/iv_userProfilePageImage"
         android:textColor="@color/White"
-        android:textSize="20sp" />
-
-    <TextView
-        android:text="TestingAbc123"
-        android:id="@+id/tv_profilePageLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/White"
-        android:layout_toRightOf="@+id/iv_userProfilePageImage"
-        android:layout_marginTop="5sp"
-        android:layout_below="@+id/tv_profilePageGender"
-        android:textSize="20sp" />
-
+        android:textSize="14sp" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/userProfile_viewPager"
+        android:layout_marginBottom="56dp"
         android:background="@color/appBlack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -24,8 +24,9 @@ import com.squareup.picasso.Picasso;
 public class OtherUserView extends AppCompatActivity {
 
     private String uid;
+    private String imageUrl;
     private userProfileViewModel viewModel;
-    private TextView tv_username, tv_age, tv_gender, tv_location;
+    private TextView tv_username, tv_age, tv_gender;
     private ImageView iv_ProfilePic;
     private Button message;
     private Toolbar toolbar;
@@ -41,7 +42,7 @@ public class OtherUserView extends AppCompatActivity {
         initialiseToolbar();
          
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         uid = intent.getStringExtra("user_id");
         viewModel= new ViewModelProvider(this).get(userProfileViewModel.class);
 
@@ -54,31 +55,30 @@ public class OtherUserView extends AppCompatActivity {
         
         initialiaseViewPagerAndTab();
 
-        //Implementing a message button in user profile creates a cyclic effect
-        //e.g click on user profile --> click chat --> click user profile --> click chat
-        //shifted message to ViewParticipants as the access point to chatting which makes more
-        //sense because this is the only way to see another users profile in the first place
-        /*
         message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
-                nextActivity.putExtra("username", tv_username.getText().toString());
-                nextActivity.putExtra("user_id", uid);
-                startActivity(nextActivity);
+                if (intent.getBooleanExtra("not_from_message_page", false)) {
+                    onBackPressed();
+                } else {
+                    Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
+                    nextActivity.putExtra("username", tv_username.getText().toString());
+                    nextActivity.putExtra("user_id", uid);
+                    nextActivity.putExtra("image_url", imageUrl);
+                    nextActivity.putExtra("not_from_other_user_view", true);
+                    startActivity(nextActivity);
+                }
             }
         });
-         */
     }
 
     public void fill(UserProfile userProfile) {
         tv_username.setText(userProfile.getUsername());
         tv_age.setText(userProfile.getAge());
         tv_gender.setText(userProfile.getGender());
-        tv_location.setText(userProfile.getLocation());
-
+        imageUrl = userProfile.getImageUrl();
         if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl() != null) {
-            Picasso.get().load(userProfile.getImageUrl()).into(iv_ProfilePic);
+            Picasso.get().load(imageUrl).into(iv_ProfilePic);
         }
     }
 
@@ -86,7 +86,6 @@ public class OtherUserView extends AppCompatActivity {
         tv_username = findViewById(R.id.tv_profilePageUsername);
         tv_age = findViewById(R.id.tv_profilePageAge);
         tv_gender = findViewById(R.id.tv_profilePageGender);
-        tv_location = findViewById(R.id.tv_profilePageLocation);
         iv_ProfilePic = findViewById(R.id.iv_userProfilePageImage);
         message = findViewById(R.id.message_other_user);
     }

@@ -67,7 +67,7 @@
         android:layout_toRightOf="@+id/iv_userProfilePageImage"
         android:text="UserName123"
         android:textColor="@color/White"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
     <TextView
         android:id="@+id/tv_profilePageAge"
         android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
         android:textColor="@color/White"
         android:layout_toRightOf="@+id/iv_userProfilePageImage"
         android:layout_below="@+id/tv_profilePageUsername"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:text="22 yrs old" />
 
     <TextView
@@ -88,7 +88,7 @@
         android:layout_toRightOf="@+id/iv_userProfilePageImage"
         android:text="Male"
         android:textColor="@color/White"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv_profilePageLocation"
@@ -98,7 +98,7 @@
         android:layout_toRightOf="@+id/iv_userProfilePageImage"
         android:layout_marginTop="5sp"
         android:layout_below="@+id/tv_profilePageGender"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:text="Singapore" />
 
 
