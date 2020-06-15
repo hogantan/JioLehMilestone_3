@@ -3,6 +3,7 @@ package com.example.jioleh.listings;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class JioActivity {
@@ -23,6 +24,7 @@ public class JioActivity {
     private int min_participants;
     private int max_participants;
     private ArrayList<String> participants;
+    private ArrayList<String> title_array;
     @ServerTimestamp
     private Date time_created;
 
@@ -42,8 +44,19 @@ public class JioActivity {
         this.min_participants = min_participants;
         this.max_participants = max_participants;
         this.participants = new ArrayList<>();
+        this.title_array = new ArrayList<>();
+        fillArray(this.title_array, this.title);
         this.current_participants = 0;
         this.imageUrl = "";
+    }
+
+    private void fillArray(ArrayList<String> array, String input) {
+        String[] words = input.toLowerCase().split("\\s+");
+        for (int i = 0; i < words.length; i++) {
+            words[i] = words[i].replaceAll("[^\\w]", "");
+        }
+        array.addAll(Arrays.asList(words));
+        array.add("");
     }
 
     @Override
@@ -72,6 +85,14 @@ public class JioActivity {
     }
 
     public JioActivity(){}
+
+    public ArrayList<String> getTitle_array() {
+        return title_array;
+    }
+
+    public void setTitle_array(ArrayList<String> title_array) {
+        this.title_array = title_array;
+    }
 
     public ArrayList<String> getParticipants() {
         return participants;

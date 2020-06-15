@@ -405,7 +405,7 @@ public class PostingPage
 
         //Storing activity id in user who created it
         HashMap<String, String> input_to_user = new HashMap<>();
-        input_to_user.put("Title", jioActivity.getDetails());
+        input_to_user.put("Title", jioActivity.getTitle());
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(currentUser.getUid())
@@ -492,7 +492,7 @@ public class PostingPage
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         if (parent.getItemAtPosition(position).equals("Please select one")) {
-            //do nothing
+            spinner_input = null;
         } else {
             //do something
             spinner_input = parent.getItemAtPosition(position).toString();

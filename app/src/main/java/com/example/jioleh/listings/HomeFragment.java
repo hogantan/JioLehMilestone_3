@@ -1,11 +1,13 @@
 package com.example.jioleh.listings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,14 +17,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jioleh.PostLoginPage;
 import com.example.jioleh.R;
 
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private EditText searchBar;
-    private Button searchIcon;
+    private TextView search;
     private RecyclerView activity_list;
 
     //private FirebaseFirestore datastore;
@@ -40,6 +42,15 @@ public class HomeFragment extends Fragment {
         currentView = inflater.inflate(R.layout.fragment_home,container,false);
         initialise();
         initialiseRecyclerView();
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent(getContext(), SearchJioActivity.class);
+                startActivity(nextActivity);
+            }
+        });
+
         return currentView;
     }
 /*
@@ -61,7 +72,7 @@ public class HomeFragment extends Fragment {
  */
 
     private void initialise() {
-        searchBar = currentView.findViewById(R.id.etSearchActivity);
+        search = currentView.findViewById(R.id.tvSearchActivity);
         //datastore = FirebaseFirestore.getInstance();
     }
 

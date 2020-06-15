@@ -6,35 +6,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#202124">
 
-    <EditText
-        android:id="@+id/etSearchActivity"
+    <TextView
+        android:id="@+id/tvSearchActivity"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/slightly_rounded_basegreen_button"
         android:ems="10"
-        android:hint="Search JioLeh"
-        android:inputType="textPersonName"
-        android:background="@drawable/rectangle_outline_text_box"
-        android:textSize="14sp"
+        android:gravity="center"
         android:padding="8dp"
+        android:text="Search JioLeh!"
         android:textColor="@color/baseBlack"
+        android:textStyle="bold"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.175"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="300dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/ic_baseline_search_basegreen"
-        app:layout_constraintBottom_toBottomOf="@+id/etSearchActivity"
-        app:layout_constraintEnd_toEndOf="@+id/etSearchActivity"
-        app:layout_constraintStart_toStartOf="@+id/etSearchActivity"
-        app:layout_constraintTop_toTopOf="@+id/etSearchActivity" />
 
     <View
         android:layout_width="match_parent"
