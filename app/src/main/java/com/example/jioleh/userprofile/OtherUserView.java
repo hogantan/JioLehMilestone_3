@@ -46,13 +46,12 @@ public class OtherUserView extends AppCompatActivity {
         setContentView(R.layout.activity_other_user_view);
         initialise();
 
-     
-        Intent intent = getIntent();
+
+        final Intent intent = getIntent();
         //the intent that opens this must put extra as "user_id" the user's id
         //this is the current profile user id not the current user
         profileUID = intent.getStringExtra("user_id");
         profileUsername = intent.getStringExtra("username");
-        final Intent intent = getIntent();
         uid = intent.getStringExtra("user_id");
         viewModel= new ViewModelProvider(this).get(userProfileViewModel.class);
 
@@ -100,11 +99,9 @@ public class OtherUserView extends AppCompatActivity {
             }
         });
 
-=======
-        
-        initialiaseViewPagerAndTab();
+        initialiaseViewPagerAndTab(profileUID);
 
-        message.setOnClickListener(new View.OnClickListener() {
+        btn_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (intent.getBooleanExtra("not_from_message_page", false)) {
