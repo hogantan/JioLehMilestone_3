@@ -144,6 +144,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
             userProfile = new UserProfile(username, contact, gender
                     , age, bio, interests, location);
 
+
             uploadFile(userProfile, mImageUri);
         }
     }
