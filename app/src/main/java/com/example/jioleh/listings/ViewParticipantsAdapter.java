@@ -58,7 +58,6 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
 
         private TextView username;
         private ImageView displayImage;
-        private Button chat;
         private String user_id;
         private String imageUrl;
 
@@ -66,15 +65,13 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
             super(itemView);
             username = itemView.findViewById(R.id.tvSingleUsersUsername);
             displayImage = itemView.findViewById(R.id.ivUserImage);
-            chat = itemView.findViewById(R.id.btnSingleViewChat);
 
-            chat.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent nextActivity = new Intent(itemView.getContext(), MessagePage.class);
+                    Intent nextActivity = new Intent(itemView.getContext(), OtherUserView.class);
                     nextActivity.putExtra("username", username.getText().toString());
                     nextActivity.putExtra("user_id", user_id);
-                    nextActivity.putExtra("image_url", imageUrl);
                     itemView.getContext().startActivity(nextActivity);
                 }
             });

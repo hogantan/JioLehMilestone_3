@@ -25,8 +25,10 @@ public class OtherUserView extends AppCompatActivity {
 
     private String profileUID;
     private String profileUsername;
+    private String uid;
+    private String imageUrl;
     private userProfileViewModel viewModel;
-    private TextView tv_username, tv_age, tv_gender, tv_location;
+    private TextView tv_username, tv_age, tv_gender;
     private ImageView iv_ProfilePic;
 
     private Button message;
@@ -44,13 +46,15 @@ public class OtherUserView extends AppCompatActivity {
         setContentView(R.layout.activity_other_user_view);
         initialise();
 
-         
-
+     
         Intent intent = getIntent();
         //the intent that opens this must put extra as "user_id" the user's id
         //this is the current profile user id not the current user
         profileUID = intent.getStringExtra("user_id");
         profileUsername = intent.getStringExtra("username");
+        final Intent intent = getIntent();
+        uid = intent.getStringExtra("user_id");
+        viewModel= new ViewModelProvider(this).get(userProfileViewModel.class);
 
         initialiseToolbar();
 
@@ -96,16 +100,34 @@ public class OtherUserView extends AppCompatActivity {
             }
         });
 
+=======
+        
+        initialiaseViewPagerAndTab();
+
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (intent.getBooleanExtra("not_from_message_page", false)) {
+                    onBackPressed();
+                } else {
+                    Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
+                    nextActivity.putExtra("username", tv_username.getText().toString());
+                    nextActivity.putExtra("user_id", uid);
+                    nextActivity.putExtra("image_url", imageUrl);
+                    nextActivity.putExtra("not_from_other_user_view", true);
+                    startActivity(nextActivity);
+                }
+            }
+        });
     }
 
     public void fill(UserProfile userProfile) {
         tv_username.setText(userProfile.getUsername());
         tv_age.setText(userProfile.getAge());
         tv_gender.setText(userProfile.getGender());
-        tv_location.setText(userProfile.getLocation());
-
+        imageUrl = userProfile.getImageUrl();
         if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl() != null) {
-            Picasso.get().load(userProfile.getImageUrl()).into(iv_ProfilePic);
+            Picasso.get().load(imageUrl).into(iv_ProfilePic);
         }
     }
 
@@ -113,7 +135,6 @@ public class OtherUserView extends AppCompatActivity {
         tv_username = findViewById(R.id.tv_profilePageUsername);
         tv_age = findViewById(R.id.tv_profilePageAge);
         tv_gender = findViewById(R.id.tv_profilePageGender);
-        tv_location = findViewById(R.id.tv_profilePageLocation);
         iv_ProfilePic = findViewById(R.id.iv_userProfilePageImage);
         btn_message = findViewById(R.id.message_other_user);
         btn_review = findViewById(R.id.write_review_other_user);

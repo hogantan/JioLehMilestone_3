@@ -69,6 +69,7 @@ public class ViewJioActivity extends AppCompatActivity {
     //private RecyclerView current_participants;
     private Button join;
     private Button like;
+    private boolean buttonFlag;
 
     private Intent intent;
     private String activity_id;
@@ -100,9 +101,9 @@ public class ViewJioActivity extends AppCompatActivity {
         initialise();
         initialiseToolbar();
         //getStatus is called onCreate to determine what the visuals of the buttons are as well as to determine isFirstTime
-        getActivityInfo();
         getButtonStatus(JOIN);
         getButtonStatus(LIKE);
+        getActivityInfo();
 
         join.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +172,7 @@ public class ViewJioActivity extends AppCompatActivity {
         minimum = findViewById(R.id.tvViewDisplayMinimum);
         join = findViewById(R.id.btnViewJoin);
         like = findViewById(R.id.btnTopBarLike);
+        buttonFlag = false;
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         datastore = FirebaseFirestore.getInstance();
@@ -194,17 +196,22 @@ public class ViewJioActivity extends AppCompatActivity {
     //to prevent more than maximum participants
     //disables and enables the join button accordingly
     private void checkIsFull() {
-        if (join.getText().toString().equals("Join")) {
-            if (current_participants == max_participants) {
-                join.setEnabled(false);
-                join.setText("Full");
-                join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegrey_button));
-            }
-        } else {
-            if (current_participants < max_participants) {
+        if (buttonFlag) {
+            if (join.getText().toString().equals("Join")) {
+                if (current_participants == max_participants) {
+                    join.setEnabled(false);
+                    join.setText("Full");
+                    join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegrey_button));
+                }
+            } else if (join.getText().toString().equals("Full")){
+                if (current_participants < max_participants) {
+                    join.setEnabled(true);
+                    join.setText("Join");
+                    join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegreen_button));
+                }
+            } else {
+                System.out.println("here3");
                 join.setEnabled(true);
-                join.setText("Join");
-                join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegreen_button));
             }
         }
     }
@@ -293,12 +300,15 @@ public class ViewJioActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        System.out.println("here2");
                         if (documentSnapshot.exists()) {
                             setButtonVisuals(NEGATIVE, finalButton, type);
                         } else {
                             setButtonVisuals(POSITIVE, finalButton, type);
-                            checkIsFull(); //after knowing the status of a button
                         }
+                        buttonFlag = true;
+                        checkIsFull();
+                        System.out.println(join.getText().toString());
                     }
                 });
     }
@@ -334,6 +344,8 @@ public class ViewJioActivity extends AppCompatActivity {
 
                         host_uid = current_activity.getHost_uid();
                         setUpHostInfo(host_uid);
+                        System.out.println("here");
+                        System.out.println(join.getText().toString());
                         checkIsFull(); //this will respond to live changes from the database
                     }
                 });

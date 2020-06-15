@@ -3,30 +3,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/baseBlack"
     tools:context="userprofile.UserProfileAboutMeFragment">
-
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/ivAboutMeLocation"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="37dp"
+            android:layout_marginLeft="15sp"
+            android:background="@drawable/ic_baseline_home_work_basegreen">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/tvAboutMeLocation"
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivAboutMeLocation"
+            android:paddingLeft="10sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:background="@drawable/round_text_box"
+            android:textColor="@color/baseWhite"
+            android:textSize="14sp"
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="15sp">
+        </TextView>
+
+        <ImageView
+            android:id="@+id/ivAboutMeContact"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/ivAboutMeLocation"
+            android:layout_marginTop="37dp"
+            android:layout_marginLeft="15sp"
+            android:background="@drawable/ic_baseline_phone_basegreen">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/tvAboutMeContact"
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ivAboutMeContact"
+            android:paddingLeft="10sp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_below="@+id/tvAboutMeLocation"
+            android:background="@drawable/round_text_box"
+            android:textColor="@color/baseWhite"
+            android:textSize="14sp"
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="15sp">
+        </TextView>
+
         <TextView
             android:id="@+id/bio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/ivAboutMeContact"
+            android:layout_marginTop="30dp"
             android:layout_marginLeft="15sp"
-            android:text="Biography"
+            android:text="Bio"
+            android:textStyle="bold"
             android:textColor="@color/offGreen"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/bio_fill"
-            android:layout_width="379dp"
-            android:layout_height="110dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/bio"
             android:layout_centerHorizontal="true"
-            android:textSize="24sp"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
             android:textColor="@color/White"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:paddingLeft="20sp"
             android:paddingRight="20sp"
             android:background="@drawable/round_text_box"
@@ -37,24 +93,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/bio_fill"
+            android:layout_marginTop="30dp"
             android:layout_marginLeft="15sp"
             android:text="Interests"
-            android:textColor="@color/offGreen"
-            android:textSize="30sp" />
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/offGreen" />
 
         <TextView
             android:id="@+id/Interest_box"
-            android:layout_width="379dp"
-            android:layout_height="110dp"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/Interests"
-            android:textSize="24sp"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/White"
             android:layout_centerHorizontal="true"
             android:background="@drawable/round_text_box"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:paddingLeft="20sp"
-            android:paddingRight="20sp"
-            />
+            android:paddingRight="20sp" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/baseBlack"
+            android:layout_below="@+id/Interest_box"
+            >
+        </View>
     </RelativeLayout>
-
-
 </ScrollView>

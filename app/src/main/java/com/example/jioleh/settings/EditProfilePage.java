@@ -3,6 +3,7 @@ package com.example.jioleh.settings;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,9 +44,10 @@ public class EditProfilePage extends AppCompatActivity {
     private TextInputLayout til_bio;
     private TextInputLayout til_location;
     private TextInputLayout til_interests;
-    private Button btn_EditProfile;
+    private Button confirmEdit;
     private ImageView iv_ImageView;
     private ImageButton ic_camera;
+    private Toolbar toolbar;
 
     private UserProfile oldUserProfile;
     private UserProfile newUserProfile;
@@ -67,6 +69,7 @@ public class EditProfilePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_time_user_page);
         initialise();
+        initialiseToolbar();
         getUserProfile();
 
         ic_camera.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +79,7 @@ public class EditProfilePage extends AppCompatActivity {
             }
         });
 
-        btn_EditProfile.setOnClickListener(new View.OnClickListener() {
+        confirmEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditProfile();
@@ -91,17 +94,27 @@ public class EditProfilePage extends AppCompatActivity {
         til_gender = findViewById(R.id.gender);
         til_age = findViewById(R.id.age);
         til_bio = findViewById(R.id.bio);
-        btn_EditProfile = findViewById(R.id.btn_createProfile);
-        btn_EditProfile.setText("Edit Profile");
         iv_ImageView = findViewById(R.id.image_view);
         ic_camera = findViewById(R.id.ic_camera);
         til_interests = findViewById(R.id.Interest);
         til_location = findViewById(R.id.Location);
+        confirmEdit = findViewById(R.id.btnConfirmEdit);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //the storage file for userProfileImage
         storageReference = FirebaseStorage.getInstance().getReference("userProfileImage");
+    }
+
+    private void initialiseToolbar() {
+        toolbar = findViewById(R.id.tbTopBar);
+        toolbar.setTitle("");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void EditProfile() {
@@ -113,10 +126,14 @@ public class EditProfilePage extends AppCompatActivity {
         String interests = til_interests.getEditText().getText().toString();
         String location = til_location.getEditText().getText().toString();
 
-        if (!validateFields(til_username) | !validateFields(til_contact) | !validateFields(til_gender)
-                | !validateFields(til_location) | !validateFields(til_bio) | !validateFields(til_interests)) {
+        if (!validateFields(til_username) | !validateFields(til_age) | !validateFields(til_gender)) {
             alertDialog();
         } else {
+
+            if (checkAge(til_age)) {
+                Toast.makeText(this, "Please key in an appropriate age", Toast.LENGTH_SHORT).show();
+                return;
+            }
             newUserProfile = new UserProfile(username, contact, gender
                     , age, bio, interests, location);
 
@@ -124,9 +141,17 @@ public class EditProfilePage extends AppCompatActivity {
                 newUserProfile.setImageUrl(oldUserProfile.getImageUrl());
                 putInFirestore(newUserProfile);
             } else {
-
                 uploadFile(newUserProfile, mImageUri);
             }
+        }
+    }
+
+    //Benchmark set as 122 as oldest recorded person is 122 lol
+    private boolean checkAge(TextInputLayout til) {
+        if (Integer.parseInt(til.getEditText().getText().toString()) > 122) {
+            return true;
+        } else {
+            return false;
         }
     }
 

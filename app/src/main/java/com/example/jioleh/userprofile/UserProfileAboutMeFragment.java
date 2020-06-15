@@ -37,6 +37,8 @@ public class UserProfileAboutMeFragment extends Fragment {
 
     private TextView tv_bio;
     private TextView tv_interests;
+    private TextView tv_location;
+    private TextView tv_contact;
 
     private String uid;
 
@@ -83,6 +85,8 @@ public class UserProfileAboutMeFragment extends Fragment {
 
         tv_bio = view.findViewById(R.id.bio_fill);
         tv_interests = view.findViewById(R.id.Interest_box);
+        tv_location = view.findViewById(R.id.tvAboutMeLocation);
+        tv_contact = view.findViewById(R.id.tvAboutMeContact);
 
 
         userProfileViewModel viewModel = new ViewModelProvider(this).get(userProfileViewModel.class);
@@ -102,6 +106,7 @@ public class UserProfileAboutMeFragment extends Fragment {
     private void fillBioAndInterest(UserProfile userProfile) {
         tv_bio.setText(userProfile.getBio());
         tv_interests.setText(userProfile.getInterests());
-
+        tv_location.setText(userProfile.getLocation());
+        tv_contact.setText(userProfile.getContact());
     }
 }

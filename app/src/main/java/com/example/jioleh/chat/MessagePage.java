@@ -96,10 +96,15 @@ public class MessagePage extends AppCompatActivity {
     }
 
     private void goToUserProfile() {
-        Intent nextActivity = new Intent(MessagePage.this, OtherUserView.class);
-        nextActivity.putExtra("username", username.getText().toString());
-        nextActivity.putExtra("user_id", intent.getStringExtra("user_id"));
-        startActivity(nextActivity);
+        if (intent.getBooleanExtra("not_from_other_user_view", false)) {
+            onBackPressed();
+        } else {
+            Intent nextActivity = new Intent(MessagePage.this, OtherUserView.class);
+            nextActivity.putExtra("username", username.getText().toString());
+            nextActivity.putExtra("user_id", intent.getStringExtra("user_id"));
+            nextActivity.putExtra("not_from_message_page", true);
+            startActivity(nextActivity);
+        }
     }
 
     private void onClickSend() {

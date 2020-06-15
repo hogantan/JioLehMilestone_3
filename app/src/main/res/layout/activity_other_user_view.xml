@@ -101,12 +101,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="20sp"
+            android:layout_marginTop="40sp"
             android:layout_toEndOf="@+id/iv_userProfilePageImage"
             android:layout_toRightOf="@+id/iv_userProfilePageImage"
             android:text="UsernameTest"
             android:textColor="@color/White"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_profilePageAge"
@@ -117,7 +117,7 @@
             android:layout_toRightOf="@+id/iv_userProfilePageImage"
             android:text="Age Test"
             android:textColor="@color/White"
-            android:textSize="20sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tv_profilePageGender"
@@ -128,18 +128,7 @@
             android:layout_toRightOf="@+id/iv_userProfilePageImage"
             android:text="GenderTest"
             android:textColor="@color/White"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/tv_profilePageLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_profilePageGender"
-            android:layout_marginTop="5sp"
-            android:layout_toRightOf="@+id/iv_userProfilePageImage"
-            android:text="LocationTest"
-            android:textColor="@color/White"
-            android:textSize="20sp" />
+            android:textSize="14sp" />
 
 
         <androidx.viewpager2.widget.ViewPager2

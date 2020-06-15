@@ -3,6 +3,7 @@ package com.example.jioleh.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jioleh.PostLoginPage;
@@ -40,11 +42,13 @@ public class FirstTimeUserPage extends AppCompatActivity {
     private TextInputLayout til_gender;
     private TextInputLayout til_age;
     private TextInputLayout til_bio;
-    private Button btn_CreateProfile;
     private ImageView iv_ImageView;
     private ImageButton ic_camera;
     private TextInputLayout til_location;
     private TextInputLayout til_interests;
+    private Button confirmEdit;
+    private TextView toolbarTitle;
+    private Toolbar toolbar;
 
 
     private UserProfile userProfile;
@@ -67,6 +71,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_time_user_page);
         initialise();
+        initialiseToolbar();
 
         ic_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +80,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
             }
         });
 
-        btn_CreateProfile.setOnClickListener(new View.OnClickListener() {
+        confirmEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //prevent users from accidentally clicking button and upload duplicate image
@@ -95,15 +100,27 @@ public class FirstTimeUserPage extends AppCompatActivity {
         til_gender = findViewById(R.id.gender);
         til_age = findViewById(R.id.age);
         til_bio = findViewById(R.id.bio);
-        btn_CreateProfile = findViewById(R.id.btn_createProfile);
+        confirmEdit = findViewById(R.id.btnConfirmEdit);
         iv_ImageView = findViewById(R.id.image_view);
         ic_camera = findViewById(R.id.ic_camera);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         til_interests = findViewById(R.id.Interest);
         til_location = findViewById(R.id.Location);
+        toolbarTitle = findViewById(R.id.tbTitle);
 
         //the storage file for userProfileImage
         storageReference = FirebaseStorage.getInstance().getReference("userProfileImage");
+    }
+
+    private void initialiseToolbar() {
+        toolbar = findViewById(R.id.tbTopBar);
+        toolbarTitle.setText("Create Profile");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     public void createProfile() {
@@ -115,15 +132,29 @@ public class FirstTimeUserPage extends AppCompatActivity {
         String interests = til_interests.getEditText().getText().toString();
         String location = til_location.getEditText().getText().toString();
 
-        if (!validateFields(til_username) | !validateFields(til_contact) | !validateFields(til_gender)
-                | !validateFields(til_location) | !validateFields(til_bio) | !validateFields(til_interests)) {
+        if (!validateFields(til_username) | !validateFields(til_age) | !validateFields(til_gender)) {
             alertDialog();
         } else {
+
+            if (checkAge(til_age)) {
+                Toast.makeText(this, "Please key in an appropriate age", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             userProfile = new UserProfile(username, contact, gender
                     , age, bio, interests, location);
 
 
             uploadFile(userProfile, mImageUri);
+        }
+    }
+
+    //Benchmark set as 122 as oldest recorded person is 122 lol
+    private boolean checkAge(TextInputLayout til) {
+        if (Integer.parseInt(til.getEditText().getText().toString()) > 122) {
+            return true;
+        } else {
+            return false;
         }
     }
 
