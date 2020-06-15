@@ -3,6 +3,7 @@ package com.example.jioleh.favourites;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -110,7 +111,7 @@ public class LikedFragment extends Fragment {
         adapter = new FavouritesAdapter();
         recyclerView = currentView.findViewById(R.id.rvFavouriteLiked);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
     }
 }

@@ -25,6 +25,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="14dp"
         android:layout_marginBottom="10dp"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/btn_round_rectangle" />
 
     <TextView

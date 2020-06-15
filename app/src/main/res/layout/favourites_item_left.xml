@@ -13,6 +13,7 @@
         android:layout_width="150dp"
         android:layout_height="120dp"
         android:layout_marginLeft="8dp"
+        android:scaleType="fitXY"
         android:src="@drawable/btn_round_rectangle"/>
 
     <TextView

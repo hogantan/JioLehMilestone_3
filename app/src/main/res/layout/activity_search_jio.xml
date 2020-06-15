@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".listings.SearchJioActivity">
+
+    <include
+        android:id="@+id/tbTopBar"
+        layout="@layout/top_app_bar">
+    </include>
+
+    <Button
+        android:id="@+id/btnExpand"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="360dp"
+        android:background="@drawable/ic_baseline_arrow_drop_down_basegreen"
+        android:layout_below="@+id/tbTopBar">
+    </Button>
+
+    <TextView
+        android:id="@+id/tvSearchExpand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Filters"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/baseGreen"
+        android:background="@color/baseBlack"
+        android:layout_below="@+id/tbTopBar">
+    </TextView>
+
+    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+        android:id="@+id/ellExpander"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/baseBlack"
+        app:ael_duration="400"
+        app:ael_expanded="false"
+        app:ael_interpolator="accelerate"
+        app:ael_orientation="vertical"
+        android:layout_below="@+id/tvSearchExpand">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilSearchTitle"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search Title"
+                android:textColorHint="@color/baseBlack" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilSearchLocation"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_below="@+id/tilSearchTitle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search Location"
+                android:textColorHint="@color/baseWhite" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tvSearchDate"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/edit_text_background_postingpage"
+            android:gravity="center_horizontal"
+            android:text=""
+            android:textAlignment="center"
+            android:layout_marginLeft="60dp"
+            android:layout_below="@+id/tvSearchDateTime"
+            android:layout_toRightOf="@+id/btnSetTime"
+            android:layout_marginStart="60dp" />
+
+        <TextView
+            android:id="@+id/tvSearchDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Date and Time"
+            android:textColor="@color/baseWhite"
+            android:textSize="16sp"
+            android:layout_below="@+id/tilSearchLocation"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvSearchTime"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/edit_text_background_postingpage"
+            android:gravity="center_horizontal"
+            android:textAlignment="center"
+            android:layout_below="@+id/tvSearchDateTime" />
+
+        <Button
+            android:id="@+id/btnSetTime"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_access_time_white"
+            android:layout_below="@+id/tvSearchDateTime"
+            android:layout_toRightOf="@+id/tvSearchTime"/>
+
+        <Button
+            android:id="@+id/btnSetDate"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_date_range_white"
+            android:layout_below="@+id/tvSearchDateTime"
+            android:layout_toRightOf="@+id/tvSearchDate"
+            android:layout_toEndOf="@+id/tvSearchDate">
+        </Button>
+
+        <TextView
+            android:id="@+id/tvSearchType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Type of Activity"
+            android:textColor="@color/baseWhite"
+            android:textSize="16sp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_below="@+id/tvSearchTime">
+        </TextView>
+
+        <Spinner
+            android:id="@+id/spSearchType"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginStart="60dp"
+            android:layout_below="@+id/tvSearchType" />
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="320dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/spSearchType"
+            android:layout_marginStart="42dp"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/slightly_rounded_basegreen_button"
+            android:text="Search"
+            android:textColor="@color/baseBlack"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/baseGreen"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/btnSearch">
+        </View>
+
+    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+    <TextView
+        android:id="@+id/tvSearchResultsMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="155dp"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="110dp"
+        android:textAlignment="center"
+        android:text="Search JioLeh!"
+        android:layout_below="@+id/ellExpander"
+        android:gravity="center_horizontal">
+
+    </TextView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearchResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ellExpander">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</RelativeLayout>

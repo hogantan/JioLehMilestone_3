@@ -197,6 +197,8 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/edit_text_background_postingpage"
                 android:text=""
+                android:textAlignment="center"
+                android:gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/btnSetTime"
@@ -269,6 +271,8 @@
                 android:layout_marginTop="15dp"
                 android:background="@drawable/edit_text_background_postingpage"
                 android:text=""
+                android:textAlignment="center"
+                android:gravity="center_horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/btnSetTime"
@@ -321,6 +325,8 @@
                 android:hint=""
                 android:inputType="number"
                 android:textSize="12sp"
+                android:textAlignment="center"
+                android:gravity="center_horizontal"
                 app:layout_constraintStart_toEndOf="@+id/tvMinParticipants"
                 app:layout_constraintTop_toBottomOf="@+id/tvNumberParticipants" />
 
@@ -348,6 +354,8 @@
                 android:hint=""
                 android:inputType="number"
                 android:textSize="12sp"
+                android:textAlignment="center"
+                android:gravity="center_horizontal"
                 app:layout_constraintStart_toEndOf="@+id/tvMaxParticipants"
                 app:layout_constraintTop_toBottomOf="@+id/tvNumberParticipants" />
 
