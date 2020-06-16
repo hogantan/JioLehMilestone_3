@@ -49,7 +49,8 @@ class JioActivityRepository {
                     //copy documents to JioActivity Object and stall in list we created
                     for(DocumentSnapshot doc : lst) {
                        JioActivity jio =doc.toObject(JioActivity.class);
-                       if (jio!=null){
+
+                       if (jio!=null){ // avoided null activities here****************
                            allActivities.add(jio);
                        }
                     }

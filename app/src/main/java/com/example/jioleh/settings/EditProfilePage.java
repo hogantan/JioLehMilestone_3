@@ -130,10 +130,14 @@ public class EditProfilePage extends AppCompatActivity {
             alertDialog();
         } else {
 
+/*
+            //commented out coz causing crash
             if (checkAge(til_age)) {
                 Toast.makeText(this, "Please key in an appropriate age", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+ */
             newUserProfile = new UserProfile(username, contact, gender
                     , age, bio, interests, location);
 

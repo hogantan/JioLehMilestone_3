@@ -25,7 +25,7 @@ public class UserProfileViewPagerAdapter extends FragmentStateAdapter {
             case 0:
                 return new UserProfileAboutMeFragment(uid);
             case 1:
-                return new UserProfileListingsFragment();
+                return new UserProfileListingsFragment(uid);
             case 2:
                 return new UserProfileReviewsFragment(uid);
             default:
