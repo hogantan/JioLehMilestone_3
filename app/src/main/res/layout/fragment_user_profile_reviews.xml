@@ -3,14 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/baseBlack"
     tools:context=".userprofile.UserProfileReviewsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/review_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
-
 
 </RelativeLayout>

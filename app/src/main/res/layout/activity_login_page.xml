@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/tbTempTopBar"
-        layout="@layout/top_app_bar" />
+        layout="@layout/top_app_bar_noline" />
 
     <TextView
         android:id="@+id/tvLoginSubHeader"

@@ -18,8 +18,25 @@
         android:layout_marginStart="100dp"
         android:layout_marginLeft="100dp"
         android:layout_marginTop="14dp"
+        android:textSize="18sp"
         android:text="Username"
-        android:textColor="#fff"
+        android:textColor="@color/baseGreen"
+        tools:layout_editor_absoluteY="60dp" />
+
+    <TextView
+        android:id="@+id/tvSingleUsersLastMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="50dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/baseGrey"
         tools:layout_editor_absoluteY="60dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView

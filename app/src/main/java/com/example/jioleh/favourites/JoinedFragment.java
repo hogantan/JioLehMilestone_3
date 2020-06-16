@@ -88,7 +88,7 @@ public class JoinedFragment extends Fragment {
                             list_of_tasks.add(getActivity(documentSnapshot.getId()));
                         }
 
-                        //Waiting for completable futures to comeplete
+                        //Waiting for completable futures to complete
                         Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
                             @Override
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {

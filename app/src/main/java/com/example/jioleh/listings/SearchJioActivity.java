@@ -60,7 +60,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
     private RecyclerView results;
     private TextView resultsMessage;
     private ExpandableRelativeLayout expandableRelativeLayout;
-    private FavouritesAdapter adapter;
+    private ActivityAdapter adapter;
 
     private FirebaseFirestore datastore;
 
@@ -132,6 +132,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
         expand = findViewById(R.id.btnExpand);
         searchExpand = findViewById(R.id.tvSearchExpand);
         expandableRelativeLayout = findViewById(R.id.ellExpander);
+        expandableRelativeLayout.collapse();
         resultsMessage = findViewById(R.id.tvSearchResultsMessage);
         datastore = FirebaseFirestore.getInstance();
     }
@@ -149,10 +150,10 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
     }
 
     private void initialiseRecyclerView() {
-        adapter = new FavouritesAdapter();
+        adapter = new ActivityAdapter();
         results = findViewById(R.id.rvSearchResults);
         results.setHasFixedSize(true);
-        results.setLayoutManager(new GridLayoutManager(this, 2));
+        results.setLayoutManager(new LinearLayoutManager(this));
         results.setAdapter(adapter);
     }
 
