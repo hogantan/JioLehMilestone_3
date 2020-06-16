@@ -12,8 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:text="test test"
+        android:textSize="16sp"
         android:textColor="@color/baseBlack"
         android:padding="10dp"
         android:background="@drawable/message_background_right" />
+
+    <TextView
+        android:id="@+id/tvMessageDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvMessage"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="3dp"
+        android:text="00/00/0000 00:00"
+        android:textColor="@color/baseWhite"
+        android:textSize="12dp" />
 
 </RelativeLayout>

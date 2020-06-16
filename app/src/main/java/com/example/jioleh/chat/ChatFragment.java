@@ -41,6 +41,7 @@ public class ChatFragment extends Fragment {
 
     private ArrayList<UserProfile> list_of_profiles = new ArrayList<>();
     private ArrayList<Task<DocumentSnapshot>> list_of_task = new ArrayList<>();
+    private ArrayList<String> list_of_uid = new ArrayList<>();
 
     @Nullable
     @Override
@@ -48,8 +49,16 @@ public class ChatFragment extends Fragment {
         currentView = inflater.inflate(R.layout.chat_fragment,container,false);
         initialise();
         initialiseRecyclerView();
-        getUsers();
         return currentView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        list_of_task.clear();
+        list_of_profiles.clear();
+        list_of_uid.clear();
+        getUsers();
     }
 
     private void initialise() {
@@ -73,8 +82,6 @@ public class ChatFragment extends Fragment {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        list_of_task.clear();
-                        list_of_profiles.clear();
                         if (!queryDocumentSnapshots.isEmpty()) {
                             List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
                             updateView(list_of_documents);
@@ -84,8 +91,6 @@ public class ChatFragment extends Fragment {
     }
 
     private void updateView(List<DocumentSnapshot> list_of_documents) {
-        final ArrayList<String> list_of_uid = new ArrayList<>();
-
         for(DocumentSnapshot documentSnapshot : list_of_documents) {
             list_of_uid.add(documentSnapshot.getId());
         }
@@ -114,5 +119,4 @@ public class ChatFragment extends Fragment {
                 .document(uid)
                 .get();
     }
-
 }

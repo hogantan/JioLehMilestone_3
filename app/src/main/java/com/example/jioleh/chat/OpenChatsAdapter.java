@@ -17,6 +17,13 @@ import com.example.jioleh.listings.JioActivity;
 import com.example.jioleh.listings.ViewJioActivity;
 import com.example.jioleh.userprofile.OtherUserView;
 import com.example.jioleh.userprofile.UserProfile;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -62,21 +69,22 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
     public void setData(List<UserProfile> userProfiles, List<String> list_of_uid) {
         this.profiles = userProfiles;
         this.list_of_uid = list_of_uid;
-        notifyDataSetChanged();
     }
 
     static class OpenChatsHolder extends RecyclerView.ViewHolder {
 
         private ImageView displayImage;
-        private String imageUrl;
         private TextView username;
+        private TextView last_msg;
         private String user_id;
+        private String imageUrl;
 
         //Initialising the holder
         OpenChatsHolder(@NonNull final View itemView) {
             super(itemView);
             displayImage = itemView.findViewById(R.id.ivUserImage);
             username = itemView.findViewById(R.id.tvSingleUsersUsername);
+            last_msg = itemView.findViewById(R.id.tvSingleUsersLastMsg);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -97,6 +105,36 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
                 Picasso.get().load(imageUrl).into(displayImage);
             }
             username.setText(userProfile.getUsername());
+
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            FirebaseFirestore
+                    .getInstance()
+                    .collection("users")
+                    .document(currentUser.getUid())
+                    .collection("openchats")
+                    .document(user_id)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            String chatId = documentSnapshot.get("channelId").toString();
+
+                            FirebaseFirestore
+                                    .getInstance()
+                                    .collection("chats")
+                                    .document(chatId)
+                                    .collection("messages")
+                                    .orderBy("dateSent", Query.Direction.DESCENDING)
+                                    .limit(1)
+                                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    last_msg.setText(queryDocumentSnapshots.getDocuments().get(0).get("text").toString());
+                                }
+                            });
+                        }
+                    });
         }
     }
 }

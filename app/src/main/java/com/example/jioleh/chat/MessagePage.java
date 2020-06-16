@@ -29,8 +29,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.ServerTimestamp;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -125,14 +130,15 @@ public class MessagePage extends AppCompatActivity {
                         if (document.exists()) {
                             MessageChat message = new MessageChat(currentUser.getUid(),
                                     intent.getStringExtra("user_id"), input,
-                                    document.get("channelId").toString());
+                                    document.get("channelId").toString(), convertDateFormat(Calendar.getInstance().getTime()));
                             sendMessage(message);
                         }
                         //if the chat channel does not exist
                         else {
                             String chatChannelID = openChatChannel();
                             MessageChat message = new MessageChat(currentUser.getUid(),
-                                    intent.getStringExtra("user_id"), input, chatChannelID);
+                                    intent.getStringExtra("user_id"), input, chatChannelID
+                            , convertDateFormat(Calendar.getInstance().getTime()));
                             sendMessage(message);
                         }
                         //to as to display text send on first send
@@ -229,6 +235,11 @@ public class MessagePage extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private String convertDateFormat(Date date) {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        return formatter.format(date);
     }
 
     private void initialise() {

@@ -39,11 +39,13 @@ public class UsersAdapter extends FirestoreRecyclerAdapter<UserProfile, UsersAda
     class UserHolder extends RecyclerView.ViewHolder {
 
         private TextView username;
+        private TextView last_msg;
         private String user_id;
 
         public UserHolder(@NonNull final View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.tvSingleUsersUsername);
+            last_msg = itemView.findViewById(R.id.tvSingleUsersLastMsg);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

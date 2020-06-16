@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/baseBlack"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -27,29 +28,37 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="Filters"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/baseGreen"
         android:background="@color/baseBlack"
         android:layout_below="@+id/tbTopBar">
     </TextView>
 
+    <View
+        android:id="@+id/viewLine"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/baseWhite"
+        android:layout_below="@+id/tvSearchExpand">
+    </View>
+
     <com.github.aakira.expandablelayout.ExpandableRelativeLayout
         android:id="@+id/ellExpander"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/baseBlack"
-        app:ael_duration="400"
-        app:ael_expanded="false"
+        app:ael_duration="1"
         app:ael_interpolator="accelerate"
         app:ael_orientation="vertical"
-        android:layout_below="@+id/tvSearchExpand">
+        android:layout_below="@+id/viewLine">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilSearchTitle"
             android:layout_width="380dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:focusableInTouchMode="true"
             android:layout_marginStart="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -178,7 +187,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/baseGreen"
+            android:background="@color/baseWhite"
             android:layout_marginTop="15dp"
             android:layout_below="@+id/btnSearch">
         </View>

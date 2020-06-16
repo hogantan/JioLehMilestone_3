@@ -54,32 +54,46 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_userProfilePageImage"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="8sp"
+            android:layout_marginTop="15sp"
             android:paddingStart="7sp"
             android:paddingEnd="7sp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
             android:weightSum="3">
 
+
             <Button
                 android:id="@+id/message_other_user"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
                 android:layout_weight="1"
+                android:textAllCaps="false"
+                android:layout_marginRight="20dp"
+                android:textSize="13sp"
+                android:background="@drawable/rectangle_outline_text_box"
                 android:text="Message" />
 
             <Button
                 android:id="@+id/write_review_other_user"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:text="Review" />
+                android:background="@drawable/rectangle_outline_text_box"
+                android:text="Review"
+                android:textAllCaps="false"
+                android:textSize="13sp" />
 
             <Button
                 android:id="@+id/report_other_user"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="25dp"
                 android:layout_weight="1"
+                android:textAllCaps="false"
+                android:textSize="13sp"
+                android:background="@drawable/rectangle_outline_text_box"
                 android:text="Report" />
         </LinearLayout>
 
@@ -105,7 +119,7 @@
             android:layout_toEndOf="@+id/iv_userProfilePageImage"
             android:layout_toRightOf="@+id/iv_userProfilePageImage"
             android:text="UsernameTest"
-            android:textColor="@color/White"
+            android:textColor="@color/baseGreen"
             android:textSize="16sp" />
 
         <TextView
@@ -113,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_profilePageUsername"
-            android:layout_marginTop="5sp"
+            android:layout_marginTop="15sp"
             android:layout_toRightOf="@+id/iv_userProfilePageImage"
             android:text="Age Test"
             android:textColor="@color/White"
@@ -124,7 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_profilePageAge"
-            android:layout_marginTop="5sp"
+            android:layout_marginTop="15sp"
             android:layout_toRightOf="@+id/iv_userProfilePageImage"
             android:text="GenderTest"
             android:textColor="@color/White"

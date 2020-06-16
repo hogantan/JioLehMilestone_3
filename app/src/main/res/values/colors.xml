@@ -12,4 +12,5 @@
     <color name="appBlack">#273A3E</color>
     <color name="White">#EEF4F5</color>
     <color name="offGreen">#D1EBFF</color>
+    <color name="darkBlack">#000</color>
 </resources>

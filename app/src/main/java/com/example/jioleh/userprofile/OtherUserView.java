@@ -140,8 +140,8 @@ public class OtherUserView extends AppCompatActivity {
 
     private void initialiseToolbar() {
         toolbar = findViewById(R.id.include_top_app_bar);
-        setSupportActionBar(toolbar);
         toolbar.setTitle(this.profileUsername);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.baseGreen));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

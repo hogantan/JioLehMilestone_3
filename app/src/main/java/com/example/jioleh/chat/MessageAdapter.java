@@ -1,18 +1,29 @@
 package com.example.jioleh.chat;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jioleh.R;
+import com.example.jioleh.userprofile.UserProfile;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //Adapter used to convert MessageChats into display items
@@ -77,16 +88,39 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
 
         private TextView messageSent;
         private TextView dateSent;
+        private ImageView displayImage;
 
         //Initialising the holder
         public MessageHolder(@NonNull View itemView) {
             super(itemView);
             messageSent = itemView.findViewById(R.id.tvMessage);
+            dateSent = itemView.findViewById(R.id.tvMessageDateTime);
+            displayImage = itemView.findViewById(R.id.ivLeftPic);
         }
 
         //Setting the details in the holder
         public void setUpView(MessageChat message) {
             messageSent.setText(message.getText());
+            dateSent.setText(message.getDate());
+
+            if (getItemViewType() == MSG_LEFT) {
+             FirebaseFirestore.getInstance()
+                     .collection("users")
+                     .document(message.getSender())
+                     .get()
+                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String imageUrl = documentSnapshot.get("imageUrl").toString();
+                        Picasso.get().load(imageUrl).into(displayImage);
+                    }
+                });
+            }
+        }
+
+        private String convertDateFormat(Date date) {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+            return formatter.format(date);
         }
     }
 }

@@ -43,6 +43,4 @@
         android:textSize="12sp"
         android:text="113 Ratings" />
 
-
-
 </RelativeLayout>

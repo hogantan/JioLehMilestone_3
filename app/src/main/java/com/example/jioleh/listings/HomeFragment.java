@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private TextView search;
+    private ImageView search;
     private RecyclerView activity_list;
 
     //private FirebaseFirestore datastore;
@@ -72,7 +73,7 @@ public class HomeFragment extends Fragment {
  */
 
     private void initialise() {
-        search = currentView.findViewById(R.id.tvSearchActivity);
+        search = currentView.findViewById(R.id.ivSearchActivity);
         //datastore = FirebaseFirestore.getInstance();
     }
 

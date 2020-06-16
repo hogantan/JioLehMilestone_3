@@ -6,29 +6,52 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#202124">
 
-    <TextView
-        android:id="@+id/tvSearchActivity"
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:background="@drawable/slightly_rounded_basegreen_button"
-        android:ems="10"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="Search JioLeh!"
-        android:textColor="@color/baseBlack"
-        android:textStyle="bold"
-        android:textSize="14sp"
+    <ImageView
+        android:id="@+id/ivSearchActivity"
+        android:layout_width="394dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="104dp"
+        android:layout_marginRight="104dp"
+        android:src="@drawable/search_jioleh"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+    <ImageView
+        android:id="@+id/ivFindNearby"
+        android:layout_width="394dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/find_nearby"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ivSearchActivity"></ImageView>
+
+    <TextView
+        android:id="@+id/tvLatestActivities"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Latest Activities"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/baseGreen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.06"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivFindNearby">
+    </TextView>
 
     <View
+        android:id="@+id/viewLine"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#fff"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/etSearchActivity">
+        android:layout_height="2dp"
+        android:background="@color/baseWhite"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLatestActivities">
 
     </View>
 
@@ -36,15 +59,13 @@
         android:id="@+id/rvActivityList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="81dp"
+        android:layout_marginTop="255dp"
         android:layout_marginBottom="56dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/etSearchActivity"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/viewLine"
+        app:layout_constraintVertical_bias="0.682" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
