@@ -49,8 +49,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textColorHint="#fff"
-        app:layout_constraintTop_toBottomOf="@+id/tvRegisterNewAccount"
-        tools:layout_editor_absoluteX="0dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRegisterNewAccount" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilRegisterEmail"
@@ -58,16 +59,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textColorHint="#fff"
-        app:layout_constraintTop_toBottomOf="@+id/tilRegisterUsername"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilRegisterUsername">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="#fff"
+            android:hint="Email"
             android:inputType="textEmailAddress"
-            android:hint="Email" />
+            android:textColor="#fff" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -76,16 +78,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textColorHint="#fff"
-        app:layout_constraintTop_toBottomOf="@+id/tilRegisterEmail"
-        tools:layout_editor_absoluteX="1dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilRegisterEmail">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="#fff"
+            android:hint="Password"
             android:inputType="textPersonName"
-            android:hint="Password" />
+            android:textColor="#fff" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

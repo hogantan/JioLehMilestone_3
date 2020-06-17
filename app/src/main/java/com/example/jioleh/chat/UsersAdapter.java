@@ -1,5 +1,7 @@
 package com.example.jioleh.chat;
 
+//NOT USED ANYMORE CHANGE TO OPENCHATS
+
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;

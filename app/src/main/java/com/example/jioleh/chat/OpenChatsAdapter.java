@@ -1,5 +1,7 @@
 package com.example.jioleh.chat;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,15 +19,19 @@ import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
 import com.example.jioleh.listings.JioActivity;
 import com.example.jioleh.listings.ViewJioActivity;
+import com.example.jioleh.post.PostingPage;
 import com.example.jioleh.userprofile.OtherUserView;
 import com.example.jioleh.userprofile.UserProfile;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -31,6 +39,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -78,6 +87,7 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
         private TextView last_msg;
         private String user_id;
         private String imageUrl;
+        private Context currentContext;
 
         //Initialising the holder
         OpenChatsHolder(@NonNull final View itemView) {
@@ -85,6 +95,7 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
             displayImage = itemView.findViewById(R.id.ivUserImage);
             username = itemView.findViewById(R.id.tvSingleUsersUsername);
             last_msg = itemView.findViewById(R.id.tvSingleUsersLastMsg);
+            currentContext = displayImage.getContext();
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -94,6 +105,14 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
                     nextActivity.putExtra("user_id", user_id);
                     nextActivity.putExtra("image_url", imageUrl);
                     itemView.getContext().startActivity(nextActivity);
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    alertDialog();
+                    return true;
                 }
             });
         }
@@ -106,8 +125,8 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
             }
             username.setText(userProfile.getUsername());
 
+            //Getting last message to display
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
             FirebaseFirestore
                     .getInstance()
                     .collection("users")
@@ -119,7 +138,6 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             String chatId = documentSnapshot.get("channelId").toString();
-
                             FirebaseFirestore
                                     .getInstance()
                                     .collection("chats")
@@ -127,14 +145,89 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
                                     .collection("messages")
                                     .orderBy("dateSent", Query.Direction.DESCENDING)
                                     .limit(1)
-                                    .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    last_msg.setText(queryDocumentSnapshots.getDocuments().get(0).get("text").toString());
-                                }
-                            });
+                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                            if (queryDocumentSnapshots.size() > 0) {
+                                                last_msg.setText(queryDocumentSnapshots.getDocuments().get(0).get("text").toString());
+                                            }
+                                        }
+                                    }); 
                         }
                     });
+        }
+
+        //Prompts user whether to delete chat with other user on his end
+        private void alertDialog() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(currentContext);
+            builder.setMessage("Do you want to delete the chat with " + username.getText().toString() + "?")
+                    .setTitle("Delete Chat");
+
+            builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    final FirebaseFirestore datastore = FirebaseFirestore.getInstance();
+                    final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    datastore.collection("users")
+                            .document(currentUser.getUid())
+                            .collection("openchats")
+                            .document(user_id)
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    final String chatId = documentSnapshot.get("channelId").toString();
+
+                                    //To delete openchats between current user and the other person
+                                    datastore.collection("users")
+                                            .document(currentUser.getUid())
+                                            .collection("openchats")
+                                            .document(user_id)
+                                            .delete();
+
+                                    //The following to to set flags in the database to determine whether a chat can be fully deleted backend
+                                    datastore.collection("chats")
+                                            .document(chatId)
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    System.out.println(documentSnapshot.get("delete"));
+                                                    if (documentSnapshot.get("shared") != null) {
+                                                        HashMap<String, String> input = new HashMap<>();
+                                                        input.put("confirmDelete", "yes");
+                                                        datastore.collection("chats")
+                                                                .document(chatId)
+                                                                .set(input, SetOptions.merge());
+                                                    } else if (documentSnapshot.get("single") != null) {
+                                                        HashMap<String, String> input = new HashMap<>();
+                                                        input.put("confirmDelete", "yes");
+                                                        datastore.collection("chats")
+                                                                .document(chatId)
+                                                                .set(input, SetOptions.merge());
+                                                    } else {
+                                                        //to indicate chat channel only own by one user ti facilitate delete
+                                                        HashMap<String, String> input = new HashMap<>();
+                                                        input.put("shared", "yes");
+                                                        datastore.collection("chats")
+                                                                .document(chatId)
+                                                                .set(input);
+                                                    }
+                                                }
+                                            });
+                                }
+                            });
+                }
+            });
+
+            builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
         }
     }
 }

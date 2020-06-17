@@ -2,6 +2,7 @@ package com.example.jioleh.favourites;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +22,9 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
@@ -49,15 +52,8 @@ public class LikedFragment extends Fragment {
         currentView = inflater.inflate(R.layout.fragment_liked, container, false);
         initialise();
         initialiseRecyclerView();
-        return currentView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        list_of_tasks.clear();
-        list_of_activities.clear();
         getLiked();
+        return currentView;
     }
 
     private void initialise() {
@@ -70,28 +66,28 @@ public class LikedFragment extends Fragment {
         datastore.collection("users")
                 .document(currentUser.getUid())
                 .collection("liked")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        //listens to joined for changes which will only occur if there is a change in activities collection which is prompted by ViewJioActivity Listener
+                        list_of_tasks.clear();
+                        list_of_activities.clear();
                         List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
 
+                        //Adding a list of completable futures
                         for (DocumentSnapshot documentSnapshot : snapshots) {
                             list_of_tasks.add(getActivity(documentSnapshot.getId()));
                         }
 
+                        //Waiting for completable futures to complete
                         Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
                             @Override
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {
-                                for (int i = 0; i < list_of_tasks.size(); i++) {
-                                    DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
-                                    JioActivity jioActivity = snapshot.toObject(JioActivity.class);
-                                    list_of_activities.add(jioActivity);
-                                }
                                 adapter.setData(list_of_activities);
                                 adapter.notifyDataSetChanged();
+                                //Visual text
                                 if (list_of_activities.isEmpty()) {
-                                    emptyText.setText("You have not like any activities!");
+                                    emptyText.setText("You have not join any activities!");
                                 } else {
                                     emptyText.setText("");
                                 }
@@ -101,10 +97,25 @@ public class LikedFragment extends Fragment {
                 });
     }
 
-    private Task<DocumentSnapshot> getActivity(String uid) {
+    private Task<DocumentSnapshot> getActivity(final String uid) {
         return datastore.collection("activities")
                 .document(uid)
-                .get();
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            list_of_activities.add(documentSnapshot.toObject(JioActivity.class));
+                        } else {
+                            //removes from current user joined activities
+                            datastore.collection("users")
+                                    .document(currentUser.getUid())
+                                    .collection("liked")
+                                    .document(uid)
+                                    .delete();
+                        }
+                    }
+                });
     }
 
     private void initialiseRecyclerView() {
