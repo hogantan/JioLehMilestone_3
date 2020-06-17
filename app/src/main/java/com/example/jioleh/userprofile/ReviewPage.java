@@ -68,7 +68,7 @@ public class ReviewPage extends AppCompatActivity {
                 .collection("users")
                 .document(other_userId)
                 .collection("Reviews")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                .document();
 
         btn_submit_review.setOnClickListener(new View.OnClickListener() {
             @Override
