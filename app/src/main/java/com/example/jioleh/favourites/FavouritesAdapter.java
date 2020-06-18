@@ -46,8 +46,10 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
     @Override
     public void onBindViewHolder(@NonNull FavouritesAdapter.FavouritesHolder holder, int position) {
         JioActivity activity = activities.get(position);
-        holder.activity_id = activity.getActivityId();
-        holder.setUpView(activity);
+        if (activity != null) {
+            holder.activity_id = activity.getActivityId();
+            holder.setUpView(activity);
+        }
     }
 
     @Override
@@ -59,11 +61,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
     public void setData(List<JioActivity> jioActivities) {
         this.activities = jioActivities;
-        notifyDataSetChanged();
     }
-
-
-
 
     static class FavouritesHolder extends RecyclerView.ViewHolder {
 

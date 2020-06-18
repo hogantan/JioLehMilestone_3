@@ -48,11 +48,13 @@ class JioActivityRepository {
 
                     //copy documents to JioActivity Object and stall in list we created
                     for(DocumentSnapshot doc : lst) {
-                       JioActivity jio =doc.toObject(JioActivity.class);
-
-                       if (jio!=null){ // avoided null activities here****************
-                           allActivities.add(jio);
-                       }
+                        JioActivity jio = null;
+                        if (doc.exists()) {
+                            jio =doc.toObject(JioActivity.class);
+                        }
+                        if (jio!=null){
+                            allActivities.add(jio);
+                        }
                     }
 
                     /*put into MutableLiveData
@@ -67,8 +69,4 @@ class JioActivityRepository {
         });
 
     }
-
-
-
-
 }

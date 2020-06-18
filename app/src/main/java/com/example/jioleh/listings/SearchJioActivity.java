@@ -56,6 +56,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
     private Button setTime;
     private Button setDate;
     private Button expand;
+    private View viewLine;
     private TextView searchExpand;
     private RecyclerView results;
     private TextView resultsMessage;
@@ -107,6 +108,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
             public void onClick(View v) {
                 expandableRelativeLayout.toggle();
                 expandButtonToggle();
+                viewLineToggle();
             }
         });
 
@@ -115,6 +117,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
             public void onClick(View v) {
                 expandableRelativeLayout.toggle();
                 expandButtonToggle();
+                viewLineToggle();
             }
         });
 
@@ -130,6 +133,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
         setTime = findViewById(R.id.btnSetTime);
         setDate = findViewById(R.id.btnSetDate);
         expand = findViewById(R.id.btnExpand);
+        viewLine = findViewById(R.id.viewLine);
         searchExpand = findViewById(R.id.tvSearchExpand);
         expandableRelativeLayout = findViewById(R.id.ellExpander);
         expandableRelativeLayout.collapse();
@@ -190,6 +194,14 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
         } else {
             expand.setBackground(getResources().getDrawable(R.drawable.ic_baseline_arrow_drop_up_basegreen));
             buttonFlag = true;
+        }
+    }
+
+    private void viewLineToggle() {
+        if (buttonFlag) {
+            viewLine.setVisibility(View.GONE);
+        } else {
+            viewLine.setVisibility(View.VISIBLE);
         }
     }
 

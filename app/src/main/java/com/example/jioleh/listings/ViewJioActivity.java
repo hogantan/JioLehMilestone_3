@@ -145,10 +145,9 @@ public class ViewJioActivity extends AppCompatActivity {
         displayHost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nextActivity = new Intent(ViewJioActivity.this, MessagePage.class);
+                Intent nextActivity = new Intent(ViewJioActivity.this, OtherUserView.class);
                 nextActivity.putExtra("username", host_name.getText().toString());
                 nextActivity.putExtra("user_id", host_uid);
-                nextActivity.putExtra("image_url", host_imageUrl);
                 startActivity(nextActivity);
             }
         });
@@ -300,7 +299,6 @@ public class ViewJioActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        System.out.println("here2");
                         if (documentSnapshot.exists()) {
                             setButtonVisuals(NEGATIVE, finalButton, type);
                         } else {
@@ -322,35 +320,47 @@ public class ViewJioActivity extends AppCompatActivity {
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                         JioActivity current_activity = documentSnapshot.toObject(JioActivity.class);
 
-                        if (!current_activity.getImageUrl().equals("") && current_activity.getImageUrl()!=null) {
-                            Picasso.get().load(current_activity.getImageUrl()).into(displayImage);
+                        if (current_activity != null) {
+                            if (!current_activity.getImageUrl().equals("") && current_activity.getImageUrl()!=null) {
+                                Picasso.get().load(current_activity.getImageUrl()).into(displayImage);
+                            }
+
+                            //live update of current participants as it listens for change in data
+                            current_participants = current_activity.getCurrent_participants();
+                            list_of_participants = current_activity.getParticipants();
+                            max_participants = current_activity.getMax_participants();
+
+                            displayTitle.setText(current_activity.getTitle());
+                            type_of_activity.setText(current_activity.getType_of_activity());
+                            location.setText(current_activity.getLocation());
+                            actual_date.setText(convertDateFormat(current_activity.getEvent_date()));
+                            actual_time.setText(current_activity.getEvent_time());
+                            confirm_date.setText(convertDateFormat(current_activity.getDeadline_date()));
+                            confirm_time.setText("Time: " + current_activity.getEvent_time());
+                            details.setText(current_activity.getDetails());
+                            participants_counter.setText(current_activity.getCurrent_participants() + "/" + max_participants);
+                            minimum.setText("Minimum required: " + current_activity.getMin_participants() + "/" + current_activity.getMax_participants());
+
+                            host_uid = current_activity.getHost_uid();
+                            setUpHostInfo(host_uid);
+                            checkIsFull(); //this will respond to live changes from the database
+                        } else {
+                            //This listens to activities being deleted
+                            datastore.collection("users")
+                                    .document(currentUser.getUid())
+                                    .collection("joined")
+                                    .document(activity_id)
+                                    .delete();
+
+                            datastore.collection("users")
+                                    .document(currentUser.getUid())
+                                    .collection("liked")
+                                    .document(activity_id)
+                                    .delete();
                         }
-
-                        //live update of current participants as it listens for change in data
-                        current_participants = current_activity.getCurrent_participants();
-                        list_of_participants = current_activity.getParticipants();
-                        max_participants = current_activity.getMax_participants();
-
-                        displayTitle.setText(current_activity.getTitle());
-                        type_of_activity.setText(current_activity.getType_of_activity());
-                        location.setText(current_activity.getLocation());
-                        actual_date.setText(convertDateFormat(current_activity.getEvent_date()));
-                        actual_time.setText(current_activity.getEvent_time());
-                        confirm_date.setText(convertDateFormat(current_activity.getDeadline_date()));
-                        confirm_time.setText("Time: " + current_activity.getEvent_time());
-                        details.setText(current_activity.getDetails());
-                        participants_counter.setText(current_activity.getCurrent_participants() + "/" + max_participants);
-                        minimum.setText("Minimum required: " + current_activity.getMin_participants() + "/" + current_activity.getMax_participants());
-
-                        host_uid = current_activity.getHost_uid();
-                        setUpHostInfo(host_uid);
-                        System.out.println("here");
-                        System.out.println(join.getText().toString());
-                        checkIsFull(); //this will respond to live changes from the database
                     }
                 });
     }
-
 
     //To retrieve of the Host(person who posted the activity) and to set up and display the necessary details of the UI variables
     private void setUpHostInfo(String uid) {
