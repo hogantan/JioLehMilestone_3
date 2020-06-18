@@ -123,7 +123,7 @@ public class ViewJioActivity extends AppCompatActivity {
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (like.getHint().toString().equals("Unlike")) {
+                if (like.getHint().toString().equals("ekil")) {
                     deleteActivity(LIKE);
                     setButtonVisuals(POSITIVE, like, LIKE);
                 } else {
@@ -411,7 +411,7 @@ public class ViewJioActivity extends AppCompatActivity {
 
         } else {
             text = "Like";
-            textInverse = "Unlike";
+            textInverse = "ekil";
             if (direction == NEGATIVE) {
                 button.setHint(textInverse);
                 Drawable img = getResources().getDrawable(R.drawable.ic_baseline_thumb_up_basegreen);

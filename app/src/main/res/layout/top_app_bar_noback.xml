@@ -16,7 +16,7 @@
         android:fontFamily="@font/sintony_bold"
         android:text="JioLeh"
         android:textColor="@color/baseGreen"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold"></TextView>
 
 </androidx.appcompat.widget.Toolbar>

@@ -41,6 +41,7 @@ public class SettingsPage extends AppCompatActivity {
             Preference changePassword = findPreference("changePassword");
             Preference editProfile = findPreference("editProfile");
             Preference signout_pref = findPreference("signout");
+            Preference deleteAccount = findPreference("deleteAccount");
 
             changePassword.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
@@ -67,6 +68,14 @@ public class SettingsPage extends AppCompatActivity {
                     Intent nextActivity = new Intent(SettingsFragment.this.getActivity(), MainActivity.class);
                     nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(nextActivity);
+                    return true;
+                }
+            });
+
+            deleteAccount.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(SettingsFragment.this.getActivity(), DeleteAccount.class));
                     return true;
                 }
             });

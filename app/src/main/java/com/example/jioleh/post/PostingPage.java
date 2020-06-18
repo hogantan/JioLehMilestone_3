@@ -162,7 +162,7 @@ public class PostingPage
         setDate = findViewById(R.id.btnSetDate);
         setTimeDeadline = findViewById(R.id.btnSetTimeDeadline);
         setDateDeadline = findViewById(R.id.btnSetDateDeadline);
-        removeImage = findViewById(R.id.ibtnRemoveImage);
+        removeImage = findViewById(R.id.btnRemoveImage);
         title_of_post = findViewById(R.id.tilDisplayTitle);
         location = findViewById(R.id.etLocation);
         min_participants = findViewById(R.id.etMinParticipants);
@@ -182,6 +182,7 @@ public class PostingPage
     private void initialiseToolbar() {
         toolbar = findViewById(R.id.tbTopBar);
         toolbar.setTitle("");
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_close_white));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -392,6 +393,7 @@ public class PostingPage
                 }
             });
         } else {
+            jioActivity.setImageUrl(getResources().getString(R.string.defaultImageUrl));
             //if users decide not to upload image, then imageURL in userProfile will be empty string
             putInFirestore(activity_id, jioActivity);
         }

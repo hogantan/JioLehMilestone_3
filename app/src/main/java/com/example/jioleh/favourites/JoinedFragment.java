@@ -84,7 +84,7 @@ public class JoinedFragment extends Fragment {
                         Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
                             @Override
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {
-                                adapter.setData(list_of_activities);
+                                adapter.setData(list_of_activities, false);
                                 adapter.notifyDataSetChanged();
                                 //Visual text
                                 if (list_of_activities.isEmpty()) {
