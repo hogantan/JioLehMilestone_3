@@ -15,6 +15,7 @@ import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
 import com.example.jioleh.userprofile.OtherUserView;
 import com.example.jioleh.userprofile.UserProfile;
+import com.example.jioleh.userprofile.YourOwnOtherUserView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -69,10 +70,17 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent nextActivity = new Intent(itemView.getContext(), OtherUserView.class);
-                    nextActivity.putExtra("username", username.getText().toString());
-                    nextActivity.putExtra("user_id", user_id);
-                    itemView.getContext().startActivity(nextActivity);
+                    if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(user_id)) {
+                        Intent nextActivity = new Intent(itemView.getContext(), YourOwnOtherUserView.class);
+                        nextActivity.putExtra("username", username.getText().toString());
+                        nextActivity.putExtra("user_id", user_id);
+                        itemView.getContext().startActivity(nextActivity);
+                    } else {
+                        Intent nextActivity = new Intent(itemView.getContext(), OtherUserView.class);
+                        nextActivity.putExtra("username", username.getText().toString());
+                        nextActivity.putExtra("user_id", user_id);
+                        itemView.getContext().startActivity(nextActivity);
+                    }
                 }
             });
         }

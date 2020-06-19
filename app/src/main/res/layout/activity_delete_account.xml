@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:text="Delete Account"
         android:textColor="@color/baseRed"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,18 +27,31 @@
         app:layout_constraintVertical_bias="0.042" />
 
     <TextView
-        android:id="@+id/tvConfirmChangePassword"
+    android:id="@+id/tvConfirmChangePassword"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Please enter your username to confirm deletion of account."
+    android:textColor="@color/baseWhite"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvChangePassword"
+    app:layout_constraintVertical_bias="0.041" />
+
+    <TextView
+        android:id="@+id/tvConfirmWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Please enter your username to confirm deletion of account"
-        android:textColor="@color/baseWhite"
-        android:gravity="center"
+        android:text="WARNING: Deleting your account is an irreversible action!"
+        android:textColor="@color/baseRed"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvChangePassword"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintTop_toBottomOf="@+id/tvConfirmChangePassword"
+        app:layout_constraintVertical_bias="0.041" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilConfirmUsername"
@@ -46,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textColorHint="#fff"
-        app:layout_constraintTop_toBottomOf="@+id/tvConfirmChangePassword"
+        app:layout_constraintTop_toBottomOf="@+id/tvConfirmWarning"
         tools:layout_editor_absoluteX="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -61,14 +74,15 @@
 
     <Button
         android:id="@+id/btnConfirmCDelete"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_250sdp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@drawable/btn_round_red_rect"
-        android:text="Delete"
-        android:textColor="#202124"
-        android:textSize="14sp"
+        android:background="@color/baseRed"
+        android:text="Confirm delete"
+        android:textSize="16sp"
         android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textColor="@color/baseBlack"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

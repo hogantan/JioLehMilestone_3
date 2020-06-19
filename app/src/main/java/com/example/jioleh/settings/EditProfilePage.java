@@ -130,15 +130,13 @@ public class EditProfilePage extends AppCompatActivity {
             alertDialog();
         } else {
 
-/*
             //commented out coz causing crash
             if (checkAge(til_age)) {
                 Toast.makeText(this, "Please key in an appropriate age", Toast.LENGTH_SHORT).show();
                 return;
             }
 
- */
-            newUserProfile = new UserProfile(username, contact, gender
+            newUserProfile = new UserProfile(username, contact, gender.toUpperCase().charAt(0) + gender.substring(1).toLowerCase()
                     , age, bio, interests, location);
 
             if (mImageUri == null && oldUserProfile.getImageUrl()!=null) {
@@ -307,6 +305,6 @@ public class EditProfilePage extends AppCompatActivity {
                 .collection("users")
                 .document(uid)
                 .set(user, SetOptions.merge());
-        startNextActivity();
+        onBackPressed();
     }
 }

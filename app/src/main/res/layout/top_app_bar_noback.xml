@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="56sp"
+    android:layout_height="wrap_content"
     android:background="@drawable/toolbar_background"
     android:minHeight="?attr/actionBarSize"
     android:theme="?attr/actionBarTheme"
@@ -16,7 +16,6 @@
         android:fontFamily="@font/sintony_bold"
         android:text="JioLeh"
         android:textColor="@color/baseGreen"
-        android:textSize="16sp"
-        android:textStyle="bold"></TextView>
+        android:textSize="16sp"></TextView>
 
 </androidx.appcompat.widget.Toolbar>

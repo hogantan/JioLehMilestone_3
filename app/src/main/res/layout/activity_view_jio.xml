@@ -112,21 +112,24 @@
 
             <View
                 android:id="@+id/vViewDisplayHost"
-                android:layout_width="350dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_marginTop="20dp"
                 android:text="Host Details"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWhoJio"></View>
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWhoJio">
+
+
+            </View>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/civViewDisplayHostImage"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="5dp"
                 app:layout_constraintStart_toStartOf="@+id/vViewDisplayHost"
                 app:layout_constraintTop_toTopOf="@+id/vViewDisplayHost"></de.hdodenhof.circleimageview.CircleImageView>
 
@@ -134,9 +137,9 @@
                 android:id="@+id/tvViewDisplayHostName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="35dp"
                 android:text="Host Name"
                 android:textColor="@color/baseGreen"
                 android:textStyle="bold"

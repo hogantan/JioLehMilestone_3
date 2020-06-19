@@ -22,7 +22,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
-public class OtherUserView extends AppCompatActivity {
+public class YourOwnOtherUserView extends AppCompatActivity {
 
     private String profileUID;
     private String profileUsername;
@@ -32,8 +32,6 @@ public class OtherUserView extends AppCompatActivity {
     private TextView tv_username, tv_age, tv_gender;
     private ImageView iv_ProfilePic;
 
-    private Button btn_message, btn_review, btn_report;
-
     private Toolbar toolbar;
 
     private UserProfileViewPagerAdapter pagerAdapter;
@@ -42,19 +40,16 @@ public class OtherUserView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_other_user_view);
+        setContentView(R.layout.activity_your_own_other_user_view);
         initialise();
 
         final Intent intent = getIntent();
-        //the intent that opens this must put extra as "user_id" the user's id
-        //this is the current profile user id not the current user
         profileUID = intent.getStringExtra("user_id");
         profileUsername = intent.getStringExtra("username");
         uid = intent.getStringExtra("user_id");
         viewModel= new ViewModelProvider(this).get(userProfileViewModel.class);
 
         initialiseToolbar();
-        initialiseButtons();
 
         viewModel= new ViewModelProvider(this).get(userProfileViewModel.class);
         viewModel.getUser(profileUID).observe(this, new Observer<UserProfile>() {
@@ -66,37 +61,6 @@ public class OtherUserView extends AppCompatActivity {
 
         initialiseViewPagerAndTab(profileUID);
 
-        btn_review.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent reviewPage = new Intent(OtherUserView.this, ReviewPage.class);
-                reviewPage.putExtra("username",profileUsername);
-                reviewPage.putExtra("user_id",profileUID);
-                startActivity(reviewPage);
-            }
-        });
-
-        btn_report.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent reportPage = new Intent(OtherUserView.this,ReportUserPage.class);
-                reportPage.putExtra("username",profileUsername);
-                reportPage.putExtra("user_id",profileUID);
-                startActivity(reportPage);
-            }
-        });
-
-        btn_message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
-                nextActivity.putExtra("username", tv_username.getText().toString());
-                nextActivity.putExtra("user_id", uid);
-                nextActivity.putExtra("image_url", imageUrl);
-                startActivity(nextActivity);
-            }
-        });
     }
 
     public void fill(UserProfile userProfile) {
@@ -114,9 +78,6 @@ public class OtherUserView extends AppCompatActivity {
         tv_age = findViewById(R.id.tv_profilePageAge);
         tv_gender = findViewById(R.id.tv_profilePageGender);
         iv_ProfilePic = findViewById(R.id.iv_userProfilePageImage);
-        btn_message = findViewById(R.id.message_other_user);
-        btn_review = findViewById(R.id.write_review_other_user);
-        btn_report = findViewById(R.id.report_other_user);
     }
 
     private void initialiseToolbar() {
@@ -156,21 +117,7 @@ public class OtherUserView extends AppCompatActivity {
                 }
             }
         });
-
         tabLayoutMediator.attach();
-
     }
 
-
-    private void initialiseButtons(){
-        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(uid)) {
-            btn_message.setVisibility(View.GONE);
-            btn_report.setVisibility(View.GONE);
-            btn_review.setVisibility(View.GONE);
-
-            btn_message.setEnabled(false);
-            btn_report.setEnabled(false);
-            btn_review.setEnabled(false);
-        }
-    }
 }
