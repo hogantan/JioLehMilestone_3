@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".settings.DeleteAccount"></activity>
+        <activity android:name=".userprofile.YourOwnOtherUserView"></activity>
+        <activity android:name=".settings.DeleteAccount" />
         <activity android:name=".listings.SearchJioActivity" />
         <activity android:name=".userprofile.ReportUserPage" />
         <activity android:name=".userprofile.ReviewPage" />

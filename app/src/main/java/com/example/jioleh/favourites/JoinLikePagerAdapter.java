@@ -42,9 +42,9 @@ public class JoinLikePagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "Joined";
+                return "Join";
             case 1:
-                return "Liked";
+                return "Like";
             default:
                 return null;
         }

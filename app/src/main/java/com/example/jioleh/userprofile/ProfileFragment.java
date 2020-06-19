@@ -89,15 +89,15 @@ public class ProfileFragment extends Fragment {
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 switch (position) {
                     case 0: {
-                        tab.setText("About Me");
-                        break;
-                    }
-                    case 1: {
                         tab.setText("Listings");
                         break;
                     }
-                    case 2: {
+                    case 1: {
                         tab.setText("Reviews");
+                        break;
+                    }
+                    case 2: {
+                        tab.setText("About Me");
                         break;
                     }
                 }

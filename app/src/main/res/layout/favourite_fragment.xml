@@ -9,9 +9,10 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tlJoinedLiked"
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -19,13 +20,15 @@
             android:id="@+id/tabItemJoined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Joined" />
+            android:text="Join"
+            android:layout_gravity="center"/>
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItemLiked"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Liked" />
+            android:text="Like"
+            android:layout_gravity="center"/>
 
     </com.google.android.material.tabs.TabLayout>
 

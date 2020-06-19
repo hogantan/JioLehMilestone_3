@@ -1,10 +1,12 @@
 package com.example.jioleh.settings;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,13 +15,21 @@ import android.widget.Toast;
 
 import com.example.jioleh.PostLoginPage;
 import com.example.jioleh.R;
+import com.example.jioleh.login.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class ChangePasswordPage extends AppCompatActivity {
 
@@ -41,6 +51,50 @@ public class ChangePasswordPage extends AppCompatActivity {
         change_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertDialog();
+            }
+        });
+    }
+
+    private void initialise() {
+        initialiseToolbar();
+        progressBar = new ProgressDialog(ChangePasswordPage.this);
+        old_password = findViewById(R.id.tilChangeOldPassword);
+        new_password = findViewById(R.id.tilChangeNewPassword);
+        confirm_new_password = findViewById(R.id.tilChangeConfirmNewPassword);
+        change_password = findViewById(R.id.btnConfirmChangePassword);
+    }
+
+    private void initialiseToolbar() {
+        toolbar = findViewById(R.id.tbTempTopBar);
+        toolbar.setTitle("Settings");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
+
+    private boolean emptyFields(String s1, String s2, String s3) {
+        return s1.isEmpty() || s2.isEmpty() || s3.isEmpty();
+    }
+
+    private boolean noMatch(String s1, String s2) {
+        return !s1.equals(s2);
+    }
+
+    private boolean tooShort(String s1, String s2) {
+        return s1.length() < 6 || s2.length() < 6;
+    }
+
+    private void alertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to change your password?")
+                .setTitle("Confirm Change");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
 
                 final String p_old = old_password.getEditText().getText().toString().trim();
                 final String p_new = new_password.getEditText().getText().toString().trim();
@@ -98,44 +152,21 @@ public class ChangePasswordPage extends AppCompatActivity {
                                 Toast.makeText(ChangePasswordPage.this,
                                         "Old password is incorrect",
                                         Toast.LENGTH_SHORT).show();
-                                finish();
                             }
                         }
                     });
                 }
             }
         });
-    }
 
-    private void initialise() {
-        initialiseToolbar();
-        progressBar = new ProgressDialog(ChangePasswordPage.this);
-        old_password = findViewById(R.id.tilChangeOldPassword);
-        new_password = findViewById(R.id.tilChangeNewPassword);
-        confirm_new_password = findViewById(R.id.tilChangeConfirmNewPassword);
-        change_password = findViewById(R.id.btnConfirmChangePassword);
-    }
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
 
-    private void initialiseToolbar() {
-        toolbar = findViewById(R.id.tbTempTopBar);
-        toolbar.setTitle("Settings");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
             }
         });
-    }
 
-    private boolean emptyFields(String s1, String s2, String s3) {
-        return s1.isEmpty() || s2.isEmpty() || s3.isEmpty();
-    }
+        AlertDialog dialog = builder.create();
 
-    private boolean noMatch(String s1, String s2) {
-        return !s1.equals(s2);
-    }
-
-    private boolean tooShort(String s1, String s2) {
-        return s1.length() < 6 || s2.length() < 6;
+        dialog.show();
     }
 }

@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="56sp"
+    android:layout_height="wrap_content"
     android:background="@color/baseBlack"
     android:minHeight="?attr/actionBarSize"
     android:theme="?attr/actionBarTheme"
@@ -11,20 +11,32 @@
 
     <TextView
         android:id="@+id/tbTitle"
-        android:layout_width="140dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:text="Edit Profile"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="@color/baseGreen">
     </TextView>
 
-    <Button
-        android:id="@+id/btnConfirmEdit"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ic_check_white"
-        android:layout_marginLeft="150dp"
-        android:clickable="true">
-    </Button>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnConfirmEdit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_check_white"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.883"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"></Button>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.appcompat.widget.Toolbar>
+

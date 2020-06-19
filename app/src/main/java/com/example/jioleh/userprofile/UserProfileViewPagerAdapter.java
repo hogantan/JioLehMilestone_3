@@ -23,11 +23,11 @@ public class UserProfileViewPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new UserProfileAboutMeFragment(uid);
-            case 1:
                 return new UserProfileListingsFragment(uid);
-            case 2:
+            case 1:
                 return new UserProfileReviewsFragment(uid);
+            case 2:
+                return new UserProfileAboutMeFragment(uid);
             default:
                 return null;
         }

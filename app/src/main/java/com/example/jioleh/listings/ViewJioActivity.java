@@ -19,6 +19,7 @@ import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
 import com.example.jioleh.userprofile.OtherUserView;
 import com.example.jioleh.userprofile.UserProfile;
+import com.example.jioleh.userprofile.YourOwnOtherUserView;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -145,10 +146,17 @@ public class ViewJioActivity extends AppCompatActivity {
         displayHost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent nextActivity = new Intent(ViewJioActivity.this, OtherUserView.class);
-                nextActivity.putExtra("username", host_name.getText().toString());
-                nextActivity.putExtra("user_id", host_uid);
-                startActivity(nextActivity);
+                if (currentUser.getUid().equals(host_uid)) {
+                    Intent nextActivity = new Intent(ViewJioActivity.this, YourOwnOtherUserView.class);
+                    nextActivity.putExtra("username", host_name.getText().toString());
+                    nextActivity.putExtra("user_id", host_uid);
+                    startActivity(nextActivity);
+                } else {
+                    Intent nextActivity = new Intent(ViewJioActivity.this, OtherUserView.class);
+                    nextActivity.putExtra("username", host_name.getText().toString());
+                    nextActivity.putExtra("user_id", host_uid);
+                    startActivity(nextActivity);
+                }
             }
         });
     }
