@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.jioleh.chat.ChatFragment;
@@ -53,6 +54,14 @@ public class PostLoginPage extends AppCompatActivity {
         checkIfFromEditProfile();
         initialiseToolbar();
 
+        jio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
+                startActivity(nextActivity);
+            }
+        });
+
 
         bottom_nav_view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -76,8 +85,8 @@ public class PostLoginPage extends AppCompatActivity {
 
                         break;
                     case R.id.bab_post:
-                        Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
-                        startActivity(nextActivity);
+                        //Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
+                        //startActivity(nextActivity);
                         break;
                     case R.id.bab_profile:
                         selectedFragment =frag5;

@@ -28,6 +28,10 @@
             android:title="Change Password" />
 
         <Preference
+            android:key="deleteAccount"
+            android:title="Delete Account" />
+
+        <Preference
             android:key="signout"
             android:title="Sign out" />
 

@@ -119,7 +119,12 @@ public class ChangePasswordPage extends AppCompatActivity {
     private void initialiseToolbar() {
         toolbar = findViewById(R.id.tbTempTopBar);
         toolbar.setTitle("Settings");
-        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private boolean emptyFields(String s1, String s2, String s3) {

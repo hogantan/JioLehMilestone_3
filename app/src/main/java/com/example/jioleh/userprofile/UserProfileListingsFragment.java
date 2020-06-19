@@ -45,7 +45,6 @@ public class UserProfileListingsFragment extends Fragment {
 
     private List<Task<DocumentSnapshot>> lst = new ArrayList<>();
 
-
     private String uid;
 
     public UserProfileListingsFragment() {
@@ -93,8 +92,8 @@ public class UserProfileListingsFragment extends Fragment {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
-
+                        lst.clear();
+                        list_of_activities.clear();
                         for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             if (documentSnapshot != null) {
                                 lst.add(add(documentSnapshot.getId()));
@@ -112,23 +111,16 @@ public class UserProfileListingsFragment extends Fragment {
                                         list_of_activities.add(jioActivity);
                                     }
                                 }
-                                adapter.setData(list_of_activities);
-
-
+                                adapter.setData(list_of_activities, true);
+                                adapter.notifyDataSetChanged();
                             }
                         });
                     }
                 });
-
-
     }
-
 
     private Task<DocumentSnapshot> add(String id) {
         return datastore.collection("activities").document(id).get();
-
-
-
     }
 }
 
