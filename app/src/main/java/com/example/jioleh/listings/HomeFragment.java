@@ -5,10 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,14 +15,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.jioleh.PostLoginPage;
 import com.example.jioleh.R;
+import com.example.jioleh.location.NearByActivity;
 
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private ImageView search;
+    private ImageView findNearBy;
     private RecyclerView activity_list;
 
     //private FirebaseFirestore datastore;
@@ -39,7 +37,7 @@ public class HomeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
         currentView = inflater.inflate(R.layout.fragment_home,container,false);
         initialise();
         initialiseRecyclerView();
@@ -49,6 +47,14 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Intent nextActivity = new Intent(getContext(), SearchJioActivity.class);
                 startActivity(nextActivity);
+            }
+        });
+
+        findNearBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent test = new Intent(getContext(), NearByActivity.class);
+                startActivity(test);
             }
         });
 
@@ -74,6 +80,7 @@ public class HomeFragment extends Fragment {
 
     private void initialise() {
         search = currentView.findViewById(R.id.ivSearchActivity);
+        findNearBy = currentView.findViewById(R.id.ivFindNearby);
         //datastore = FirebaseFirestore.getInstance();
     }
 
