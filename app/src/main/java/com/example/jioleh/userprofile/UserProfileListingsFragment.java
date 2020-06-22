@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,10 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -37,6 +42,7 @@ import java.util.concurrent.CompletableFuture;
 public class UserProfileListingsFragment extends Fragment {
     private View currentView;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private FavouritesAdapter adapter;
 
     private FirebaseFirestore datastore;
@@ -46,6 +52,7 @@ public class UserProfileListingsFragment extends Fragment {
     private List<Task<DocumentSnapshot>> lst = new ArrayList<>();
 
     private String uid;
+    private boolean deletable;
 
     public UserProfileListingsFragment() {
         // Required empty public constructor
@@ -53,6 +60,7 @@ public class UserProfileListingsFragment extends Fragment {
 
     public UserProfileListingsFragment(String uid){
         this.uid = uid;
+        this.deletable = FirebaseAuth.getInstance().getCurrentUser().getUid().equals(uid);
     }
 
     @Override
@@ -69,11 +77,23 @@ public class UserProfileListingsFragment extends Fragment {
         initialise();
         initialiseRecyclerView();
         getHostingActivities();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Second line of check
+                checkActivityExpiry();
+                getHostingActivities();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return currentView;
     }
 
     private void initialise() {
         datastore = FirebaseFirestore.getInstance();
+        swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
     }
 
     private void initialiseRecyclerView() {
@@ -100,10 +120,10 @@ public class UserProfileListingsFragment extends Fragment {
                             }
                         }
 
-
                         Tasks.whenAllSuccess(lst).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
                             @Override
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {
+
                                 for (int i = 0; i < lst.size(); i++) {
                                     DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
                                     JioActivity jioActivity = snapshot.toObject(JioActivity.class);
@@ -111,7 +131,21 @@ public class UserProfileListingsFragment extends Fragment {
                                         list_of_activities.add(jioActivity);
                                     }
                                 }
-                                adapter.setData(list_of_activities, true);
+
+                                //to show activities that are not expired first
+                                //linear time sorting though, although doubt that n will become too large anyways
+                                Collections.sort(list_of_activities, new Comparator<JioActivity>() {
+                                    @Override
+                                    public int compare(JioActivity o1, JioActivity o2) {
+                                        if (o1.isExpired() && !o2.isExpired()) {
+                                            return 0;
+                                        } else {
+                                            return -1;
+                                        }
+                                    }
+                                });
+
+                                adapter.setData(list_of_activities, deletable);
                                 adapter.notifyDataSetChanged();
                             }
                         });
@@ -121,6 +155,24 @@ public class UserProfileListingsFragment extends Fragment {
 
     private Task<DocumentSnapshot> add(String id) {
         return datastore.collection("activities").document(id).get();
+    }
+
+    public void checkActivityExpiry() {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
+
+        jioActivityColRef.whereLessThan("event_timestamp", currentDateTime)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
+                            jioActivityColRef.document(documentSnapshot.getId())
+                                    .update("expired", true);
+                        }
+                    }
+                });
     }
 }
 

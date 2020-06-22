@@ -38,6 +38,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -94,6 +95,9 @@ public class ViewJioActivity extends AppCompatActivity {
     private int max_participants;
     private int current_participants;
     private ArrayList<String> list_of_participants;
+
+    //Used to determine status of activity (expired or not)
+    private boolean activityExpired;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +184,7 @@ public class ViewJioActivity extends AppCompatActivity {
         join = findViewById(R.id.btnViewJoin);
         like = findViewById(R.id.btnTopBarLike);
         buttonFlag = false;
+        activityExpired =false;
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         datastore = FirebaseFirestore.getInstance();
@@ -217,9 +222,16 @@ public class ViewJioActivity extends AppCompatActivity {
                     join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegreen_button));
                 }
             } else {
-                System.out.println("here3");
                 join.setEnabled(true);
             }
+        }
+    }
+
+    private void checkIsExpired() {
+        if (activityExpired) {
+            join.setEnabled(false);
+            join.setText("Expired");
+            join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegrey_button));
         }
     }
 
@@ -314,7 +326,7 @@ public class ViewJioActivity extends AppCompatActivity {
                         }
                         buttonFlag = true;
                         checkIsFull();
-                        System.out.println(join.getText().toString());
+                        checkIsExpired();
                     }
                 });
     }
@@ -331,6 +343,15 @@ public class ViewJioActivity extends AppCompatActivity {
                         if (current_activity != null) {
                             if (!current_activity.getImageUrl().equals("") && current_activity.getImageUrl()!=null) {
                                 Picasso.get().load(current_activity.getImageUrl()).into(displayImage);
+                            }
+
+                            //second line of checking whether an activity has expired or not
+                            Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+                            if (current_activity.getEvent_timestamp().before(currentDateTime)) {
+                                datastore.collection("activities")
+                                        .document(documentSnapshot.getId())
+                                        .update("expired", true);
+                                activityExpired = true;
                             }
 
                             //live update of current participants as it listens for change in data
@@ -352,6 +373,7 @@ public class ViewJioActivity extends AppCompatActivity {
                             host_uid = current_activity.getHost_uid();
                             setUpHostInfo(host_uid);
                             checkIsFull(); //this will respond to live changes from the database
+                            checkIsExpired();
                         } else {
                             //This listens to activities being deleted
                             datastore.collection("users")
@@ -380,8 +402,8 @@ public class ViewJioActivity extends AppCompatActivity {
                         UserProfile current_user = documentSnapshot.toObject(UserProfile.class);
                         host_imageUrl = current_user.getImageUrl();
 
-                        if (!current_user.getImageUrl().equals("") && current_user.getImageUrl()!=null) {
-                            Picasso.get().load(current_user.getImageUrl()).into(host_image);
+                        if (!host_imageUrl.equals("") && host_imageUrl!=null) {
+                            Picasso.get().load(host_imageUrl).into(host_image);
                         }
 
                         host_name.setText(current_user.getUsername());

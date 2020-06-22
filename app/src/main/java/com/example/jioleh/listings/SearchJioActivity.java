@@ -32,15 +32,18 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class SearchJioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -206,6 +209,9 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
     }
 
     private void searchDatabase() {
+        //Third line of check
+        checkActivityExpiry();
+
         String title_input = title.getEditText().getText().toString();
         String location_input = location.getEditText().getText().toString();
         String date_input = date.getText().toString();
@@ -234,11 +240,16 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<JioActivity> activities = queryDocumentSnapshots.toObjects(JioActivity.class);
-                adapter.setData(activities);
+                ArrayList<JioActivity> list_of_activities = new ArrayList<>();
+                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                    if (queryDocumentSnapshot.get("expired").equals(false)) {
+                        list_of_activities.add(queryDocumentSnapshot.toObject(JioActivity.class));
+                    }
+                }
+                adapter.setData(list_of_activities);
                 adapter.notifyDataSetChanged();
 
-                if (activities.size() == 0) {
+                if (list_of_activities.size() == 0) {
                     resultsMessage.setText("No matches.");
                 } else {
                     resultsMessage.setText("");
@@ -312,5 +323,23 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
             words[i] = words[i].replaceAll("[^\\w]", "");
         }
         return words;
+    }
+
+    public void checkActivityExpiry() {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        CollectionReference jioActivityColRef = datastore.collection("activities");
+
+        jioActivityColRef.whereLessThan("event_timestamp", currentDateTime)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
+                            jioActivityColRef.document(documentSnapshot.getId())
+                                    .update("expired", true);
+                        }
+                    }
+                });
     }
 }

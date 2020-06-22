@@ -14,10 +14,18 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.jioleh.R;
 import com.example.jioleh.location.NearByActivity;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -25,6 +33,7 @@ public class HomeFragment extends Fragment {
     private ImageView search;
     private ImageView findNearBy;
     private RecyclerView activity_list;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     //private FirebaseFirestore datastore;
     private ActivityAdapter adapter;
@@ -45,6 +54,8 @@ public class HomeFragment extends Fragment {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Date currentDate = Calendar.getInstance().getTime();
+                System.out.println(currentDate);
                 Intent nextActivity = new Intent(getContext(), SearchJioActivity.class);
                 startActivity(nextActivity);
             }
@@ -55,6 +66,14 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Intent test = new Intent(getContext(), NearByActivity.class);
                 startActivity(test);
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                viewModel.checkActivityExpiry();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -81,6 +100,7 @@ public class HomeFragment extends Fragment {
     private void initialise() {
         search = currentView.findViewById(R.id.ivSearchActivity);
         findNearBy = currentView.findViewById(R.id.ivFindNearby);
+        swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
         //datastore = FirebaseFirestore.getInstance();
     }
 

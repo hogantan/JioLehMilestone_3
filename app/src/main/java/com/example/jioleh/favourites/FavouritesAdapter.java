@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,17 +84,19 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
      class FavouritesHolder extends RecyclerView.ViewHolder {
 
+        private TextView expired;
         private ImageView displayImage;
         private TextView displayTitle;
         private TextView date;
         private TextView time;
         private TextView location;
         private String activity_id;
-         private Context currentContext;
+        private Context currentContext;
 
         //Initialising the holder
         FavouritesHolder(@NonNull final View itemView) {
             super(itemView);
+            expired = itemView.findViewById(R.id.tvExpired);
             displayImage = itemView.findViewById(R.id.ivFavouritesImage);
             displayTitle = itemView.findViewById(R.id.tvFavouritesTitle);
             date = itemView.findViewById(R.id.tvFavouritesDate);
@@ -123,6 +126,11 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
         //Setting the details in the holder
         void setUpView(JioActivity jioActivity) {
+            if (jioActivity.isExpired()) {
+                expired.setVisibility(TextView.VISIBLE);
+            } else {
+                expired.setVisibility(TextView.INVISIBLE);
+            }
             if (!jioActivity.getImageUrl().equals("") && jioActivity.getImageUrl()!=null) {
                 Picasso.get().load(jioActivity.getImageUrl()).into(displayImage);
             }

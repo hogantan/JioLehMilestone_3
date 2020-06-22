@@ -102,14 +102,18 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
 
         //Setting the details in the holder
         void setUpView(JioActivity jioActivity) {
-            if (!jioActivity.getImageUrl().equals("") && jioActivity.getImageUrl()!=null) {
-                Picasso.get().load(jioActivity.getImageUrl()).into(displayImage);
+            if (jioActivity.isExpired()) {
+
+            } else {
+                if (!jioActivity.getImageUrl().equals("") && jioActivity.getImageUrl()!=null) {
+                    Picasso.get().load(jioActivity.getImageUrl()).into(displayImage);
+                }
+                displayTitle.setText(jioActivity.getTitle());
+                date.setText(convertDateFormat(jioActivity.getEvent_date()));
+                time.setText(jioActivity.getEvent_time());
+                location.setText(jioActivity.getLocation());
+                currentParticipants.setText(jioActivity.getCurrent_participants() + "/" + jioActivity.getMax_participants());
             }
-            displayTitle.setText(jioActivity.getTitle());
-            date.setText(convertDateFormat(jioActivity.getEvent_date()));
-            time.setText(jioActivity.getEvent_time());
-            location.setText(jioActivity.getLocation());
-            currentParticipants.setText(jioActivity.getCurrent_participants() + "/" + jioActivity.getMax_participants());
         }
 
         private String convertDateFormat(String date) {

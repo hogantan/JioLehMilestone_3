@@ -1,11 +1,13 @@
 package com.example.jioleh;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import com.example.jioleh.favourites.FavouriteFragment;
 import com.example.jioleh.listings.HomeFragment;
 import com.example.jioleh.post.PostingPage;
 import com.example.jioleh.post.PostFragment;
+import com.example.jioleh.settings.EditProfilePage;
 import com.example.jioleh.userprofile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -139,5 +142,4 @@ public class PostLoginPage extends AppCompatActivity {
             active = frag5;
         }
     }
-
 }
