@@ -62,7 +62,7 @@ public class NearByActivity extends AppCompatActivity
 
     private GoogleMap map;
     private SupportMapFragment mapFragment;
-    SearchView searchView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,41 +72,6 @@ public class NearByActivity extends AppCompatActivity
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                String location = searchView.getQuery().toString();
-                List<Address> addressList = new ArrayList<>();
-
-                if(location!=null ||!location.equals("")) {
-                    Geocoder geocoder = new Geocoder(NearByActivity.this, Locale.getDefault());
-                    try {
-
-
-                            addressList = geocoder.getFromLocationName(location, 1);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    if (addressList != null && addressList.size() > 0) {
-                        Address address = addressList.get(0);
-                       LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                        map.addMarker(new MarkerOptions().position(latLng).title(location));
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                }
-                }
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-
 
         mapFragment.getMapAsync(this);
     }
