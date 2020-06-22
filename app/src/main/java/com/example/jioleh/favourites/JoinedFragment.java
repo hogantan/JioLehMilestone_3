@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,12 +33,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class JoinedFragment extends Fragment {
 
     private View currentView;
     private TextView emptyText;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private FavouritesAdapter adapter;
 
@@ -53,12 +60,25 @@ public class JoinedFragment extends Fragment {
         initialise();
         initialiseRecyclerView();
         getJoined();
+
+        //this is to update when an activity expires but it does not get reflected since join and like fragment does not listen to field data of activity
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Second line of check
+                checkActivityExpiry();
+                getJoined();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return currentView;
     }
 
     private void initialise() {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         datastore = FirebaseFirestore.getInstance();
+        swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
         emptyText = currentView.findViewById(R.id.tvFavouriteEmpty);
     }
 
@@ -84,6 +104,18 @@ public class JoinedFragment extends Fragment {
                         Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
                             @Override
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {
+                                //to show activities that are not expired first
+                                //linear time sorting though, although doubt that n will become too large anyways
+                                Collections.sort(list_of_activities, new Comparator<JioActivity>() {
+                                    @Override
+                                    public int compare(JioActivity o1, JioActivity o2) {
+                                        if (o1.isExpired() && !o2.isExpired()) {
+                                            return 0;
+                                        } else {
+                                            return -1;
+                                        }
+                                    }
+                                });
                                 adapter.setData(list_of_activities, false);
                                 adapter.notifyDataSetChanged();
                                 //Visual text
@@ -126,5 +158,23 @@ public class JoinedFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
+    }
+
+    public void checkActivityExpiry() {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
+
+        jioActivityColRef.whereLessThan("event_timestamp", currentDateTime)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
+                            jioActivityColRef.document(documentSnapshot.getId())
+                                    .update("expired", true);
+                        }
+                    }
+                });
     }
 }

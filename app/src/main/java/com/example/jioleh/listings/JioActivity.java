@@ -1,14 +1,18 @@
 package com.example.jioleh.listings;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
 public class JioActivity {
-
 
     private String activityId; //use fireStore document id
     private String title;
@@ -17,6 +21,7 @@ public class JioActivity {
     private String host_uid;
     private String event_date;
     private String event_time;
+    private Date event_timestamp;
     private String deadline_date;
     private String deadline_time;
     private String details;
@@ -26,6 +31,7 @@ public class JioActivity {
     private int max_participants;
     private ArrayList<String> participants;
     private ArrayList<String> title_array;
+    private boolean expired;
     @ServerTimestamp
     private Date time_created;
 
@@ -41,6 +47,7 @@ public class JioActivity {
         this.host_uid = host_uid;
         this.event_date = event_date;
         this.event_time = event_time;
+        convertDate(event_date, event_time);
         this.deadline_date = deadline_date;
         this.deadline_time = deadline_time;
         this.details = details;
@@ -50,6 +57,7 @@ public class JioActivity {
         this.title_array = new ArrayList<>();
         fillArray(this.title_array, this.title);
         this.current_participants = 0;
+        this.expired = false;
         this.imageUrl = "";
     }
 
@@ -60,6 +68,16 @@ public class JioActivity {
         }
         array.addAll(Arrays.asList(words));
         array.add("");
+    }
+
+    private void convertDate(String date, String time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        try {
+            this.event_timestamp = formatter.parse(date + " " + time);
+            System.out.println(formatter.parse(date + " " + time));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -236,5 +254,21 @@ public class JioActivity {
 
     public void setGeoPoint(GeoPoint geoPoint) {
         this.geoPoint = geoPoint;
+    }
+
+    public Date getEvent_timestamp() {
+        return event_timestamp;
+    }
+
+    public void setEvent_timestamp(Date event_timestamp) {
+        this.event_timestamp = event_timestamp;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }
