@@ -22,6 +22,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" /> <!-- ******************************************* -->
         <activity android:name=".location.NearByActivity" />
+        <activity android:name=".userprofile.YourOwnOtherUserView"></activity>
+        <activity android:name=".settings.DeleteAccount" />
         <activity android:name=".listings.SearchJioActivity" />
         <activity android:name=".userprofile.ReportUserPage" />
         <activity android:name=".userprofile.ReviewPage" />

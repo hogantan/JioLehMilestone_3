@@ -30,12 +30,13 @@
                 android:id="@+id/tvPostFirstHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
                 android:text="Display Information"
                 android:textColor="@color/baseGreen"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.059"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,41 +44,40 @@
                 android:id="@+id/ivPostDisplayImage"
                 android:layout_width="116dp"
                 android:layout_height="120dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_add_box_green"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.054"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvPostFirstHeader" />
 
             <ImageButton
-                android:id="@+id/ibtnRemoveImage"
+                android:id="@+id/btnRemoveImage"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="52dp"
+                android:layout_marginTop="120dp"
                 android:src="@drawable/ic_baseline_indeterminate_check_box_24"
-                app:layout_constraintStart_toEndOf="@+id/ivPostDisplayImage"
-                app:layout_constraintTop_toBottomOf="@+id/tilDisplayTitle">
+                app:layout_constraintEnd_toEndOf="@+id/ivPostDisplayImage"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/ivPostDisplayImage"
+                app:layout_constraintTop_toTopOf="@+id/ivPostDisplayImage">
 
             </ImageButton>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilDisplayTitle"
-                android:layout_width="230dp"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="28dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.358"
                 app:layout_constraintStart_toEndOf="@+id/ivPostDisplayImage"
-                app:layout_constraintTop_toBottomOf="@+id/tvPostFirstHeader"
-                tools:layout_editor_absoluteX="1dp"
-                tools:layout_editor_absoluteY="376dp">
+                app:layout_constraintTop_toBottomOf="@+id/tvPostFirstHeader">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDisplayTitle"
-                    android:layout_width="210dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:hint="Title of post"
@@ -114,11 +114,12 @@
 
             <Spinner
                 android:id="@+id/spTypeActivity"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="25dp"
                 android:gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -142,7 +143,10 @@
                 android:layout_width="250dp"
                 android:layout_marginRight="90dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="25dp"
                 android:autofillHints=""
                 android:hint="Open map to select location"
                 android:textSize="16sp"
@@ -178,11 +182,9 @@
 
             <TextView
                 android:id="@+id/tvTime"
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/edit_text_background_postingpage"
                 android:gravity="center_horizontal"
                 android:textAlignment="center"
@@ -193,15 +195,15 @@
 
             <TextView
                 android:id="@+id/tvDate"
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/edit_text_background_postingpage"
                 android:gravity="center_horizontal"
                 android:text=""
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_bias="0.25"
                 app:layout_constraintStart_toEndOf="@+id/btnSetTime"
                 app:layout_constraintTop_toBottomOf="@+id/tvActivityTimeDate" />
 
@@ -209,10 +211,10 @@
                 android:id="@+id/btnSetTime"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/ic_access_time_white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.041"
                 app:layout_constraintStart_toEndOf="@+id/tvTime"
                 app:layout_constraintTop_toBottomOf="@+id/tvActivityTimeDate" />
 
@@ -220,10 +222,12 @@
                 android:id="@+id/btnSetDate"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/ic_date_range_white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/tvDate"
                 app:layout_constraintTop_toBottomOf="@+id/tvActivityTimeDate" />
 
@@ -241,11 +245,9 @@
 
             <TextView
                 android:id="@+id/tvDeadlineTime"
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/edit_text_background_postingpage"
                 android:gravity="center_horizontal"
                 android:textAlignment="center"
@@ -258,25 +260,25 @@
                 android:id="@+id/btnSetTimeDeadline"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/ic_access_time_white"
-                app:layout_constraintStart_toEndOf="@+id/tvTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.041"
+                app:layout_constraintStart_toEndOf="@+id/tvDeadlineTime"
                 app:layout_constraintTop_toBottomOf="@+id/tvConfirmationDeadline" />
 
             <TextView
                 android:id="@+id/tvDeadlineDate"
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/edit_text_background_postingpage"
                 android:gravity="center_horizontal"
                 android:text=""
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btnSetTime"
+                app:layout_constraintHorizontal_bias="0.25"
+                app:layout_constraintStart_toEndOf="@+id/btnSetTimeDeadline"
                 app:layout_constraintTop_toBottomOf="@+id/tvConfirmationDeadline" />
 
             <TextView
@@ -295,22 +297,24 @@
                 android:id="@+id/btnSetDateDeadline"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/ic_date_range_white"
-                app:layout_constraintStart_toEndOf="@+id/tvDate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/tvDeadlineDate"
                 app:layout_constraintTop_toBottomOf="@+id/tvConfirmationDeadline" />
 
             <TextView
                 android:id="@+id/tvMinParticipants"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="68dp"
-                android:layout_marginLeft="68dp"
                 android:layout_marginTop="16dp"
                 android:text="Minimum:"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.199"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvNumberParticipants" />
 
@@ -318,8 +322,6 @@
                 android:id="@+id/etMinParticipants"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="16dp"
                 android:autofillHints=""
                 android:background="@drawable/edit_text_background_postingpage"
@@ -328,6 +330,8 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.025"
                 app:layout_constraintStart_toEndOf="@+id/tvMinParticipants"
                 app:layout_constraintTop_toBottomOf="@+id/tvNumberParticipants" />
 
@@ -335,11 +339,11 @@
                 android:id="@+id/tvMaxParticipants"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="72dp"
-                android:layout_marginLeft="72dp"
                 android:layout_marginTop="16dp"
                 android:text="Maximum:"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.248"
                 app:layout_constraintStart_toEndOf="@+id/etMinParticipants"
                 app:layout_constraintTop_toBottomOf="@+id/tvNumberParticipants" />
 
@@ -347,8 +351,6 @@
                 android:id="@+id/etMaxParticipants"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="16dp"
                 android:autofillHints=""
                 android:background="@drawable/edit_text_background_postingpage"
@@ -357,6 +359,8 @@
                 android:inputType="number"
                 android:textAlignment="center"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.083"
                 app:layout_constraintStart_toEndOf="@+id/tvMaxParticipants"
                 app:layout_constraintTop_toBottomOf="@+id/tvNumberParticipants" />
 
@@ -374,15 +378,17 @@
 
             <EditText
                 android:id="@+id/etAdditionalDetails"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginEnd="25dp"
                 android:ems="10"
                 android:hint="Type additional details here"
                 android:inputType="textMultiLine"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvDetails" />
 

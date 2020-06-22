@@ -83,7 +83,7 @@ public class LoginPage extends AppCompatActivity {
     private void checkUser(String email, String password) {
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(LoginPage.this,
-                    "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+                    "Incorrect username or password", Toast.LENGTH_SHORT).show();
         } else {
 
             //Setting Details of Loading Screen

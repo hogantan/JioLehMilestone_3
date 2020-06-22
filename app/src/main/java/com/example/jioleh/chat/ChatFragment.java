@@ -49,16 +49,8 @@ public class ChatFragment extends Fragment {
         currentView = inflater.inflate(R.layout.chat_fragment,container,false);
         initialise();
         initialiseRecyclerView();
-        return currentView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        list_of_task.clear();
-        list_of_profiles.clear();
-        list_of_uid.clear();
         getUsers();
+        return currentView;
     }
 
     private void initialise() {
@@ -82,10 +74,11 @@ public class ChatFragment extends Fragment {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
-                            updateView(list_of_documents);
-                        }
+                        list_of_task.clear();
+                        list_of_profiles.clear();
+                        list_of_uid.clear();
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        updateView(list_of_documents);
                     }
                 });
     }

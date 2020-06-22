@@ -2,6 +2,7 @@ package com.example.jioleh.favourites;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,7 +24,9 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -49,6 +52,7 @@ public class JoinedFragment extends Fragment {
         currentView = inflater.inflate(R.layout.fragment_joined, container, false);
         initialise();
         initialiseRecyclerView();
+        getJoined();
         return currentView;
     }
 
@@ -58,29 +62,17 @@ public class JoinedFragment extends Fragment {
         emptyText = currentView.findViewById(R.id.tvFavouriteEmpty);
     }
 
-
-    //Since joined or liked tabs are only updated if user goes into an ViewJioActivity, there
-    //should not be any change in data when user is on this fragment
-    //Thus, only need to get data when data sees this fragment which is why onStart is used
-    @Override
-    public void onStart() {
-        super.onStart();
-        //the following has to be cleared as since they are initialised onCreate which is only called once
-        //an alternative can be to create a new list everytime onStart as well
-        list_of_tasks.clear();
-        list_of_activities.clear();
-        getJoined();
-    }
-
     //To locate the activities that the user has joined
     private void getJoined() {
         datastore.collection("users")
                 .document(currentUser.getUid())
                 .collection("joined")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        //listens to joined for changes which will only occur if there is a change in activities collection which is prompted by ViewJioActivity Listener
+                        list_of_tasks.clear();
+                        list_of_activities.clear();
                         List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
 
                         //Adding a list of completable futures
@@ -92,14 +84,8 @@ public class JoinedFragment extends Fragment {
                         Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
                             @Override
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {
-                                for (int i = 0; i < list_of_tasks.size(); i++) {
-                                    DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
-                                    JioActivity jioActivity = snapshot.toObject(JioActivity.class);
-                                    list_of_activities.add(jioActivity);
-                                }
-                                adapter.setData(list_of_activities);
+                                adapter.setData(list_of_activities, false);
                                 adapter.notifyDataSetChanged();
-
                                 //Visual text
                                 if (list_of_activities.isEmpty()) {
                                     emptyText.setText("You have not join any activities!");
@@ -113,10 +99,25 @@ public class JoinedFragment extends Fragment {
     }
 
     //Get a completable future task
-    private Task<DocumentSnapshot> getActivity(String uid) {
+    private Task<DocumentSnapshot> getActivity(final String uid) {
         return datastore.collection("activities")
                 .document(uid)
-                .get();
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            list_of_activities.add(documentSnapshot.toObject(JioActivity.class));
+                        } else {
+                            //removes from current user joined activities
+                            datastore.collection("users")
+                                    .document(currentUser.getUid())
+                                    .collection("joined")
+                                    .document(uid)
+                                    .delete();
+                        }
+                    }
+                });
     }
 
     private void initialiseRecyclerView() {

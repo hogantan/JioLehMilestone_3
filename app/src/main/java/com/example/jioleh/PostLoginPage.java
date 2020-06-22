@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.jioleh.chat.ChatFragment;
@@ -53,6 +54,14 @@ public class PostLoginPage extends AppCompatActivity {
         checkIfFromEditProfile();
         initialiseToolbar();
 
+        jio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
+                startActivity(nextActivity);
+            }
+        });
+
 
         bottom_nav_view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -62,25 +71,29 @@ public class PostLoginPage extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.bab_home:
                         selectedFragment = frag1;
+                        toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_background));
                         toolbar_title.setText("JioLeh");
 
                         break;
                     case R.id.bab_chat:
                         selectedFragment = frag2;
+                        toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_background));
                         toolbar_title.setText("Messages");
 
                         break;
                     case R.id.bab_favourite:
                         selectedFragment = frag3;
+                        toolbar.setBackground(getResources().getDrawable(R.color.baseBlack));
                         toolbar_title.setText("Favourites");
 
                         break;
                     case R.id.bab_post:
-                        Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
-                        startActivity(nextActivity);
+                        //Intent nextActivity = new Intent(PostLoginPage.this, PostingPage.class);
+                        //startActivity(nextActivity);
                         break;
                     case R.id.bab_profile:
                         selectedFragment =frag5;
+                        toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_background));
                         toolbar_title.setText("My Profile");
                         break;
                 }

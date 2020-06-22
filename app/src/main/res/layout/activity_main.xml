@@ -4,50 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/baseBlack"
+    android:background="@drawable/app_logo"
     tools:context=".login.MainActivity">
-
-    <ImageView
-        android:id="@+id/ivLogo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:background="@drawable/logo_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.418"></ImageView>
 
     <Button
         android:id="@+id/btnSignIn"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/btn_round_rectangle"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
         android:text="@string/common_signin_button_text"
+        android:textAllCaps="false"
         android:textColor="#202124"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivLogo"
-        app:layout_constraintVertical_bias="0.365" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.59" />
 
     <Button
         android:id="@+id/btnNeedAAccount"
-        android:layout_width="250dp"
-        android:layout_height="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_edge_button_white"
-        android:text="Sign Up For An Account"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:text="Sign Up"
+        android:textAllCaps="false"
         android:textColor="#202124"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSignIn" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

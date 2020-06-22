@@ -2,12 +2,12 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="56sp"
-    android:background="@color/baseBlack"
+    android:layout_height="wrap_content"
+    android:background="@drawable/toolbar_background"
     android:minHeight="?attr/actionBarSize"
     android:theme="?attr/actionBarTheme"
     app:layout_constraintTop_toTopOf="parent"
-    app:navigationIcon="@drawable/ic_close_white">
+    app:navigationIcon="?attr/homeAsUpIndicator">
 
     <TextView
         android:id="@+id/tbTitle"
@@ -15,16 +15,29 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:text="Post an Activity"
-        android:textSize="20sp"
+        android:fontFamily="@font/sintony_bold"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:textColor="@color/baseGreen">
     </TextView>
 
-    <Button
-        android:id="@+id/btnConfirmPost"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ic_check_white"
-        android:layout_marginLeft="160dp"
-        android:clickable="true">
-    </Button>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnConfirmPost"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/ic_check_white"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"></Button>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.appcompat.widget.Toolbar>

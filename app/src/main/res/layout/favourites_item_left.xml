@@ -1,89 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="180dp"
-    android:layout_height="240dp"
-    android:layout_marginLeft="15dp"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:background="@drawable/favourite_item_background"
     android:padding="8dp">
 
     <ImageView
         android:id="@+id/ivFavouritesImage"
-        android:layout_width="150dp"
-        android:layout_height="120dp"
-        android:layout_marginLeft="8dp"
+        android:layout_width="170dp"
+        android:layout_height="150dp"
         android:scaleType="fitXY"
-        android:src="@drawable/btn_round_rectangle"/>
+        android:src="@drawable/btn_round_rectangle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvFavouritesTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:layout_below="@id/ivFavouritesImage"
-        android:text="Title"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:padding="5dp"
+        android:text="Title"
         android:textColor="@color/baseWhite"
         android:textSize="12dp"
-        android:layout_marginLeft="3dp"
-        android:padding="10dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivFavouritesImage" />
 
     <ImageView
+        android:id="@+id/ivFavouritesLocation"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_marginTop="155dp"
-        android:layout_marginLeft="8dp"
-        android:background="@drawable/ic_baseline_location_on_green"/>
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_baseline_location_on_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvFavouritesTitle" />
 
     <TextView
         android:id="@+id/tvFavouritesLocation"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="145dp"
-        android:text="Location"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:text="Location"
         android:textColor="@color/baseWhite"
         android:textSize="12dp"
-        android:layout_marginLeft="18dp"
-        android:padding="10dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toEndOf="@+id/ivFavouritesLocation"
+        app:layout_constraintTop_toBottomOf="@+id/tvFavouritesTitle" />
 
     <ImageView
+        android:id="@+id/ivFavouritesDate"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="175dp"
-        android:background="@drawable/ic_baseline_access_time_basegreen"/>
+        android:layout_marginTop="12dp"
+        android:background="@drawable/ic_baseline_access_time_basegreen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivFavouritesLocation" />
 
     <TextView
         android:id="@+id/tvFavouritesDate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="165dp"
-        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:text="Date"
         android:textColor="@color/baseWhite"
-        android:textSize="12dp" />
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toEndOf="@+id/ivFavouritesDate"
+        app:layout_constraintTop_toBottomOf="@+id/tvFavouritesLocation" />
 
     <ImageView
+        android:id="@+id/ivFavouritesTime"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_marginTop="195dp"
-        android:layout_marginLeft="8dp"
-        android:background="@drawable/ic_baseline_calendar_today_basegreen"/>
+        android:layout_marginTop="12dp"
+        android:background="@drawable/ic_baseline_calendar_today_basegreen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivFavouritesDate" />
 
     <TextView
         android:id="@+id/tvFavouritesTime"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="185dp"
-        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:text="Time"
         android:textColor="@color/baseWhite"
-        android:textSize="12dp" />
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toEndOf="@+id/ivFavouritesTime"
+        app:layout_constraintTop_toBottomOf="@+id/tvFavouritesDate" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

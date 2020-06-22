@@ -54,7 +54,10 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
+    //Used in filter search bar expandable bar
     implementation 'com.github.aakira:expandable-layout:1.6.0@aar'
+    //Use to scale relative layout to fit all screen sizes
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
     //Google services
     implementation 'com.google.android.gms:play-services-maps:17.0.0'

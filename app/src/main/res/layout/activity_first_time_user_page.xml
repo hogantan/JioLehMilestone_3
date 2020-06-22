@@ -26,39 +26,54 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent">
 
+            <TextView
+                android:id="@+id/tvDisplayInformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Display Information"
+                android:textColor="@color/baseGreen"
+                android:layout_marginTop="15dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintHorizontal_bias="0.034"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+            </TextView>
+
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_view"
-                android:layout_width="152dp"
-                android:layout_height="152dp"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_120sdp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="30dp"
                 android:onClick="addImage"
                 android:src="@drawable/default_picture"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/tvDisplayInformation" />
 
             <ImageButton
                 android:id="@+id/ic_camera"
-                android:layout_width="34dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_alignEnd="@+id/image_view"
                 android:layout_alignRight="@+id/image_view"
-                android:layout_marginStart="116dp"
-                android:layout_marginLeft="116dp"
-                android:layout_marginTop="136dp"
                 android:background="@drawable/ic_camera_white"
+                app:layout_constraintEnd_toEndOf="@+id/image_view"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/image_view"
-                app:layout_constraintTop_toTopOf="@+id/image_view" />
+                app:layout_constraintTop_toBottomOf="@+id/image_view" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/username"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/_150sdp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
+                android:layout_marginTop="55dp"
                 app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.9"
@@ -82,7 +97,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/age"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/_150sdp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
@@ -103,7 +118,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/gender"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/_150sdp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
@@ -122,32 +137,36 @@
                     android:maxLength="21"
                     android:maxLines="1"
                     android:inputType="textFilter"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"/>
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <View
-                android:id="@+id/viewCenterLine"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/baseWhite"
-                android:layout_marginTop="15dp"
-                app:layout_constraintTop_toBottomOf="@+id/gender">
-            </View>
+            <TextView
+                android:id="@+id/tvAboutMe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="About Me"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/baseGreen"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.034"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/gender"></TextView>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="15dp"
                 app:errorEnabled="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.075"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/viewCenterLine">
+                app:layout_constraintTop_toBottomOf="@+id/tvAboutMe">
 
                 <com.google.android.material.textfield.TextInputEditText
-
-                    android:layout_width="400dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ems="10"
@@ -167,7 +186,7 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="400dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ems="10"
@@ -187,7 +206,7 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="400dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ems="10"
@@ -206,7 +225,7 @@
                 tools:layout_editor_absoluteX="0dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="400dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:ems="10"
