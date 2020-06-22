@@ -13,4 +13,5 @@
     <color name="White">#EEF4F5</color>
     <color name="offGreen">#D1EBFF</color>
     <color name="darkBlack">#000</color>
+    <color name="red">#FF0000</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.jioleh.listings;
 
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class JioActivity {
     private ArrayList<String> title_array;
     @ServerTimestamp
     private Date time_created;
+
+    private GeoPoint geoPoint;
 
     public JioActivity(String title, String location, String type_of_activity,
                        String host_uid, String event_date, String event_time, String deadline_date,
@@ -227,4 +230,11 @@ public class JioActivity {
         this.time_created = time_created;
     }
 
+    public GeoPoint getGeoPoint() {
+        return geoPoint;
+    }
+
+    public void setGeoPoint(GeoPoint geoPoint) {
+        this.geoPoint = geoPoint;
+    }
 }

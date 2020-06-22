@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.jioleh.location.LocationPicker;
 import com.example.jioleh.R;
 import com.example.jioleh.listings.JioActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,6 +34,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -65,6 +67,9 @@ public class PostingPage
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private StorageTask uploadTask;
 
+    //Location Picker
+    private final int PICK_LOCATION_REQUEST = 2;
+
     private Toolbar toolbar;
     private Button confirmPost;
     private TextInputLayout title_of_post;
@@ -72,7 +77,8 @@ public class PostingPage
     private ImageButton removeImage;
     private Spinner type_of_activity;
     private String spinner_input = null;
-    private EditText location;
+    private TextView location;
+    private Button btn_select_location;
     private TextView time_of_activity;
     private TextView date_of_activity;
     private Button setTime;
@@ -90,6 +96,8 @@ public class PostingPage
     private int currentYear;
     private int currentMonth;
     private int currentDay;
+
+    private GeoPoint geoPoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +156,14 @@ public class PostingPage
                 createJioActivity();
             }
         });
+
+        btn_select_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostingPage.this, LocationPicker.class);
+                startActivityForResult(intent, PICK_LOCATION_REQUEST);
+            }
+        });
     }
 
     private void initialise() {
@@ -165,6 +181,7 @@ public class PostingPage
         removeImage = findViewById(R.id.btnRemoveImage);
         title_of_post = findViewById(R.id.tilDisplayTitle);
         location = findViewById(R.id.etLocation);
+        btn_select_location = findViewById(R.id.post_activity_open_maps);
         min_participants = findViewById(R.id.etMinParticipants);
         max_participants = findViewById(R.id.etMaxParticipants);
         additional_details = findViewById(R.id.etAdditionalDetails);
@@ -258,11 +275,22 @@ public class PostingPage
 
             //load into imageView on app
             Picasso.get().load(mImageUri).into(displayImage);
+
+        } else if (requestCode == PICK_LOCATION_REQUEST && resultCode == RESULT_OK
+                && data != null ) {
+
+            String returnedAddress = data.getStringExtra("Address_name");
+            double latitude = data.getDoubleExtra("Latitude_double", 0);
+            double longitude = data.getDoubleExtra("Longitude_double", 0);
+            geoPoint = new GeoPoint(latitude,longitude);
+
+            this.location.setText(returnedAddress);
+
         }
     }
 
     private void createJioActivity() {
-        if (!validateTIL(title_of_post) | !validateET(location) | !validateTV(time_of_activity)
+        if (!validateTIL(title_of_post)  | !validateTV(time_of_activity)| !validateTV(location)
                 | !validateTV(date_of_activity) | !validateTV(time_of_deadline) | !validateTV(date_of_deadline)
                 | !validateET(min_participants) | !validateET(max_participants) | !validateET(additional_details)
                 | !validateSpinner()) {
@@ -286,6 +314,8 @@ public class PostingPage
                 JioActivity input_activity = new JioActivity(title, venue, spinner_input
                         , current_uid, actualDate, actualTime, deadlineDate, deadlineTime, details, min, max);
                 confirmationDialog(input_activity, mImageUri);
+
+                input_activity.setGeoPoint(geoPoint);
             }
         }
 

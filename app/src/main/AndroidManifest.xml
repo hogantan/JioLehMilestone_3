@@ -3,6 +3,7 @@
     package="com.example.jioleh">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name="androidx.multidex.MultiDexApplication"
@@ -12,6 +13,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".location.LocationPicker" /> <!-- Google Map declarations -->
+        <service
+            android:name=".location.NearByActivity"
+            android:foregroundServiceType="location" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" /> <!-- ******************************************* -->
+        <activity android:name=".location.NearByActivity" />
         <activity android:name=".userprofile.YourOwnOtherUserView"></activity>
         <activity android:name=".settings.DeleteAccount" />
         <activity android:name=".listings.SearchJioActivity" />

@@ -5,6 +5,12 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
+    //for mapBox
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.example.jioleh"
         minSdkVersion 16
@@ -13,6 +19,8 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //for setting drawables in imageview
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -26,7 +34,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.google.firebase:firebase-analytics:17.4.2'
+    implementation 'com.google.firebase:firebase-analytics:17.4.3'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.firebase:firebase-auth:19.3.1'
 
@@ -51,8 +59,20 @@ dependencies {
     //Use to scale relative layout to fit all screen sizes
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
-    testImplementation 'junit:junit:4.12'
+    //Google services
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
+
+    //mapbox
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-locationlayer:0.5.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-services:5.3.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.8.0'
+
+
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
 
 }
