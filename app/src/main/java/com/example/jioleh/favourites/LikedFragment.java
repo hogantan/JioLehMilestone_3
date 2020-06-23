@@ -67,6 +67,7 @@ public class LikedFragment extends Fragment {
             public void onRefresh() {
                 //Second line of check
                 checkActivityExpiry();
+                checkActivityCancelledConfirmed();
                 getLiked();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -108,11 +109,7 @@ public class LikedFragment extends Fragment {
                                 Collections.sort(list_of_activities, new Comparator<JioActivity>() {
                                     @Override
                                     public int compare(JioActivity o1, JioActivity o2) {
-                                        if (o1.isExpired() && !o2.isExpired()) {
-                                            return 0;
-                                        } else {
-                                            return -1;
-                                        }
+                                        return o1.getEvent_timestamp().compareTo(o2.getEvent_timestamp());
                                     }
                                 });
                                 adapter.setData(list_of_activities, false);
@@ -171,6 +168,31 @@ public class LikedFragment extends Fragment {
                         for (DocumentSnapshot documentSnapshot: list_of_documents) {
                             jioActivityColRef.document(documentSnapshot.getId())
                                     .update("expired", true);
+                        }
+                    }
+                });
+    }
+
+    public void checkActivityCancelledConfirmed() {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
+
+        jioActivityColRef.whereLessThan("deadline_timestamp", currentDateTime)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
+                            int minimum = Integer.parseInt(documentSnapshot.get("min_participants").toString());
+                            int current = Integer.parseInt(documentSnapshot.get("current_participants").toString());
+                            if (current < minimum) {
+                                jioActivityColRef.document(documentSnapshot.getId())
+                                        .update("cancelled", true);
+                            } else {
+                                jioActivityColRef.document(documentSnapshot.getId())
+                                        .update("confirmed", true);
+                            }
                         }
                     }
                 });

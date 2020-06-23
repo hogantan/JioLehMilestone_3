@@ -30,6 +30,8 @@ public class JioActivityViewModel extends ViewModel implements databaseOperation
         repository.checkActivityExpiry();
     }
 
+    public void checkActivityCancelledConfirmed() { repository.checkActivityCancelledConfirmed();}
+
     @Override
     public void jioActivityDataAdded(List<JioActivity> allActivities) {
         listOfJioActivities.setValue(allActivities);

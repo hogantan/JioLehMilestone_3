@@ -27,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,6 +87,8 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
      class FavouritesHolder extends RecyclerView.ViewHolder {
 
         private TextView expired;
+        private TextView cancelled;
+        private TextView confirmed;
         private ImageView displayImage;
         private TextView displayTitle;
         private TextView date;
@@ -97,6 +101,8 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
         FavouritesHolder(@NonNull final View itemView) {
             super(itemView);
             expired = itemView.findViewById(R.id.tvExpired);
+            cancelled = itemView.findViewById(R.id.tvCancel);
+            confirmed = itemView.findViewById(R.id.tvConfirm);
             displayImage = itemView.findViewById(R.id.ivFavouritesImage);
             displayTitle = itemView.findViewById(R.id.tvFavouritesTitle);
             date = itemView.findViewById(R.id.tvFavouritesDate);
@@ -130,6 +136,18 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
                 expired.setVisibility(TextView.VISIBLE);
             } else {
                 expired.setVisibility(TextView.INVISIBLE);
+
+                if (jioActivity.isCancelled()) {
+                    cancelled.setVisibility(TextView.VISIBLE);
+                } else {
+                    cancelled.setVisibility(TextView.INVISIBLE);
+                }
+
+                if (jioActivity.isConfirmed()) {
+                    confirmed.setVisibility(TextView.VISIBLE);
+                } else {
+                    confirmed.setVisibility(TextView.INVISIBLE);
+                }
             }
             if (!jioActivity.getImageUrl().equals("") && jioActivity.getImageUrl()!=null) {
                 Picasso.get().load(jioActivity.getImageUrl()).into(displayImage);

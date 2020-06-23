@@ -24,6 +24,7 @@ public class JioActivity {
     private Date event_timestamp;
     private String deadline_date;
     private String deadline_time;
+    private Date deadline_timestamp;
     private String details;
     private String imageUrl;
     private int current_participants;
@@ -32,6 +33,8 @@ public class JioActivity {
     private ArrayList<String> participants;
     private ArrayList<String> title_array;
     private boolean expired;
+    private boolean cancelled;
+    private boolean confirmed;
     @ServerTimestamp
     private Date time_created;
 
@@ -47,9 +50,10 @@ public class JioActivity {
         this.host_uid = host_uid;
         this.event_date = event_date;
         this.event_time = event_time;
-        convertDate(event_date, event_time);
+        convertDate(event_date, event_time, this.event_timestamp);
         this.deadline_date = deadline_date;
         this.deadline_time = deadline_time;
+        convertDate(event_date, event_time, this.deadline_timestamp);
         this.details = details;
         this.min_participants = min_participants;
         this.max_participants = max_participants;
@@ -58,6 +62,8 @@ public class JioActivity {
         fillArray(this.title_array, this.title);
         this.current_participants = 0;
         this.expired = false;
+        this.cancelled = false;
+        this.confirmed = false;
         this.imageUrl = "";
     }
 
@@ -70,10 +76,10 @@ public class JioActivity {
         array.add("");
     }
 
-    private void convertDate(String date, String time) {
+    private void convertDate(String date, String time, Date toChange) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         try {
-            this.event_timestamp = formatter.parse(date + " " + time);
+            toChange = formatter.parse(date + " " + time);
             System.out.println(formatter.parse(date + " " + time));
         } catch (ParseException e) {
             e.printStackTrace();
@@ -270,5 +276,29 @@ public class JioActivity {
 
     public void setExpired(boolean expired) {
         this.expired = expired;
+    }
+
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public Date getDeadline_timestamp() {
+        return deadline_timestamp;
+    }
+
+    public void setDeadline_timestamp(Date deadline_timestamp) {
+        this.deadline_timestamp = deadline_timestamp;
     }
 }
