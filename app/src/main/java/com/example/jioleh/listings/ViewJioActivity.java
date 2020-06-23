@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -77,6 +78,7 @@ public class ViewJioActivity extends AppCompatActivity {
     private String activity_id;
     private String host_uid;
     private String host_imageUrl;
+    private JioActivity currentActivity;
 
     private FirebaseFirestore datastore;
     private FirebaseUser currentUser;
@@ -96,9 +98,6 @@ public class ViewJioActivity extends AppCompatActivity {
     private int current_participants;
     private ArrayList<String> list_of_participants;
 
-    //Used to determine status of activity (expired or not)
-    private boolean activityExpired;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +112,20 @@ public class ViewJioActivity extends AppCompatActivity {
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Fourth line of check when user clicks the join button
+                if (checkIsExpired(currentActivity)) {
+                    return;
+                }
+
+                if (checkIsCancelled(currentActivity)) {
+                    return;
+                }
+
+                if (checkIsConfirmed(currentActivity)) {
+                    return;
+                }
+
                 if (join.getText().toString().equals("Leave")) {
                     deleteActivity(JOIN);
                     setButtonVisuals(POSITIVE, join, JOIN);
@@ -184,7 +197,6 @@ public class ViewJioActivity extends AppCompatActivity {
         join = findViewById(R.id.btnViewJoin);
         like = findViewById(R.id.btnTopBarLike);
         buttonFlag = false;
-        activityExpired =false;
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         datastore = FirebaseFirestore.getInstance();
@@ -192,6 +204,15 @@ public class ViewJioActivity extends AppCompatActivity {
         //Fetching activity id from activity holder from the activity adapter class
         intent = getIntent();
         activity_id = intent.getStringExtra("activity_id");
+        datastore.collection("activities")
+                .document(activity_id)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        currentActivity = documentSnapshot.toObject(JioActivity.class);
+                    }
+                });
     }
 
     private void initialiseToolbar() {
@@ -227,12 +248,62 @@ public class ViewJioActivity extends AppCompatActivity {
         }
     }
 
-    private void checkIsExpired() {
-        if (activityExpired) {
+    //Second line of checking whether an activity has expired or not
+    private boolean checkIsExpired(JioActivity currentActivity) {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        if (currentActivity.getEvent_timestamp().before(currentDateTime)) {
+            datastore.collection("activities")
+                    .document(activity_id)
+                    .update("expired", true);
+
             join.setEnabled(false);
             join.setText("Expired");
             join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegrey_button));
+
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    //Second line of checking whether an activity is cancelled
+    private boolean checkIsCancelled(JioActivity currentActivity) {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        if (currentActivity.getDeadline_timestamp().before(currentDateTime)) {
+            int minimum = currentActivity.getMin_participants();
+            int current = current_participants;
+            if (current < minimum) {
+                datastore.collection("activities")
+                        .document(activity_id)
+                        .update("cancelled", true);
+                join.setEnabled(false);
+                join.setText("Cancelled");
+                join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basered_button));
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Second line of checking whether an activity is cancelled
+    private boolean checkIsConfirmed(JioActivity currentActivity) {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        if (currentActivity.getDeadline_timestamp().before(currentDateTime)) {
+            int minimum = currentActivity.getMin_participants();
+            int current = current_participants;
+            if (current >= minimum) {
+                datastore.collection("activities")
+                        .document(activity_id)
+                        .update("confirmed", true);
+                join.setEnabled(false);
+                join.setText("Confirmed");
+                join.setBackground(getResources().getDrawable(R.drawable.slightly_rounded_basegreen_button));
+
+                return true;
+            }
+        }
+        return false;
     }
 
     //Update number of current participants as well as the list of participants in the activity
@@ -326,7 +397,11 @@ public class ViewJioActivity extends AppCompatActivity {
                         }
                         buttonFlag = true;
                         checkIsFull();
-                        checkIsExpired();
+                        if (checkIsExpired(currentActivity)) {
+                        } else {
+                            checkIsCancelled(currentActivity);
+                            checkIsConfirmed(currentActivity);
+                        }
                     }
                 });
     }
@@ -338,42 +413,38 @@ public class ViewJioActivity extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        JioActivity current_activity = documentSnapshot.toObject(JioActivity.class);
+                        currentActivity = documentSnapshot.toObject(JioActivity.class);
 
-                        if (current_activity != null) {
-                            if (!current_activity.getImageUrl().equals("") && current_activity.getImageUrl()!=null) {
-                                Picasso.get().load(current_activity.getImageUrl()).into(displayImage);
-                            }
-
-                            //second line of checking whether an activity has expired or not
-                            Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
-                            if (current_activity.getEvent_timestamp().before(currentDateTime)) {
-                                datastore.collection("activities")
-                                        .document(documentSnapshot.getId())
-                                        .update("expired", true);
-                                activityExpired = true;
+                        if (currentActivity != null) {
+                            if (!currentActivity.getImageUrl().equals("") && currentActivity.getImageUrl()!=null) {
+                                Picasso.get().load(currentActivity.getImageUrl()).into(displayImage);
                             }
 
                             //live update of current participants as it listens for change in data
-                            current_participants = current_activity.getCurrent_participants();
-                            list_of_participants = current_activity.getParticipants();
-                            max_participants = current_activity.getMax_participants();
+                            current_participants = currentActivity.getCurrent_participants();
+                            list_of_participants = currentActivity.getParticipants();
+                            max_participants = currentActivity.getMax_participants();
 
-                            displayTitle.setText(current_activity.getTitle());
-                            type_of_activity.setText(current_activity.getType_of_activity());
-                            location.setText(current_activity.getLocation());
-                            actual_date.setText(convertDateFormat(current_activity.getEvent_date()));
-                            actual_time.setText(current_activity.getEvent_time());
-                            confirm_date.setText(convertDateFormat(current_activity.getDeadline_date()));
-                            confirm_time.setText("Time: " + current_activity.getEvent_time());
-                            details.setText(current_activity.getDetails());
-                            participants_counter.setText(current_activity.getCurrent_participants() + "/" + max_participants);
-                            minimum.setText("Minimum required: " + current_activity.getMin_participants() + "/" + current_activity.getMax_participants());
+                            displayTitle.setText(currentActivity.getTitle());
+                            type_of_activity.setText(currentActivity.getType_of_activity());
+                            location.setText(currentActivity.getLocation());
+                            actual_date.setText(convertDateFormat(currentActivity.getEvent_date()));
+                            actual_time.setText(currentActivity.getEvent_time());
+                            confirm_date.setText(convertDateFormat(currentActivity.getDeadline_date()));
+                            confirm_time.setText("Time: " + currentActivity.getEvent_time());
+                            details.setText(currentActivity.getDetails());
+                            participants_counter.setText(currentActivity.getCurrent_participants() + "/" + max_participants);
+                            minimum.setText("Minimum required: " + currentActivity.getMin_participants() + "/" + currentActivity.getMax_participants());
 
-                            host_uid = current_activity.getHost_uid();
+                            host_uid = currentActivity.getHost_uid();
                             setUpHostInfo(host_uid);
                             checkIsFull(); //this will respond to live changes from the database
-                            checkIsExpired();
+                            //Second line of check
+                            if (checkIsExpired(currentActivity)) {
+                            } else {
+                                checkIsCancelled(currentActivity);
+                                checkIsConfirmed(currentActivity);
+                            }
                         } else {
                             //This listens to activities being deleted
                             datastore.collection("users")

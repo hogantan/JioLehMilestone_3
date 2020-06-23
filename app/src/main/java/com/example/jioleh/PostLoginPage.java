@@ -45,9 +45,6 @@ public class PostLoginPage extends AppCompatActivity {
 
     Fragment active = frag1;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

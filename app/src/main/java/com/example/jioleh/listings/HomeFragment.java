@@ -69,10 +69,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        //Third line of check
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 viewModel.checkActivityExpiry();
+                viewModel.checkActivityCancelledConfirmed();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -138,6 +140,9 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         //Creates a ViewModel
         viewModel = new ViewModelProvider(this).get(JioActivityViewModel.class);
+        //First Line of check
+        viewModel.checkActivityExpiry();
+        viewModel.checkActivityCancelledConfirmed();
 
         //observe for changes in database
         viewModel.getListOfJioActivities().observe(getViewLifecycleOwner(), new Observer<List<JioActivity>>() {
