@@ -137,15 +137,12 @@ public class DeleteAccount extends AppCompatActivity {
                         });
 
                 //Deleting from FirebaseAuth
+                currentUser.delete();
+
                 //Return back to main activity
-                currentUser.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Intent nextActivity = new Intent(DeleteAccount.this, MainActivity.class);
-                        nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(nextActivity);
-                    }
-                });
+                Intent nextActivity = new Intent(DeleteAccount.this, MainActivity.class);
+                nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(nextActivity);
 
                 Toast.makeText(DeleteAccount.this, "Account has been deleted", Toast.LENGTH_SHORT).show();
             }

@@ -66,6 +66,8 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
     @Override
     public void onBindViewHolder(@NonNull FavouritesAdapter.FavouritesHolder holder, int position) {
+        holder.setIsRecyclable(false);
+
         JioActivity activity = activities.get(position);
         if (activity != null) {
             holder.activity_id = activity.getActivityId();
