@@ -96,6 +96,7 @@ public class JoinedFragment extends Fragment {
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         //listens to joined for changes which will only occur if there is a change in activities collection which is prompted by ViewJioActivity Listener
                         List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
+
                         list_of_tasks.clear();
                         list_of_activities.clear();
 
