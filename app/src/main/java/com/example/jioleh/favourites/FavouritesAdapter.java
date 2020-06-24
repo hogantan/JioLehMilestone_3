@@ -43,6 +43,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
     private List<JioActivity> activities;
     private boolean deletable;
+    private boolean removable;
 
     public FavouritesAdapter() {
         activities = new ArrayList<>();
@@ -79,9 +80,10 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
     //Used to determine who the receiver or sender is depending on current user
 
-    public void setData(List<JioActivity> jioActivities, boolean deletable) {
+    public void setData(List<JioActivity> jioActivities, boolean deletable, boolean removable) {
         this.activities = jioActivities;
         this.deletable = deletable;
+        this.removable = removable;
     }
 
      class FavouritesHolder extends RecyclerView.ViewHolder {
@@ -113,9 +115,23 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent nextActivity = new Intent(itemView.getContext(), ViewJioActivity.class);
-                    nextActivity.putExtra("activity_id", activity_id);
-                    itemView.getContext().startActivity(nextActivity);
+                    //check whether the activity exists
+                    FirebaseFirestore.getInstance()
+                            .collection("activities")
+                            .document(activity_id)
+                            .get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if (documentSnapshot.exists()) {
+                                        Intent nextActivity = new Intent(itemView.getContext(), ViewJioActivity.class);
+                                        nextActivity.putExtra("activity_id", activity_id);
+                                        itemView.getContext().startActivity(nextActivity);
+                                    } else {
+                                        alertDialogDoesNotExist();
+                                    }
+                                }
+                            });
                 }
             });
 
@@ -123,8 +139,22 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
                 itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        alertDialog();
+                        alertDialogDelete();
                         return true;
+                    }
+                });
+            }
+
+            if (FavouritesAdapter.this.removable) {
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (cancelled.getVisibility() == TextView.VISIBLE || expired.getVisibility() == TextView.VISIBLE) {
+                            alertDialogRemove();
+                            return true;
+                        } else {
+                            return  false;
+                        }
                     }
                 });
             }
@@ -132,23 +162,8 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
         //Setting the details in the holder
         void setUpView(JioActivity jioActivity) {
-            if (jioActivity.isExpired()) {
-                expired.setVisibility(TextView.VISIBLE);
-            } else {
-                expired.setVisibility(TextView.INVISIBLE);
+            setVisibility(jioActivity);
 
-                if (jioActivity.isCancelled()) {
-                    cancelled.setVisibility(TextView.VISIBLE);
-                } else {
-                    cancelled.setVisibility(TextView.INVISIBLE);
-                }
-
-                if (jioActivity.isConfirmed()) {
-                    confirmed.setVisibility(TextView.VISIBLE);
-                } else {
-                    confirmed.setVisibility(TextView.INVISIBLE);
-                }
-            }
             if (!jioActivity.getImageUrl().equals("") && jioActivity.getImageUrl()!=null) {
                 Picasso.get().load(jioActivity.getImageUrl()).into(displayImage);
             }
@@ -170,7 +185,34 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
             }
         }
 
-        private void alertDialog() {
+        private void setVisibility(JioActivity jioActivity) {
+            if (jioActivity.isExpired()) {
+                confirmed.setVisibility(TextView.INVISIBLE);
+                cancelled.setVisibility(TextView.INVISIBLE);
+                expired.setVisibility(TextView.VISIBLE);
+                return;
+            }
+
+            if (jioActivity.isCancelled()) {
+                expired.setVisibility(TextView.INVISIBLE);
+                confirmed.setVisibility(TextView.INVISIBLE);
+                cancelled.setVisibility(TextView.VISIBLE);
+                return;
+            }
+
+            if (jioActivity.isConfirmed()) {
+                expired.setVisibility(TextView.INVISIBLE);
+                cancelled.setVisibility(TextView.INVISIBLE);
+                confirmed.setVisibility(TextView.VISIBLE);
+                return;
+            }
+
+            confirmed.setVisibility(TextView.INVISIBLE);
+            cancelled.setVisibility(TextView.INVISIBLE);
+            expired.setVisibility(TextView.INVISIBLE);
+        }
+
+        private void alertDialogDelete() {
             AlertDialog.Builder builder = new AlertDialog.Builder(currentContext);
             builder.setMessage("Do you want to delete this activity?")
                     .setTitle("Delete Activity");
@@ -202,6 +244,49 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
 
             dialog.show();
         }
-    }
 
+        private void alertDialogRemove() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(currentContext);
+            builder.setMessage("Do you want to remove this activity?")
+                    .setTitle("Remove Activity");
+
+            builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    final FirebaseFirestore datastore = FirebaseFirestore.getInstance();
+                    final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                    datastore.collection("users")
+                            .document(currentUser.getUid())
+                            .collection("joined")
+                            .document(activity_id)
+                            .delete();
+                }
+            });
+
+            builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        }
+
+        private void alertDialogDoesNotExist() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(currentContext);
+            builder.setMessage(displayTitle.getText().toString() + " has been removed.")
+                    .setTitle("Activity Missing");
+
+            builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        }
+    }
 }

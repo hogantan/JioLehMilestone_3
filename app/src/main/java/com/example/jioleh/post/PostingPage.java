@@ -47,6 +47,8 @@ import org.imperiumlabs.geofirestore.GeoFirestore;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -118,7 +120,21 @@ public class PostingPage
             }
         });
 
+        time_of_activity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openClock(time_of_activity);
+            }
+        });
+
         setDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCalender(date_of_activity);
+            }
+        });
+
+        date_of_activity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openCalender(date_of_activity);
@@ -132,7 +148,21 @@ public class PostingPage
             }
         });
 
+        time_of_deadline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openClock(time_of_deadline);
+            }
+        });
+
         setDateDeadline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCalender(date_of_deadline);
+            }
+        });
+
+        date_of_deadline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openCalender(date_of_deadline);
@@ -161,6 +191,14 @@ public class PostingPage
         });
 
         btn_select_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PostingPage.this, LocationPicker.class);
+                startActivityForResult(intent, PICK_LOCATION_REQUEST);
+            }
+        });
+
+        location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PostingPage.this, LocationPicker.class);
@@ -316,15 +354,44 @@ public class PostingPage
             } else {
                 JioActivity input_activity = new JioActivity(title, venue, spinner_input
                         , current_uid, actualDate, actualTime, deadlineDate, deadlineTime, details, min, max);
-                confirmationDialog(input_activity, mImageUri);
 
                 input_activity.setGeoPoint(geoPoint);
+                input_activity.setDeadline_timestamp(convertDate(deadlineDate, deadlineTime));
+                input_activity.setEvent_timestamp(convertDate(actualDate, actualTime));
+                input_activity.setTitle_array(fillArray(new ArrayList<>(), title));
+                confirmationDialog(input_activity, mImageUri);
             }
         }
+    }
 
+    private Date convertDate(String date, String time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        try {
+            return formatter.parse(date + " " + time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private ArrayList<String> fillArray(ArrayList<String> array, String input) {
+        String[] words = input.toLowerCase().split("\\s+");
+        for (int i = 0; i < words.length; i++) {
+            words[i] = words[i].replaceAll("[^\\w]", "");
+        }
+        array.addAll(Arrays.asList(words));
+        array.add("");
+
+        return array;
     }
 
     private boolean checkMinMax(int first, int second) {
+        //minimum and maximum participants must be more than zero
+        if (first <= 0 || second <= 0) {
+            return false;
+        }
+
+        //maximum cannot be lesser than minimum
         if (second < first) {
             return false;
         } else {
@@ -334,11 +401,19 @@ public class PostingPage
 
     private boolean checkDate(String first, String second) {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
         Date d1 = null;
         Date d2 = null;
         try {
             d1 = dateFormat.parse(first);
             d2 = dateFormat.parse(second);
+
+            //either deadlines cannot be before the current date and time
+            if (d1.compareTo(currentDateTime) < 0 || d2.compareTo(currentDateTime) < 0) {
+                return false;
+            }
+
+            //actual deadline cannot be before the confirmation deadline
             if (d2.compareTo(d1) < 0) {
                 return false;
             } else {
@@ -427,7 +502,6 @@ public class PostingPage
             });
         } else {
             jioActivity.setImageUrl(getResources().getString(R.string.defaultImageUrl));
-            //if users decide not to upload image, then imageURL in userProfile will be empty string
             putInFirestore(activity_id, jioActivity);
         }
     }
@@ -504,13 +578,13 @@ public class PostingPage
 
         if (ALERT_TYPE == ALERT_FIELDS ) {
             builder.setMessage("Please fill up the required fields.")
-                    .setTitle("Posting an Activity");
+                    .setTitle("Empty Fields");
         } else if (ALERT_TYPE == ALERT_MINMAX) {
-            builder.setMessage("Please ensure that maximum participants is lower than minimum.")
-                    .setTitle("Posting an Activity");
+            builder.setMessage("Please enter valid minimum and maximum number of participants.")
+                    .setTitle("Number of Participants");
         } else if (ALERT_TYPE == ALERT_DATETIME) {
-            builder.setMessage("Please ensure deadline date/time is before actual date/time.")
-                    .setTitle("Posting an Activity");
+            builder.setMessage("Please enter valid time and date for actual activity of confirmation deadline.")
+                    .setTitle("Time and Date");
         } else {}
 
         builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
@@ -523,7 +597,7 @@ public class PostingPage
     }
 
     private void removeImage() {
-        Drawable defaultImage = getResources().getDrawable(R.drawable.ic_add_box_green);
+        Drawable defaultImage = getResources().getDrawable(R.drawable.ic_baseline_add_a_photo_basegreen);
         displayImage.setImageDrawable(defaultImage);
         mImageUri = null;
     }

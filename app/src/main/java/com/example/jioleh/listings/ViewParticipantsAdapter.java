@@ -1,5 +1,7 @@
 package com.example.jioleh.listings;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jioleh.R;
@@ -16,8 +19,11 @@ import com.example.jioleh.chat.MessagePage;
 import com.example.jioleh.userprofile.OtherUserView;
 import com.example.jioleh.userprofile.UserProfile;
 import com.example.jioleh.userprofile.YourOwnOtherUserView;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,6 +32,8 @@ import java.util.List;
 public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipantsAdapter.ParticipantsHolder> {
     private List<UserProfile> list_of_participants;
     private List<String> list_of_uid;
+    private String host_uid;
+    private String activity_id;
 
     ViewParticipantsAdapter() {
         list_of_participants = new ArrayList<>();
@@ -40,8 +48,8 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
 
     @Override
     public void onBindViewHolder(@NonNull ViewParticipantsAdapter.ParticipantsHolder holder, int position) {
-        holder.setUpView(list_of_participants.get(position));
         holder.user_id = list_of_uid.get(position);
+        holder.setUpView(list_of_participants.get(position));
     }
 
     @Override
@@ -49,23 +57,28 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
         return list_of_participants.size();
     }
 
-    public void setData(List<UserProfile> users, List<String> list_of_uid) {
+    public void setData(List<UserProfile> users, List<String> list_of_uid, String host_uid, String activity_id) {
         this.list_of_participants = users;
         this.list_of_uid = list_of_uid;
+        this.host_uid = host_uid;
+        this.activity_id = activity_id;
         notifyDataSetChanged();
     }
 
-    static class ParticipantsHolder extends RecyclerView.ViewHolder {
+    class ParticipantsHolder extends RecyclerView.ViewHolder {
 
         private TextView username;
         private ImageView displayImage;
         private String user_id;
         private String imageUrl;
+        private String currentUserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        private Context currentContext;
 
         public ParticipantsHolder(@NonNull final View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.tvSingleUsersUsername);
             displayImage = itemView.findViewById(R.id.ivUserImage);
+            currentContext = username.getContext();
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -86,11 +99,81 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
         }
 
         public void setUpView(UserProfile userProfile) {
-            if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl()!=null) {
+            if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl() != null) {
                 imageUrl = userProfile.getImageUrl();
                 Picasso.get().load(imageUrl).into(displayImage);
             }
             username.setText(userProfile.getUsername());
+
+            //Allows host to kick participants
+            if (currentUserUid.equals(host_uid)) {
+                System.out.println(currentUserUid);
+                System.out.println(user_id);
+                if (!currentUserUid.equals(user_id)) {
+                    itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            alertDialogKickParticipant();
+                            return true;
+                        }
+                    });
+                }
+            }
+        }
+
+        private void alertDialogKickParticipant() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(currentContext);
+            builder.setMessage("Do you want to kick " + username.getText().toString() + " from the activity?")
+                    .setTitle("Kick Participant");
+
+            builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    updateParticipants(activity_id);
+                }
+            });
+
+            builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        }
+
+        //Update number of current participants as well as the list of participants in the activity
+        private void updateParticipants(final String activity_id) {
+
+            FirebaseFirestore datastore = FirebaseFirestore.getInstance();
+
+            datastore.collection("users")
+                    .document(user_id)
+                    .collection("joined")
+                    .document(activity_id)
+                    .delete();
+
+            datastore.collection("activities")
+                    .document(activity_id)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            JioActivity currentActivity = documentSnapshot.toObject(JioActivity.class);
+
+                            int updatedNumberOfParticipants = currentActivity.getCurrent_participants() - 1;
+                            ArrayList<String> updatedListParticipants = currentActivity.getParticipants();
+                            updatedListParticipants.remove(user_id);
+
+                            datastore.collection("activities")
+                                    .document(activity_id)
+                                    .update("current_participants", updatedNumberOfParticipants);
+
+                            datastore.collection("activities")
+                                    .document(activity_id)
+                                    .update("participants", updatedListParticipants);
+                        }
+                    });
         }
     }
 }

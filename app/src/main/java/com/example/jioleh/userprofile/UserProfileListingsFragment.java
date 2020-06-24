@@ -60,6 +60,8 @@ public class UserProfileListingsFragment extends Fragment {
 
     public UserProfileListingsFragment(String uid){
         this.uid = uid;
+        //this is to differentiate between otheruserview and your own view of your profile
+        //basically you should not be able to delete another users activities
         this.deletable = FirebaseAuth.getInstance().getCurrentUser().getUid().equals(uid);
     }
 
@@ -145,7 +147,7 @@ public class UserProfileListingsFragment extends Fragment {
                                     }
                                 });
 
-                                adapter.setData(list_of_activities, deletable);
+                                adapter.setData(list_of_activities, deletable, false);
                                 adapter.notifyDataSetChanged();
                             }
                         });

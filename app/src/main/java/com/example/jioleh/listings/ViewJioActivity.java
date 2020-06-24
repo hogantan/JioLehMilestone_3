@@ -2,10 +2,12 @@ package com.example.jioleh.listings;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,6 +27,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -65,6 +69,7 @@ public class ViewJioActivity extends AppCompatActivity {
     private TextView confirm_date;
     private TextView confirm_time;
     private TextView details;
+    private ImageView editDetails;
     private TextView participants_counter;
     private TextView minimum;
     private View displayHost;
@@ -156,6 +161,7 @@ public class ViewJioActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent nextActivity = new Intent(ViewJioActivity.this, ViewParticipants.class);
                 nextActivity.putExtra("activity_id", activity_id);
+                nextActivity.putExtra("host_uid", host_uid);
                 startActivity(nextActivity);
             }
         });
@@ -176,6 +182,18 @@ public class ViewJioActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if (currentUser.getUid().equals(host_uid)) {
+            editDetails.setVisibility(ImageView.VISIBLE);
+            editDetails.setClickable(true);
+
+            editDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialogEditDetails();
+                }
+            });
+        }
     }
 
     private void  initialise() {
@@ -190,6 +208,7 @@ public class ViewJioActivity extends AppCompatActivity {
         confirm_date = findViewById(R.id.tvViewDisplayConfirmDate);
         confirm_time = findViewById(R.id.tvViewDisplayConfirmTime);
         details = findViewById(R.id.tvViewDisplayDetails);
+        editDetails = findViewById(R.id.ivViewDisplayDetailsEdit);
         displayHost = findViewById(R.id.vViewDisplayHost);
         displayParticipants = findViewById(R.id.vViewDisplayParticipants);
         participants_counter = findViewById(R.id.tvViewDisplayParticipantsCounter);
@@ -359,8 +378,6 @@ public class ViewJioActivity extends AppCompatActivity {
         } else {
 
         }
-        HashMap<String, String> input_firestore = new HashMap<>();
-        input_firestore.put(field, activity_id);
         datastore.collection("users")
                 .document(currentUser.getUid())
                 .collection(collection_path)
@@ -431,7 +448,7 @@ public class ViewJioActivity extends AppCompatActivity {
                             actual_date.setText(convertDateFormat(currentActivity.getEvent_date()));
                             actual_time.setText(currentActivity.getEvent_time());
                             confirm_date.setText(convertDateFormat(currentActivity.getDeadline_date()));
-                            confirm_time.setText("Time: " + currentActivity.getEvent_time());
+                            confirm_time.setText(currentActivity.getEvent_time());
                             details.setText(currentActivity.getDetails());
                             participants_counter.setText(currentActivity.getCurrent_participants() + "/" + max_participants);
                             minimum.setText("Minimum required: " + currentActivity.getMin_participants() + "/" + currentActivity.getMax_participants());
@@ -439,6 +456,22 @@ public class ViewJioActivity extends AppCompatActivity {
                             host_uid = currentActivity.getHost_uid();
                             setUpHostInfo(host_uid);
                             checkIsFull(); //this will respond to live changes from the database
+
+                            //Enable editing for host
+                            if (currentUser.getUid().equals(host_uid)) {
+                                editDetails.setVisibility(ImageView.VISIBLE);
+                                editDetails.setClickable(true);
+
+                                editDetails.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        alertDialogEditDetails();
+                                    }
+                                });
+                            }
+
+                            getButtonStatus(JOIN);
+
                             //Second line of check
                             if (checkIsExpired(currentActivity)) {
                             } else {
@@ -527,5 +560,28 @@ public class ViewJioActivity extends AppCompatActivity {
                 button.setTextColor(getResources().getColor(R.color.baseWhite));
             }
         }
+    }
+
+    private void alertDialogEditDetails() {
+        final View view = getLayoutInflater().inflate(R.layout.alertdialog_edittext, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Edit Addtional Details");
+
+        AlertDialog dialog = builder.create();
+
+        TextInputEditText textInputEditText = view.findViewById(R.id.etDialogText);
+        textInputEditText.setText(details.getText().toString());
+
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                datastore.collection("activities")
+                        .document(activity_id)
+                        .update("details", textInputEditText.getText().toString());
+            }
+        });
+
+        dialog.setView(view);
+        dialog.show();
     }
 }

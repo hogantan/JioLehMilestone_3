@@ -141,8 +141,9 @@ public class FirstTimeUserPage extends AppCompatActivity {
                 return;
             }
 
-            userProfile = new UserProfile(username, contact, gender
+            userProfile = new UserProfile(username, contact, gender.toUpperCase().charAt(0) + gender.substring(1).toLowerCase()
                     , age, bio, interests, location);
+
 
 
             uploadFile(userProfile, mImageUri);
@@ -281,6 +282,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
             });
         } else {
             //if users decide not to upload image, then imageURL in userProfile will be empty string
+            userProf.setImageUrl(getResources().getString(R.string.defaultImageUrl));
             putInFirestore(userProf);
         }
     }

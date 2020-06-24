@@ -29,7 +29,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_user_self_view_profile_page">userSelfViewProfilePage</string>
 
-    <string name="defaultImageUrl"><![CDATA[https://firebasestorage.googleapis.com/v0/b/jioleh.appspot.com/o/jioActivityDisplayImage%2FBP4XWUaxMMgj1syQaNdL?alt=media&token=56acbec7–1118-4f60-8f02-cb7e3fe3b454]]></string>
+    <string name="defaultImageUrl"><![CDATA[https://firebasestorage.googleapis.com/v0/b/jioleh.appspot.com/o/Default%2F0ccab518-6557-404d-bd5a-a53ef3b2cc97_200x200.png?alt=media&token=44821f34-c162-41a2-92dd-a1d2ef66b9e7]]></string>
 
     <string-array name="type_activity">
         <item>Please select one</item>
