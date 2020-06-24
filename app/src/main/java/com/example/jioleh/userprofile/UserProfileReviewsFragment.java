@@ -17,6 +17,7 @@ import com.example.jioleh.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -71,38 +72,32 @@ public class UserProfileReviewsFragment extends Fragment {
         Rv_Review.setLayoutManager(new LinearLayoutManager(this.getContext()));
         lst = new ArrayList<>();
 
-        FirebaseFirestore.getInstance().collection("users")
+        FirebaseFirestore.getInstance()
+                .collection("users")
                 .document(this.uid)
                 .collection("Reviews")
                 .orderBy("timeOfPost", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot dc : task.getResult()) {
-                                Review review = dc.toObject(Review.class);
-                                if (review != null) {
-                                    lst.add(review);
-                                }
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
+                            Review review = dc.toObject(Review.class);
+                            if (review != null) {
+                                lst.add(review);
                             }
-
-                        }
                     }
-                })
-                .continueWithTask(new Continuation<QuerySnapshot, Task<Review>>() {
-                    @Override
-                    public Task<Review> then(@NonNull Task<QuerySnapshot> task) throws Exception {
+
                         ReviewAdapter reviewAdapter = new ReviewAdapter();
                         reviewAdapter.setData(lst);
+                        reviewAdapter.setUid(UserProfileReviewsFragment.this.uid);
+                        reviewAdapter.setViewer_uid(FirebaseAuth.getInstance().getUid());
                         Rv_Review.setAdapter(reviewAdapter);
-                        return null;
-                    }
-                });
-
-
+                }});
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        initRv();
+    }
 }

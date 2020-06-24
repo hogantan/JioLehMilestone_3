@@ -71,19 +71,16 @@ public class PostLoginPage extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.bab_home:
                         selectedFragment = frag1;
-                        toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_background));
                         toolbar_title.setText("JioLeh");
 
                         break;
                     case R.id.bab_chat:
                         selectedFragment = frag2;
-                        toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_background));
                         toolbar_title.setText("Messages");
 
                         break;
                     case R.id.bab_favourite:
                         selectedFragment = frag3;
-                        toolbar.setBackground(getResources().getDrawable(R.color.baseBlack));
                         toolbar_title.setText("Favourites");
 
                         break;
@@ -93,7 +90,6 @@ public class PostLoginPage extends AppCompatActivity {
                         break;
                     case R.id.bab_profile:
                         selectedFragment =frag5;
-                        toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_background));
                         toolbar_title.setText("My Profile");
                         break;
                 }
@@ -121,6 +117,7 @@ public class PostLoginPage extends AppCompatActivity {
         toolbar = findViewById(R.id.tbTopBar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_background));
 
     }
 

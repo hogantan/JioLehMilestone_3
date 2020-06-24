@@ -10,6 +10,7 @@ public class Review {
     private String from_userImg;
     private String from_username;
     private float rating;
+    private String documentId;
 
     @ServerTimestamp
     private Date timeOfPost;
@@ -23,6 +24,14 @@ public class Review {
         this.from_userImg = from_userImg;
         this.from_username = from_username;
         this.rating = rating;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+
+    public String getDocumentId() {
+        return documentId;
     }
 
     public Review(String wordsOfReview, float rating) {

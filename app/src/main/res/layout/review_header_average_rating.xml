@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <RatingBar
         android:id="@+id/review_average_ratingBar"
@@ -13,7 +14,6 @@
         android:stepSize="0.5"
         style="?android:attr/ratingBarStyleSmall"
         android:isIndicator="true">
-
     </RatingBar>
 
     <TextView
@@ -42,5 +42,6 @@
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:text="113 Ratings" />
+
 
 </RelativeLayout>
