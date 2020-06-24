@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
-    android:layout_marginBottom="20dp"
     android:background="@drawable/review_edit_text"
     android:paddingTop="8dp">
 
@@ -17,8 +15,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/default_picture"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp"
+        app:civ_border_color="@color/baseGreen"
+        app:civ_border_width="1dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -95,4 +93,19 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginEnd="4sp"
         android:layout_marginRight="4sp" />
+
+    <TextView
+        android:id="@+id/review_delete"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Delete Review"
+        android:textSize="12sp"
+        android:clickable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.967"
+        app:layout_constraintStart_toEndOf="@+id/review_row_date"
+        app:layout_constraintTop_toBottomOf="@+id/comment_content" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

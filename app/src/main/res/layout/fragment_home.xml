@@ -13,7 +13,7 @@
         android:layout_marginTop="24dp"
         android:src="@drawable/search_jioleh"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></ImageView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivFindNearby"
@@ -23,7 +23,7 @@
         android:src="@drawable/find_nearby"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivSearchActivity"></ImageView>
+        app:layout_constraintTop_toBottomOf="@+id/ivSearchActivity" />
 
     <TextView
         android:id="@+id/tvLatestActivities"
@@ -59,7 +59,6 @@
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

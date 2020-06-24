@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@drawable/baseblack_top_line"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:tabTextColor="@color/White">
 
@@ -85,8 +84,6 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/userProfile_viewPager"
-        android:layout_marginBottom="56dp"
-        android:background="@color/appBlack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/userProfile_top_frame" />
