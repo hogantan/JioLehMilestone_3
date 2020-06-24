@@ -7,17 +7,17 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.jioleh.R;
+import com.example.jioleh.listings.JioActivity;
+import com.example.jioleh.listings.ViewJioActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
@@ -25,39 +25,32 @@ import com.google.android.gms.maps.GoogleMap.OnMyLocationClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import org.imperiumlabs.geofirestore.GeoFirestore;
+import org.imperiumlabs.geofirestore.GeoQuery;
+import org.imperiumlabs.geofirestore.listeners.GeoQueryDataEventListener;
 
 
-/**
- * This demo shows how GMS Location can be used to check for changes to the users location.  The
- * "My Location" button uses GMS Location to set the blue dot representing the users location.
- * Permission for {@link android.Manifest.permission#ACCESS_FINE_LOCATION} is requested at run
- * time. If the permission has not been granted, the Activity is finished with an error message.
- */
 public class NearByActivity extends AppCompatActivity
         implements
         OnMyLocationButtonClickListener,
         OnMyLocationClickListener,
         OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
 
-    /**
-     * Request code for location permission request.
-     *
-     * @see #onRequestPermissionsResult(int, String[], int[])
-     */
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
-    /**
-     * Flag indicating whether a requested permission has been denied after returning in
-     * {@link #onRequestPermissionsResult(int, String[], int[])}.
-     */
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final double QUERY_NEARBY_RADIUS = 1.0;
+    private static final int MAP_ZOOM_STANDARD =15;
+
     private boolean permissionDenied = false;
 
     private GoogleMap map;
@@ -81,21 +74,18 @@ public class NearByActivity extends AppCompatActivity
         map = googleMap;
         map.setOnMyLocationButtonClickListener(this);
         map.setOnMyLocationClickListener(this);
+        map.setOnInfoWindowClickListener(this);
         enableMyLocation();
     }
 
-    /**
-     * Enables the My Location layer if the fine location permission has been granted.
-     */
     private void enableMyLocation() {
-
 
         //this is to get current location
         LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         Criteria mCriteria = new Criteria();
         String bestProvider = String.valueOf(manager.getBestProvider(mCriteria, true));
 
-        // [START maps_check_location_permission]
+        // check for permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             if (map != null) {
@@ -105,22 +95,67 @@ public class NearByActivity extends AppCompatActivity
                 Location mLocation = manager.getLastKnownLocation(bestProvider);
                 final double currentLatitude = mLocation.getLatitude();
                 final double currentLongitude = mLocation.getLongitude();
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLatitude, currentLongitude), 15));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLatitude, currentLongitude), MAP_ZOOM_STANDARD));
 
-            }
+                //GeoFirestore
+                CollectionReference colRef = FirebaseFirestore.getInstance().collection("activities");
+                GeoQuery geoQuery = new GeoFirestore(colRef).queryAtLocation(new GeoPoint(currentLatitude,currentLongitude), QUERY_NEARBY_RADIUS);
+
+                //adding info window adapter to map
+                map.setInfoWindowAdapter(new CustomInfoWindowAdapter(this));
+
+                geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+                    @Override
+                    public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                        JioActivity jio = documentSnapshot.toObject(JioActivity.class);
+                        LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                        MarkerOptions options = new MarkerOptions()
+                                .position(latLng);
+
+                        map.addMarker(options)
+                        .setTag(jio);
+                    }
+
+                    @Override
+                    public void onDocumentExited(DocumentSnapshot documentSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+                    }
+
+                    @Override
+                    public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryReady() {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryError(Exception e) {
+
+                    }
+                });
+                }
+
+
+
         } else {
             // Permission to access the location is missing. Show rationale and request permission
             PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                     Manifest.permission.ACCESS_FINE_LOCATION, true);
         }
-        // [END maps_check_location_permission]
+
     }
 
+    //current location button animates map to user's location
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
         return false;
     }
 
@@ -129,7 +164,7 @@ public class NearByActivity extends AppCompatActivity
         Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
     }
 
-    // [START maps_check_location_permission_result]
+    // Checks permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
@@ -141,13 +176,11 @@ public class NearByActivity extends AppCompatActivity
             enableMyLocation();
         } else {
             // Permission was denied. Display an error message
-            // [START_EXCLUDE]
             // Display the missing permission error dialog when the fragments resume.
             permissionDenied = true;
-            // [END_EXCLUDE]
         }
     }
-    // [END maps_check_location_permission_result]
+
 
     @Override
     protected void onResumeFragments() {
@@ -159,15 +192,19 @@ public class NearByActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Displays a dialog with error message explaining that the location permission is missing.
-     */
+
+    // Displays a dialog with error message explaining that the location permission is missing.
     private void showMissingPermissionError() {
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
     }
 
-
-
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        JioActivity jio = (JioActivity) marker.getTag();
+        Intent nextActivity = new Intent(NearByActivity.this, ViewJioActivity.class);
+        nextActivity.putExtra("activity_id", jio.getActivityId());
+        startActivity(nextActivity);
+    }
 }
 

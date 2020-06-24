@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,6 +41,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import org.imperiumlabs.geofirestore.GeoFirestore;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -430,10 +433,16 @@ public class PostingPage
     }
 
     public void putInFirestore(String activity_id, JioActivity jioActivity) {
-        FirebaseFirestore.getInstance()
-                .collection("activities")
-                .document(activity_id)
+        CollectionReference colRef = FirebaseFirestore.getInstance()
+                .collection("activities");
+
+        //put in JioActivity in firestore
+        colRef.document(activity_id)
                 .set(jioActivity);
+
+        //put geoLocation into geoFirestore for nearby activity queries
+        GeoFirestore geoFirestore = new GeoFirestore(colRef);
+        geoFirestore.setLocation(activity_id,jioActivity.getGeoPoint());
 
         //Storing activity id in user who created it
         HashMap<String, String> input_to_user = new HashMap<>();

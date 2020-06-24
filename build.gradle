@@ -10,6 +10,8 @@ buildscript {
         mavenCentral()
 
 
+
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.6.3'
@@ -24,6 +26,9 @@ allprojects {
     repositories {
         google()
         jcenter()
+
+        //for GeoFirestore
+        maven { url 'https://jitpack.io' }
         
     }
 }

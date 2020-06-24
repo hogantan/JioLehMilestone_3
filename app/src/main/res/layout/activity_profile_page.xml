@@ -10,7 +10,7 @@
         android:id="@+id/userProfile_top_frame"
         android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:background="@drawable/user_prof_top" >
+         >
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/userProfile_tabLayout"
