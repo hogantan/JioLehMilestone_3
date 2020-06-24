@@ -50,40 +50,18 @@ public class JioActivity {
         this.host_uid = host_uid;
         this.event_date = event_date;
         this.event_time = event_time;
-        convertDate(event_date, event_time, this.event_timestamp);
         this.deadline_date = deadline_date;
         this.deadline_time = deadline_time;
-        convertDate(event_date, event_time, this.deadline_timestamp);
         this.details = details;
         this.min_participants = min_participants;
         this.max_participants = max_participants;
         this.participants = new ArrayList<>();
         this.title_array = new ArrayList<>();
-        fillArray(this.title_array, this.title);
         this.current_participants = 0;
         this.expired = false;
         this.cancelled = false;
         this.confirmed = false;
         this.imageUrl = "";
-    }
-
-    private void fillArray(ArrayList<String> array, String input) {
-        String[] words = input.toLowerCase().split("\\s+");
-        for (int i = 0; i < words.length; i++) {
-            words[i] = words[i].replaceAll("[^\\w]", "");
-        }
-        array.addAll(Arrays.asList(words));
-        array.add("");
-    }
-
-    private void convertDate(String date, String time, Date toChange) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-        try {
-            toChange = formatter.parse(date + " " + time);
-            System.out.println(formatter.parse(date + " " + time));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

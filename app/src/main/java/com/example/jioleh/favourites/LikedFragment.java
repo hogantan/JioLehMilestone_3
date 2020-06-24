@@ -65,6 +65,8 @@ public class LikedFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                list_of_tasks.clear();
+                list_of_activities.clear();
                 //Second line of check
                 checkActivityExpiry();
                 checkActivityCancelledConfirmed();
@@ -91,9 +93,9 @@ public class LikedFragment extends Fragment {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         //listens to joined for changes which will only occur if there is a change in activities collection which is prompted by ViewJioActivity Listener
+                        List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
                         list_of_tasks.clear();
                         list_of_activities.clear();
-                        List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
 
                         //Adding a list of completable futures
                         for (DocumentSnapshot documentSnapshot : snapshots) {
@@ -112,7 +114,7 @@ public class LikedFragment extends Fragment {
                                         return o1.getEvent_timestamp().compareTo(o2.getEvent_timestamp());
                                     }
                                 });
-                                adapter.setData(list_of_activities, false);
+                                adapter.setData(list_of_activities, false, false);
                                 adapter.notifyDataSetChanged();
                                 //Visual text
                                 if (list_of_activities.isEmpty()) {

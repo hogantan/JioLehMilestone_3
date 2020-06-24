@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="13dp"
                 android:text="Type of Activity"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/ic_baseline_dehaze_green"
+                app:srcCompat="@drawable/ic_baseline_dehaze_green"
                 app:layout_constraintEnd_toStartOf="@id/tvViewDisplayTypeActivity"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTitle"></ImageView>
@@ -79,9 +79,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="14dp"
                 android:text="Location"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTypeActivity"></TextView>
 
@@ -92,7 +92,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/ic_baseline_location_on_green"
+                app:srcCompat="@drawable/ic_baseline_location_on_green"
                 app:layout_constraintEnd_toStartOf="@id/tvViewDisplayLocation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTypeActivity"></ImageView>
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="70dp"
                 android:layout_marginLeft="70dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="14dp"
                 android:text="Date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWhen"></TextView>
@@ -186,10 +186,10 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="13dp"
                 android:background="@drawable/ic_baseline_access_time_basegreen"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWhen"></ImageView>
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayActualDate"></ImageView>
 
             <TextView
                 android:id="@+id/tvViewDisplayActualTime"
@@ -197,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="70dp"
                 android:layout_marginLeft="70dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="13dp"
                 android:text="Time"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayActualDate"></TextView>
@@ -231,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="70dp"
                 android:layout_marginLeft="70dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="13dp"
                 android:text="Date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayConfirm"></TextView>
@@ -241,10 +241,10 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="13dp"
                 android:background="@drawable/ic_baseline_access_time_basegreen"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayConfirm"></ImageView>
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayConfirmDate"></ImageView>
 
             <TextView
                 android:id="@+id/tvViewDisplayConfirmTime"
@@ -252,24 +252,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="70dp"
                 android:layout_marginLeft="70dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="13dp"
                 android:text="Time"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayConfirmDate"></TextView>
+
 
             <TextView
                 android:id="@+id/tvViewDisplayAbout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="32dp"
                 android:text="About Activity"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.067"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayMinimum"></TextView>
-
 
             <ImageView
                 android:id="@+id/ivViewDisplayDetailsLogo"
@@ -277,13 +277,23 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginRight="200dp"
-                android:src="@drawable/ic_baseline_info_green"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginTop="34dp"
                 app:layout_constraintStart_toEndOf="@id/tvViewDisplayAbout"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayMinimum"></ImageView>
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayMinimum"
+                app:srcCompat="@drawable/ic_baseline_info_green"></ImageView>
+
+            <ImageView
+                android:id="@+id/ivViewDisplayDetailsEdit"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="34dp"
+                android:clickable="false"
+                android:visibility="invisible"
+                app:layout_constraintStart_toEndOf="@+id/ivViewDisplayDetailsLogo"
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayMinimum"
+                app:srcCompat="@drawable/ic_baseline_edit_basegreen"></ImageView>
 
             <TextView
                 android:id="@+id/tvViewDisplayDetails"
@@ -327,7 +337,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/ic_baseline_person_basegreen"
+                app:srcCompat="@drawable/ic_baseline_person_basegreen"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWho"></ImageView>
 
@@ -336,11 +346,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="8dp"
                 android:text="100/100"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintBottom_toBottomOf="@+id/vViewDisplayParticipants"
                 app:layout_constraintStart_toEndOf="@id/ivViewDisplayParticipantsLogo"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWho"></TextView>
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayWho"
+                app:layout_constraintVertical_bias="0.0"></TextView>
 
             <TextView
                 android:id="@+id/tvViewDisplayMinimum"

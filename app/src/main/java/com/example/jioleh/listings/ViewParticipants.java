@@ -43,6 +43,7 @@ public class ViewParticipants extends AppCompatActivity {
 
     private Intent intent;
     private String activity_id;
+    private String host_id;
 
     //Used to manage locating of participants in datastore
     private ArrayList<UserProfile> list_of_participants = new ArrayList<>();
@@ -83,7 +84,7 @@ public class ViewParticipants extends AppCompatActivity {
                                     UserProfile userProfile = snapshot.toObject(UserProfile.class);
                                     list_of_participants.add(userProfile);
                                 }
-                                adapter.setData(list_of_participants, list_of_uid);
+                                adapter.setData(list_of_participants, list_of_uid, host_id, activity_id);
                             }
                         });
                     }
@@ -102,6 +103,7 @@ public class ViewParticipants extends AppCompatActivity {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         intent = getIntent();
         activity_id = intent.getStringExtra("activity_id");
+        host_id = intent.getStringExtra("host_uid");
     }
 
     private void initialiseToolbar() {
