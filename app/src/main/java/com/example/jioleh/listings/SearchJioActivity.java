@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class SearchJioActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -219,15 +220,28 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
         String time_input = time.getText().toString();
         String type_input = spinner_input;
 
-        Query query = datastore.collection("activities")
-                .whereArrayContainsAny("title_array", Arrays.asList(convertSentenceToWordArray(title_input.toLowerCase())));
+        Query query = datastore.collection("activities");
+
+        //checking each individual user input
+
+        //this checks each word of user input whether it fits with each title's word
+        if (!title_input.isEmpty()) {
+            List<String> location_words = Arrays.asList(convertSentenceToWordArray(title_input.toLowerCase()));
+            for (String word : location_words) {
+                query = query.whereEqualTo("title_map." + word, true);
+            }
+        }
 
         if (type_input != null) {
             query = query.whereEqualTo("type_of_activity", type_input);
         }
 
+        //this checks each word or number of user input whether it fits with each location's word/number
         if (!location_input.isEmpty()) {
-            query = query.whereEqualTo("location", location_input);
+            List<String> location_words = Arrays.asList(convertSentenceToWordArray(location_input.toLowerCase()));
+            for (String word : location_words) {
+                query = query.whereEqualTo("location_map." + word, true);
+            }
         }
 
         if (!date_input.isEmpty()) {
