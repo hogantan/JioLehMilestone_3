@@ -51,7 +51,14 @@
         <item>Movies</item>
         <item>Shopping</item>
         <item>Outdoor Adventure</item>
+        <item>Volunteer Work</item>
         <item>Others</item>
+    </string-array>
+
+    <string-array name="gender">
+        <item>Select one</item>
+        <item>Male</item>
+        <item>Female</item>
     </string-array>
 
 </resources>
