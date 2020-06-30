@@ -126,11 +126,14 @@ public class ProfileFragment extends Fragment {
 
         if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl() != null) {
             Picasso.get().load(userProfile.getImageUrl()).into(iv_userProfileImage);
-        } else {
+        }
+        /*else {
             Toast.makeText(ProfileFragment.this.getActivity(),
                     "user details cannot be found", Toast.LENGTH_LONG).show();
 
         }
+
+         */
     }
 
     //to put in the settings icon on the top right of the action bar

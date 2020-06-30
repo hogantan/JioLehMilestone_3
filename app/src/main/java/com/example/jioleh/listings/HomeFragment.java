@@ -81,50 +81,14 @@ public class HomeFragment extends Fragment {
 
         return currentView;
     }
-/*
-    @Override
-    public void onStart() {
-        super.onStart();
-        getActivities();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        if (activity != null) {
-            activity.getSupportActionBar().show();
-        }
-    }
-
- */
 
     private void initialise() {
         search = currentView.findViewById(R.id.ivSearchActivity);
         findNearBy = currentView.findViewById(R.id.ivFindNearby);
         swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
-        //datastore = FirebaseFirestore.getInstance();
+
     }
 
-/*
-    private void getActivities() {
-        datastore.collection("activities")
-                .orderBy("time_created", Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                        } else {
-                            List<JioActivity> activities
-                                    = queryDocumentSnapshots.toObjects(JioActivity.class);
-                            adapter.setData(activities);
-                            //activity_list.smoothScrollToPosition(adapter.getItemCount() - 1);
-                        }
-                    }
-                });
-    }
-
- */
 
 
     private void initialiseRecyclerView() {

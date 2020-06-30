@@ -33,7 +33,6 @@ import java.util.Objects;
 public class UserProfileReviewsFragment extends Fragment {
     private String uid;
     private List<Review> lst;
-    private float avg;
 
     public UserProfileReviewsFragment() {
         // Required empty public constructor
@@ -43,34 +42,22 @@ public class UserProfileReviewsFragment extends Fragment {
         this.uid = uid;
     }
 
-
-    RecyclerView Rv_Review;
-    RatingBar rb;
+    private RecyclerView Rv_Review;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_profile_reviews, container, false);
-
         Rv_Review = view.findViewById(R.id.review_recyclerView);
         initRv();
-
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
     }
 
     public void initRv() {
         Rv_Review.setHasFixedSize(true);
         Rv_Review.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        lst = new ArrayList<>();
+
 
         FirebaseFirestore.getInstance()
                 .collection("users")
@@ -80,6 +67,7 @@ public class UserProfileReviewsFragment extends Fragment {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        lst = new ArrayList<>();
                         for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
                             Review review = dc.toObject(Review.class);
                             if (review != null) {
@@ -95,9 +83,4 @@ public class UserProfileReviewsFragment extends Fragment {
                 }});
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        initRv();
-    }
 }

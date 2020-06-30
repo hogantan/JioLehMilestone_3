@@ -63,5 +63,7 @@ public class Review {
         return timeOfPost;
     }
 
+    public void setTimeOfPost(Date date) { this.timeOfPost = date;}
+
 
 }

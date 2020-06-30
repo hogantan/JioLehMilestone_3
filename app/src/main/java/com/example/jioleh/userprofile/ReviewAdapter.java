@@ -31,7 +31,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
-
     private List<Review> lst;
     private float avg;
     private String uid;
@@ -63,7 +62,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         } else {
             return null;
         }
-
     }
 
     @Override
@@ -73,8 +71,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             calculateAverage();
             ReviewHeader head = (ReviewHeader) holder;
             head.rb.setRating(avg);
-            head.totalReviews.setText(String.valueOf(lst.size()) + " Ratings");
-            head.avgRating.setText(String.valueOf(avg));
+            head.totalReviews.setText(lst.size() + " Ratings");
+            head.avgRating.setText(String.format("%.2f",avg));
 
         } else if (holder instanceof ReviewHolder) {
             ReviewHolder rv = (ReviewHolder) holder;
@@ -86,9 +84,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 Picasso.get().load(UImg).into(rv.iv_reviewer_profilePic);
             }
 
+            // Server time stamp from firestore may be null
+            // because the task may not be completed yet but
+            // local changes continues first
+            if(review.getTimeOfPost()!=null) {
+                rv.date.setText(timeStampToString(review.getTimeOfPost()));
+            }
+
             rv.review_words.setText(review.getWordsOfReview());
             rv.reviewer_username.setText(review.getFrom_username());
-            rv.date.setText(timeStampToString(review.getTimeOfPost()));
             rv.review_rating.setText(String.format("%.1f", (review.getRating())));
 
             if (review.getFrom_uid().equals(this.viewer_uid)) {
@@ -107,10 +111,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                                 .collection("Reviews")
                                                 .document(review.getDocumentId())
                                                 .delete();
-                                        lst.remove(holder.getAdapterPosition());
-                                        notifyItemRemoved(holder.getAdapterPosition());
-                                        notifyItemRangeChanged(holder.getAdapterPosition(),lst.size());
-
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -119,8 +119,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                     }
                                 }).show();
                     }
+
+
                 });
+
+
             }
+
+
         }
 
     }
@@ -144,12 +150,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             avg += review.getRating();
 
         }
-        if(lst.size()!=0) {
-            avg = avg / lst.size();
+        if(lst.size()!=0 && lst.size()!=1) {
+            avg = avg / (lst.size());
         }
     }
-
-
 
     private  String timeStampToString(Date date) {
         String ans = DateFormat.format("dd-MM-yy",date).toString();
@@ -174,7 +178,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             review_rating = itemView.findViewById(R.id.review_row_rating);
             delete_review = itemView.findViewById(R.id.review_delete);
         }
-
 
     }
 
