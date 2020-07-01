@@ -4,11 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".userprofile.OtherUserView">
+    tools:context=".userprofile.OtherUserView"
+    >
+
 
     <include
         android:id="@+id/include_top_app_bar"
         layout="@layout/top_app_bar" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -60,7 +63,7 @@
             android:paddingEnd="7sp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="2">
 
 
             <Button
@@ -69,7 +72,7 @@
                 android:layout_height="25dp"
                 android:layout_weight="1"
                 android:textAllCaps="false"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
                 android:textSize="13sp"
                 android:background="@drawable/rectangle_outline_text_box"
                 android:text="Message" />
@@ -78,24 +81,13 @@
                 android:id="@+id/write_review_other_user"
                 android:layout_width="70dp"
                 android:layout_height="25dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginRight="20dp"
                 android:layout_weight="1"
+                android:layout_marginLeft="20dp"
                 android:background="@drawable/rectangle_outline_text_box"
                 android:text="Review"
                 android:textAllCaps="false"
                 android:textSize="13sp" />
 
-            <Button
-                android:id="@+id/report_other_user"
-                android:layout_width="70dp"
-                android:layout_height="25dp"
-                android:layout_weight="1"
-                android:textAllCaps="false"
-                android:textSize="13sp"
-                android:background="@drawable/rectangle_outline_text_box"
-                android:text="Report" />
         </LinearLayout>
 
 
@@ -104,7 +96,9 @@
             android:layout_width="180dp"
             android:layout_height="140dp"
             android:layout_marginTop="@dimen/_10sdp"
-            android:src="@drawable/default_picture" />
+            android:src="@drawable/default_picture"
+            app:civ_border_color="@color/White"
+            app:civ_border_width="1dp"/>
 
         <TextView
             android:text="TestingAbc123"
@@ -147,7 +141,29 @@
             android:layout_height="match_parent"
             android:layout_below="@id/userProfile_top_frame"
             android:layout_marginTop="0dp"
-            android:background="@color/appBlack" />
+            android:background="@color/baseBlack" >
+
+
+        </androidx.viewpager2.widget.ViewPager2>
     </RelativeLayout>
+
+
+<ProgressBar
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_marginTop="4sp"
+    android:layout_marginRight="60sp"
+    android:id="@+id/pb"/>
+
+    <LinearLayout
+        android:id="@+id/blocked_user_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/baseBlack"
+        android:visibility="invisible"
+        android:orientation="horizontal" />
 
 </RelativeLayout>

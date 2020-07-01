@@ -15,9 +15,12 @@
         <SwitchPreferenceCompat
             android:title="Show Contact"
             android:summary="Anyone can see your contact"
-            app:key="showEmail">
+            app:key="showContact">
         </SwitchPreferenceCompat>
 
+        <Preference
+            android:key="blockedUsers"
+            android:title="Blocked Users"/>
 
     </PreferenceCategory>
 

@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/launcher_icon_logo_512_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".settings.BlockedUsersScreen"></activity>
         <activity android:name=".location.LocationPicker" /> <!-- Google Map declarations -->
         <service
             android:name=".location.NearByActivity"
@@ -22,7 +23,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" /> <!-- ******************************************* -->
         <activity android:name=".location.NearByActivity" />
-        <activity android:name=".userprofile.YourOwnOtherUserView"></activity>
+        <activity android:name=".userprofile.YourOwnOtherUserView" />
         <activity android:name=".settings.DeleteAccount" />
         <activity android:name=".listings.SearchJioActivity" />
         <activity android:name=".userprofile.ReportUserPage" />

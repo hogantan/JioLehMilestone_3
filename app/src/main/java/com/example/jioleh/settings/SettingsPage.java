@@ -52,6 +52,15 @@ public class SettingsPage extends AppCompatActivity {
             Preference editProfile = findPreference("editProfile");
             Preference signout_pref = findPreference("signout");
             Preference deleteAccount = findPreference("deleteAccount");
+            Preference blockedUsers = findPreference("blockedUsers");
+
+            blockedUsers.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(new Intent(SettingsFragment.this.getActivity(), BlockedUsersScreen.class));
+                    return true;
+                }
+            });
 
             changePassword.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
