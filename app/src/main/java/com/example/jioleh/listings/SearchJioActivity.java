@@ -93,7 +93,21 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
             }
         });
 
+        time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openClock(time);
+            }
+        });
+
         setDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCalender(date);
+            }
+        });
+
+        date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openCalender(date);

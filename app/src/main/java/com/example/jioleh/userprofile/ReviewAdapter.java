@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jioleh.R;
+import com.example.jioleh.chat.MessagePage;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -68,7 +70,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
         if (holder instanceof ReviewHeader) {
             calculateAverage();
             ReviewHeader head = (ReviewHeader) holder;
@@ -90,6 +91,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             rv.reviewer_username.setText(review.getFrom_username());
             rv.date.setText(timeStampToString(review.getTimeOfPost()));
             rv.review_rating.setText(String.format("%.1f", (review.getRating())));
+            rv.reviewer_uid = review.getFrom_uid();
 
             if (review.getFrom_uid().equals(this.viewer_uid)) {
                 rv.delete_review.setVisibility(View.VISIBLE);
@@ -97,7 +99,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     @Override
                     public void onClick(View v) {
                         new AlertDialog.Builder(viewGroup.getContext())
-                                .setTitle("Delete Review")
+                                .setTitle("Delete review")
                                 .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -164,6 +166,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         ImageView iv_reviewer_profilePic;
         TextView review_words, reviewer_username, date,review_rating,delete_review;
+        String reviewer_uid;
 
         ReviewHolder(@NonNull View itemView) {
             super(itemView);
@@ -173,8 +176,18 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             date = itemView.findViewById(R.id.review_row_date);
             review_rating = itemView.findViewById(R.id.review_row_rating);
             delete_review = itemView.findViewById(R.id.review_delete);
-        }
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context currentContext = reviewer_username.getContext();
+                    Intent nextActivity = new Intent(currentContext, OtherUserView.class);
+                    nextActivity.putExtra("username", reviewer_username.getText().toString());
+                    nextActivity.putExtra("user_id", reviewer_uid);
+                    currentContext.startActivity(nextActivity);
+                }
+            });
+        }
 
     }
 

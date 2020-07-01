@@ -61,7 +61,6 @@ public class PostingPage
     private static int ALERT_FIELDS = 1;
     private static int ALERT_MINMAX = 2;
     private static int ALERT_DATETIME = 3;
-    private static int ALERT_CANCEL = 4;
 
     //Image
     private final int PICK_IMAGE_REQUEST = 1;
@@ -388,6 +387,11 @@ public class PostingPage
     private boolean checkMinMax(int first, int second) {
         //minimum and maximum participants must be more than zero
         if (first <= 0 || second <= 0) {
+            return false;
+        }
+
+        //this is to set a maximum to both minimum and maximum to ensure that participants array do not get too large which can affect database storage and time complexities when querying
+        if (first > 50 || second > 50) {
             return false;
         }
 

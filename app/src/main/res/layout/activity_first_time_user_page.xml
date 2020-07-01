@@ -50,6 +50,8 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="30dp"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/baseGrey"
                 android:onClick="addImage"
                 android:src="@drawable/default_picture"
                 app:layout_constraintStart_toStartOf="parent"
@@ -116,8 +118,21 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/gender"
+            <TextView
+                android:id="@+id/tvSelectGender"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:text="Gender:"
+                app:layout_constraintHorizontal_bias="0.9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_view"
+                app:layout_constraintTop_toBottomOf="@+id/age">
+            </TextView>
+
+            <Spinner
+                android:id="@+id/spGender"
                 android:layout_width="@dimen/_150sdp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -125,20 +140,7 @@
                 app:layout_constraintHorizontal_bias="0.9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/image_view"
-                app:layout_constraintTop_toBottomOf="@+id/age"
-                app:errorEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ems="10"
-                    android:hint="Gender"
-                    android:maxLength="21"
-                    android:maxLines="1"
-                    android:inputType="textFilter"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                app:layout_constraintTop_toBottomOf="@+id/tvSelectGender" />
 
             <TextView
                 android:id="@+id/tvAboutMe"
@@ -152,7 +154,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.034"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/gender"></TextView>
+                app:layout_constraintTop_toBottomOf="@+id/spGender"></TextView>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/contact"
@@ -171,6 +173,8 @@
                     android:layout_gravity="center"
                     android:ems="10"
                     android:hint="Phone Number"
+                    android:maxLines="1"
+                    android:maxLength="20"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -191,6 +195,8 @@
                     android:layout_gravity="center"
                     android:ems="10"
                     android:hint="Address"
+                    android:maxLines="1"
+                    android:maxLength="100"
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -211,6 +217,7 @@
                     android:layout_gravity="center"
                     android:ems="10"
                     android:hint="Bio"
+                    android:maxLength="400"
                     android:inputType="textMultiLine" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -231,6 +238,7 @@
                     android:ems="10"
                     android:gravity="start|top"
                     android:hint="Interests"
+                    android:maxLength="400"
                     android:inputType="textMultiLine" />
 
             </com.google.android.material.textfield.TextInputLayout>
