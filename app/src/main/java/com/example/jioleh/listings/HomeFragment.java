@@ -84,6 +84,7 @@ public class HomeFragment extends Fragment {
         search = currentView.findViewById(R.id.ivSearchActivity);
         findNearBy = currentView.findViewById(R.id.ivFindNearby);
         swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
+
     }
 
     private void initialiseRecyclerView() {

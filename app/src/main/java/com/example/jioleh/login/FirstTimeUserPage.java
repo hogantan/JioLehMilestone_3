@@ -97,7 +97,6 @@ public class FirstTimeUserPage extends AppCompatActivity {
     private void initialise() {
         til_username = findViewById(R.id.username);
         til_contact = findViewById(R.id.contact);
-        til_gender = findViewById(R.id.gender);
         til_age = findViewById(R.id.age);
         til_bio = findViewById(R.id.bio);
         confirmEdit = findViewById(R.id.btnConfirmEdit);

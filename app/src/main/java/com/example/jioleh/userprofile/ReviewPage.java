@@ -78,6 +78,7 @@ public class ReviewPage extends AppCompatActivity {
                 String currentUid = firebaseUser.getUid();
 
                 Review review = new Review(reviewWord, currentUid,profilePic,username,rating);
+
                 review.setDocumentId(reviewDocRef.getId());
 
                 reviewDocRef.set(review)
