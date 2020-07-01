@@ -10,9 +10,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.jioleh.PostLoginPage;
@@ -35,11 +38,12 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-public class EditProfilePage extends AppCompatActivity {
+public class EditProfilePage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private TextInputLayout til_username;
     private TextInputLayout til_contact;
-    private TextInputLayout til_gender;
+    private Spinner gender;
+    private String spinner_input = null;
     private TextInputLayout til_age;
     private TextInputLayout til_bio;
     private TextInputLayout til_location;
@@ -70,6 +74,7 @@ public class EditProfilePage extends AppCompatActivity {
         setContentView(R.layout.activity_first_time_user_page);
         initialise();
         initialiseToolbar();
+        initialiseSpinners();
         getUserProfile();
 
         ic_camera.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +96,7 @@ public class EditProfilePage extends AppCompatActivity {
     private void initialise() {
         til_username = findViewById(R.id.username);
         til_contact = findViewById(R.id.contact);
-        til_gender = findViewById(R.id.gender);
+        gender = findViewById(R.id.spGender);
         til_age = findViewById(R.id.age);
         til_bio = findViewById(R.id.bio);
         iv_ImageView = findViewById(R.id.image_view);
@@ -104,6 +109,14 @@ public class EditProfilePage extends AppCompatActivity {
 
         //the storage file for userProfileImage
         storageReference = FirebaseStorage.getInstance().getReference("userProfileImage");
+    }
+
+    private void initialiseSpinners() {
+        ArrayAdapter<CharSequence> type_activity_adapter = ArrayAdapter.createFromResource(this,
+                R.array.gender, android.R.layout.simple_spinner_item);
+        type_activity_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gender.setAdapter(type_activity_adapter);
+        gender.setOnItemSelectedListener(this);
     }
 
     private void initialiseToolbar() {
@@ -120,13 +133,13 @@ public class EditProfilePage extends AppCompatActivity {
     private void EditProfile() {
         String username = til_username.getEditText().getText().toString();
         String contact = til_contact.getEditText().getText().toString();
-        String gender = til_gender.getEditText().getText().toString();
+        String gender = spinner_input;
         String age = til_age.getEditText().getText().toString();
         String bio = til_bio.getEditText().getText().toString();
         String interests = til_interests.getEditText().getText().toString();
         String location = til_location.getEditText().getText().toString();
 
-        if (!validateFields(til_username) | !validateFields(til_age) | !validateFields(til_gender)) {
+        if (!validateFields(til_username) | !validateFields(til_age) | !validateSpinner(spinner_input)) {
             alertDialog();
         } else {
 
@@ -180,6 +193,14 @@ public class EditProfilePage extends AppCompatActivity {
         }
     }
 
+    private boolean validateSpinner(String input) {
+        if (input == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     //onClick for the ImageView
     public void addImage(View v) {
         openFileChooser();
@@ -222,7 +243,7 @@ public class EditProfilePage extends AppCompatActivity {
         oldUserProfile = profile;
         til_username.getEditText().setText(profile.getUsername());
         til_age.getEditText().setText(profile.getAge());
-        til_gender.getEditText().setText(profile.getGender());
+        gender.setSelection(setSpinnerDetails(profile.getGender()));
         til_contact.getEditText().setText(profile.getContact());
         til_bio.getEditText().setText(profile.getBio());
         til_location.getEditText().setText(profile.getLocation());
@@ -306,5 +327,32 @@ public class EditProfilePage extends AppCompatActivity {
                 .document(uid)
                 .set(user, SetOptions.merge());
         onBackPressed();
+    }
+
+    //Used for spinner
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        if (parent.getItemAtPosition(position).equals("Select one")) {
+            spinner_input = null;
+        } else {
+            //do something
+            spinner_input = parent.getItemAtPosition(position).toString();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    private int setSpinnerDetails(String input) {
+        if (input.equals("Male")) {
+            return 1;
+        } else if (input.equals("Female")) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 }

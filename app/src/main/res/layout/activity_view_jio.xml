@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".listings.ViewJioActivity">
+    tools:context=".listings.ViewJioActivity"
+    android:background="@color/baseBlack">
 
     <include
         android:id="@+id/tbTopBar"
@@ -130,6 +131,8 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="5dp"
+                app:civ_border_color="@color/baseGrey"
+                app:civ_border_width="1dp"
                 app:layout_constraintStart_toStartOf="@+id/vViewDisplayHost"
                 app:layout_constraintTop_toTopOf="@+id/vViewDisplayHost"></de.hdodenhof.circleimageview.CircleImageView>
 

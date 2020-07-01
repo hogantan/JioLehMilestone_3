@@ -11,12 +11,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
 public class JioActivity {
 
     private String activityId; //use fireStore document id
     private String title;
     private String location;
+    private HashMap<String, Boolean> location_map;
     private String type_of_activity;
     private String host_uid;
     private String event_date;
@@ -31,7 +33,7 @@ public class JioActivity {
     private int min_participants;
     private int max_participants;
     private ArrayList<String> participants;
-    private ArrayList<String> title_array;
+    private HashMap<String, Boolean> title_map;
     private boolean expired;
     private boolean cancelled;
     private boolean confirmed;
@@ -46,6 +48,7 @@ public class JioActivity {
                        int max_participants) {
         this.title = title;
         this.location = location;
+        this.location_map = new HashMap<>();
         this.type_of_activity = type_of_activity;
         this.host_uid = host_uid;
         this.event_date = event_date;
@@ -56,7 +59,7 @@ public class JioActivity {
         this.min_participants = min_participants;
         this.max_participants = max_participants;
         this.participants = new ArrayList<>();
-        this.title_array = new ArrayList<>();
+        this.title_map = new HashMap<>();
         this.current_participants = 0;
         this.expired = false;
         this.cancelled = false;
@@ -90,14 +93,6 @@ public class JioActivity {
     }
 
     public JioActivity(){}
-
-    public ArrayList<String> getTitle_array() {
-        return title_array;
-    }
-
-    public void setTitle_array(ArrayList<String> title_array) {
-        this.title_array = title_array;
-    }
 
     public ArrayList<String> getParticipants() {
         return participants;
@@ -278,5 +273,21 @@ public class JioActivity {
 
     public void setDeadline_timestamp(Date deadline_timestamp) {
         this.deadline_timestamp = deadline_timestamp;
+    }
+
+    public HashMap<String, Boolean> getTitle_map() {
+        return title_map;
+    }
+
+    public void setTitle_map(HashMap<String, Boolean> title_map) {
+        this.title_map = title_map;
+    }
+
+    public HashMap<String, Boolean> getLocation_map() {
+        return location_map;
+    }
+
+    public void setLocation_map(HashMap<String, Boolean> location_map) {
+        this.location_map = location_map;
     }
 }

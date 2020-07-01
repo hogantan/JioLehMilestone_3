@@ -61,7 +61,6 @@ public class PostingPage
     private static int ALERT_FIELDS = 1;
     private static int ALERT_MINMAX = 2;
     private static int ALERT_DATETIME = 3;
-    private static int ALERT_CANCEL = 4;
 
     //Image
     private final int PICK_IMAGE_REQUEST = 1;
@@ -326,7 +325,6 @@ public class PostingPage
             geoPoint = new GeoPoint(latitude,longitude);
 
             this.location.setText(returnedAddress);
-
         }
     }
 
@@ -338,6 +336,7 @@ public class PostingPage
             alertDialog(ALERT_FIELDS);
         }  else {
             String title = title_of_post.getEditText().getText().toString();
+            String location_input = location.getText().toString();
             String venue = location.getText().toString();
             String actualTime = time_of_activity.getText().toString();
             String actualDate = date_of_activity.getText().toString();
@@ -358,7 +357,8 @@ public class PostingPage
                 input_activity.setGeoPoint(geoPoint);
                 input_activity.setDeadline_timestamp(convertDate(deadlineDate, deadlineTime));
                 input_activity.setEvent_timestamp(convertDate(actualDate, actualTime));
-                input_activity.setTitle_array(fillArray(new ArrayList<>(), title));
+                input_activity.setTitle_map(fillMap(new HashMap<>(), title));
+                input_activity.setLocation_map(fillMap(new HashMap<>(), location_input));
                 confirmationDialog(input_activity, mImageUri);
             }
         }
@@ -374,20 +374,24 @@ public class PostingPage
         }
     }
 
-    private ArrayList<String> fillArray(ArrayList<String> array, String input) {
+    private HashMap<String, Boolean> fillMap(HashMap<String, Boolean> map, String input) {
         String[] words = input.toLowerCase().split("\\s+");
         for (int i = 0; i < words.length; i++) {
             words[i] = words[i].replaceAll("[^\\w]", "");
+            map.put(words[i], true);
         }
-        array.addAll(Arrays.asList(words));
-        array.add("");
 
-        return array;
+        return map;
     }
 
     private boolean checkMinMax(int first, int second) {
         //minimum and maximum participants must be more than zero
         if (first <= 0 || second <= 0) {
+            return false;
+        }
+
+        //this is to set a maximum to both minimum and maximum to ensure that participants array do not get too large which can affect database storage and time complexities when querying
+        if (first > 50 || second > 50) {
             return false;
         }
 

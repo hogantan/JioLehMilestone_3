@@ -21,7 +21,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/btn_round_rectangle"
-        android:text="Create Account"
+        android:text="Create account"
         android:textSize="14sp"
         android:textStyle="bold"
         android:textAllCaps="false"
@@ -73,14 +73,16 @@
         android:textColorHint="@color/baseWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilRegisterEmail">
+        app:layout_constraintTop_toBottomOf="@+id/tilRegisterEmail"
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:hint="Password"
-            android:inputType="textPersonName"
+            android:inputType="textPassword"
+            android:maxLength="128"
             android:textColor="@color/baseWhite" />
     </com.google.android.material.textfield.TextInputLayout>
 

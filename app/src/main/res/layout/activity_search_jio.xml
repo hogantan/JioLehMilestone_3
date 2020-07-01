@@ -64,6 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search Title"
+                android:maxLength="40"
+                android:maxLines="1"
                 android:textColorHint="@color/baseBlack" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,6 +80,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search Location"
+                android:maxLength="60"
+                android:maxLines="1"
                 android:textColorHint="@color/baseWhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
