@@ -3,6 +3,7 @@
     <color name="colorPrimary">#00ffce</color>
     <color name="colorPrimaryDark">#202124</color>
     <color name="baseBlack">#202124</color>
+    <color name="baseLighterBlack">#242529</color>
     <color name="baseGreen">#00ffce</color>
     <color name="baseRed">#D50000</color>
     <color name="baseWhite">#FFF</color>

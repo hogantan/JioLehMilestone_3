@@ -5,6 +5,8 @@ package com.example.jioleh.chat;
         import androidx.annotation.NonNull;
         import androidx.annotation.Nullable;
         import androidx.fragment.app.Fragment;
+        import androidx.lifecycle.Observer;
+        import androidx.lifecycle.ViewModelProvider;
         import androidx.recyclerview.widget.LinearLayoutManager;
         import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +15,8 @@ package com.example.jioleh.chat;
         import android.view.ViewGroup;
 
         import com.example.jioleh.R;
+        import com.example.jioleh.listings.JioActivity;
+        import com.example.jioleh.listings.JioActivityViewModel;
         import com.example.jioleh.userprofile.UserProfile;
         import com.google.android.gms.tasks.OnSuccessListener;
         import com.google.android.gms.tasks.Task;
@@ -35,13 +39,7 @@ public class ChatFragment extends Fragment {
     private View currentView;
     private OpenChatsAdapter adapter;
 
-
-    private FirebaseFirestore datastore;
-    private FirebaseUser currentUser;
-
-    private ArrayList<UserProfile> list_of_profiles = new ArrayList<>();
-    private ArrayList<Task<DocumentSnapshot>> list_of_task = new ArrayList<>();
-    private ArrayList<String> list_of_uid = new ArrayList<>();
+    private ChatFragmentViewModel viewModel;
 
     @Nullable
     @Override
@@ -49,14 +47,11 @@ public class ChatFragment extends Fragment {
         currentView = inflater.inflate(R.layout.chat_fragment,container,false);
         initialise();
         initialiseRecyclerView();
-        getUsers();
         return currentView;
     }
 
     private void initialise() {
         recyclerView = currentView.findViewById(R.id.rvUsersList);
-        datastore = FirebaseFirestore.getInstance();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     private void initialiseRecyclerView() {
@@ -67,49 +62,18 @@ public class ChatFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void getUsers() {
-        datastore.collection("users")
-                .document(currentUser.getUid())
-                .collection("openchats")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        list_of_task.clear();
-                        list_of_profiles.clear();
-                        list_of_uid.clear();
-                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
-                        updateView(list_of_documents);
-                    }
-                });
-    }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel = new ChatFragmentViewModel(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-    private void updateView(List<DocumentSnapshot> list_of_documents) {
-        for(DocumentSnapshot documentSnapshot : list_of_documents) {
-            list_of_uid.add(documentSnapshot.getId());
-        }
-
-        for(String uid : list_of_uid) {
-            list_of_task.add(getUser(uid));
-        }
-
-        Tasks.whenAllSuccess(list_of_task).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
+        //observe for changes in database
+        viewModel.getListOfUserProfiles().observe(getViewLifecycleOwner(), new Observer<List<?>[]>() {
             @Override
-            public void onSuccess(List<? super DocumentSnapshot> snapShots) {
-                for (int i = 0; i < list_of_task.size(); i++) {
-                    DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
-                    UserProfile userProfile = snapshot.toObject(UserProfile.class);
-                    list_of_profiles.add(userProfile);
-                }
-                adapter.setData(list_of_profiles, list_of_uid);
+            public void onChanged(List<?>[] userProfiles) {
+                adapter.setData((List<UserProfile>)userProfiles[0], (List<String>)userProfiles[1]);
                 adapter.notifyDataSetChanged();
             }
         });
-    }
-
-    //Get a completable future task
-    private Task<DocumentSnapshot> getUser(String uid) {
-        return datastore.collection("users")
-                .document(uid)
-                .get();
     }
 }

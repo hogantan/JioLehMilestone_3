@@ -12,9 +12,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,12 +37,13 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-public class FirstTimeUserPage extends AppCompatActivity {
+public class FirstTimeUserPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
 
     private TextInputLayout til_username;
     private TextInputLayout til_contact;
-    private TextInputLayout til_gender;
+    private Spinner gender;
+    private String spinner_input = null;
     private TextInputLayout til_age;
     private TextInputLayout til_bio;
     private ImageView iv_ImageView;
@@ -71,6 +75,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_time_user_page);
         initialise();
+        initialiseSpinners();
         initialiseToolbar();
 
         ic_camera.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +111,7 @@ public class FirstTimeUserPage extends AppCompatActivity {
         til_interests = findViewById(R.id.Interest);
         til_location = findViewById(R.id.Location);
         toolbarTitle = findViewById(R.id.tbTitle);
+        gender = findViewById(R.id.spGender);
 
         //the storage file for userProfileImage
         storageReference = FirebaseStorage.getInstance().getReference("userProfileImage");
@@ -122,16 +128,24 @@ public class FirstTimeUserPage extends AppCompatActivity {
         });
     }
 
+    private void initialiseSpinners() {
+        ArrayAdapter<CharSequence> type_activity_adapter = ArrayAdapter.createFromResource(this,
+                R.array.gender, android.R.layout.simple_spinner_item);
+        type_activity_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        gender.setAdapter(type_activity_adapter);
+        gender.setOnItemSelectedListener(this);
+    }
+
     public void createProfile() {
         String username = til_username.getEditText().getText().toString();
         String contact = til_contact.getEditText().getText().toString();
-        String gender = til_gender.getEditText().getText().toString();
+        String gender = spinner_input;
         String age = til_age.getEditText().getText().toString();
         String bio = til_bio.getEditText().getText().toString();
         String interests = til_interests.getEditText().getText().toString();
         String location = til_location.getEditText().getText().toString();
 
-        if (!validateFields(til_username) | !validateFields(til_age) | !validateFields(til_gender)) {
+        if (!validateFields(til_username) | !validateFields(til_age) | !validateSpinner(gender)) {
             alertDialog();
         } else {
 
@@ -164,6 +178,14 @@ public class FirstTimeUserPage extends AppCompatActivity {
             return false;
         } else {
             til.getEditText().setError(null);
+            return true;
+        }
+    }
+
+    private boolean validateSpinner(String input) {
+        if (input == null) {
+            return false;
+        } else {
             return true;
         }
     }
@@ -239,7 +261,10 @@ public class FirstTimeUserPage extends AppCompatActivity {
     }
 
     public void startNextActivity() {
-        startActivity(new Intent(FirstTimeUserPage.this, PostLoginPage.class));
+        Intent nextActivity = new Intent(FirstTimeUserPage.this, PostLoginPage.class);
+        nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(nextActivity);
+        finish();
     }
 
     public void uploadFile(final UserProfile userProf, Uri mImageUri) {
@@ -286,4 +311,30 @@ public class FirstTimeUserPage extends AppCompatActivity {
         }
     }
 
+    //Used for spinner
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        if (parent.getItemAtPosition(position).equals("Select one")) {
+            spinner_input = null;
+        } else {
+            //do something
+            spinner_input = parent.getItemAtPosition(position).toString();
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    private int setSpinnerDetails(String input) {
+        if (input.equals("Male")) {
+            return 1;
+        } else if (input.equals("Female")) {
+            return 2;
+        } else {
+            return 0;
+        }
+    }
 }

@@ -50,8 +50,6 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="30dp"
-                app:civ_border_width="1dp"
-                app:civ_border_color="@color/baseGrey"
                 android:onClick="addImage"
                 android:src="@drawable/default_picture"
                 app:layout_constraintStart_toStartOf="parent"

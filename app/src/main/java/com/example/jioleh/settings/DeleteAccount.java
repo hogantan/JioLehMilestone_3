@@ -1,9 +1,11 @@
 package com.example.jioleh.settings;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +15,11 @@ import android.widget.Toast;
 
 import com.example.jioleh.R;
 import com.example.jioleh.listings.JioActivity;
+import com.example.jioleh.login.LoginPage;
 import com.example.jioleh.login.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +42,8 @@ public class DeleteAccount extends AppCompatActivity {
     private FirebaseAuth database;
     private FirebaseFirestore datastore;
     private FirebaseUser currentUser;
+
+    private ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +75,7 @@ public class DeleteAccount extends AppCompatActivity {
     }
 
     private void initialise() {
+        progressBar = new ProgressDialog(DeleteAccount.this);
         username = findViewById(R.id.tilConfirmUsername);
         delete = findViewById(R.id.btnConfirmCDelete);
         database = FirebaseAuth.getInstance();
@@ -94,6 +102,12 @@ public class DeleteAccount extends AppCompatActivity {
 
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+
+                //Progress bar settings
+                progressBar.setTitle("Deleting Account");
+                progressBar.setMessage("Please wait while we delete your account");
+                progressBar.setCanceledOnTouchOutside(false);
+                progressBar.show();
 
                 HashMap<String, Boolean> input = new HashMap<>();
                 input.put("isDeleted", true);
@@ -137,14 +151,21 @@ public class DeleteAccount extends AppCompatActivity {
                         });
 
                 //Deleting from FirebaseAuth
-                currentUser.delete();
-
-                //Return back to main activity
-                Intent nextActivity = new Intent(DeleteAccount.this, MainActivity.class);
-                nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(nextActivity);
-
-                Toast.makeText(DeleteAccount.this, "Account has been deleted", Toast.LENGTH_SHORT).show();
+                currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            progressBar.dismiss();
+                            Intent nextActivity = new Intent(DeleteAccount.this, MainActivity.class);
+                            nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(nextActivity);
+                            Toast.makeText(DeleteAccount.this, "Account has been deleted successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            progressBar.dismiss();
+                            Toast.makeText(DeleteAccount.this, "Failed to delete account", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 

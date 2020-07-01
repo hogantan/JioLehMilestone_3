@@ -26,7 +26,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="3dp"
         android:text="00/00/0000 00:00"
-        android:textColor="@color/baseWhite"
+        android:textColor="@color/baseGrey"
         android:textSize="12dp" />
 
 </RelativeLayout>
