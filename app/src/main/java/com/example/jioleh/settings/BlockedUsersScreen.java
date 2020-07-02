@@ -2,10 +2,12 @@ package com.example.jioleh.settings;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.jioleh.R;
 import com.example.jioleh.userprofile.UserProfile;
@@ -24,12 +26,15 @@ public class BlockedUsersScreen extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
     private BlockedUsersAdapter mAdapter;
     private List<UserProfile> myDataset;
+    private List<String> myUserId;
     private RecyclerView recyclerView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blocked_users_screen);
+        initialiseTb();
 
         recyclerView = findViewById(R.id.blocked_users_rv);
 
@@ -39,13 +44,11 @@ public class BlockedUsersScreen extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         getBlockedUsers();
-
-
     }
 
     private void getBlockedUsers() {
         String currentUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        myDataset = new ArrayList<>();
+
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(currentUID)
@@ -53,18 +56,33 @@ public class BlockedUsersScreen extends AppCompatActivity {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-
+                        myDataset = new ArrayList<>();
+                        myUserId = new ArrayList<>();
                         for(DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()) {
+
                             if(documentSnapshot.exists()) {
                                 UserProfile user = documentSnapshot.toObject(UserProfile.class);
                                 myDataset.add(user);
+                                myUserId.add(documentSnapshot.getId());
                             }
                         }
                         mAdapter = new BlockedUsersAdapter();
-                        mAdapter.setData(myDataset);
+                        mAdapter.setData(myDataset,myUserId);
 
                         recyclerView.setAdapter(mAdapter);
                     }
                 });
+    }
+
+    private void initialiseTb() {
+        toolbar = findViewById(R.id.blocked_users_top_bar);
+        toolbar.setTitle("Blocked Users");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 }
