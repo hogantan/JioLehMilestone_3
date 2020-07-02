@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.example.jioleh.R;
 
 /**
+ * @Author Android Google maps
+ * This class is taken from the google maps repository
  * Utility class for access to runtime permissions.
  */
 public abstract class PermissionUtils {

@@ -35,13 +35,11 @@ public class HomeFragment extends Fragment {
     private RecyclerView activity_list;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    //private FirebaseFirestore datastore;
     private ActivityAdapter adapter;
     private View currentView;
 
     // viewModel for jioActivity
     private JioActivityViewModel viewModel;
-
 
 
     @Nullable
@@ -88,8 +86,6 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
 
     }
-
-
 
     private void initialiseRecyclerView() {
         adapter = new ActivityAdapter();

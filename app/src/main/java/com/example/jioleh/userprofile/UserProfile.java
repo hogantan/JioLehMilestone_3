@@ -1,6 +1,7 @@
 package com.example.jioleh.userprofile;
 
 public class UserProfile {
+
     private String username;
     private boolean isNewUser;
     private String contact;

@@ -54,7 +54,7 @@ public class ReviewPage extends AppCompatActivity {
         String other_userId = intent.getStringExtra("user_id");
         tv_username_display.setText(other_username);
 
-      viewModel = new ViewModelProvider(this).get(userProfileViewModel.class);
+        viewModel = new ViewModelProvider(this).get(userProfileViewModel.class);
 
         fetchCurrentUserDetails(firebaseUser.getUid()).observe(ReviewPage.this, new Observer<UserProfile>() {
             @Override
@@ -123,6 +123,5 @@ public class ReviewPage extends AppCompatActivity {
 
     public LiveData<UserProfile> fetchCurrentUserDetails(String currentUserId) {
         return viewModel.getUser(currentUserId);
-
     }
 }
