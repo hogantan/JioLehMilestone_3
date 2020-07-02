@@ -64,7 +64,7 @@ public class OtherUserView extends AppCompatActivity {
     private UserProfileViewPagerAdapter pagerAdapter;
     private ViewPager2 viewPager2;
 
-    private boolean documentExist;
+    private boolean documentExist=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class OtherUserView extends AppCompatActivity {
         profileUsername = intent.getStringExtra("username");
         chcekIfBlocked();
 
-        if (!documentExist) {
+        if (documentExist) {
             LinearLayout blocked_user_view = findViewById(R.id.blocked_user_layout);
             blocked_user_view.setVisibility(View.VISIBLE);
 
@@ -293,8 +293,5 @@ public class OtherUserView extends AppCompatActivity {
     private void isBlocked(boolean result) {
         this.documentExist = result;
     }
-
-    private void blockedUserDialog() {
-
-    }
+    
 }

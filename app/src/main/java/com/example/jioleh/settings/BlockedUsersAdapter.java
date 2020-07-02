@@ -3,6 +3,7 @@ package com.example.jioleh.settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.jioleh.R;
 import com.example.jioleh.userprofile.UserProfile;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -18,13 +21,15 @@ import java.util.List;
 
 public class BlockedUsersAdapter extends RecyclerView.Adapter<BlockedUsersAdapter.BlockedUsersHolder> {
     private List<UserProfile> listOfBlockedUsers;
+    private List<String> lstOfUid;
 
     public BlockedUsersAdapter() {
         this.listOfBlockedUsers = new ArrayList<>();
     }
 
-    public void setData(List<UserProfile> listOfBlockedUsers) {
+    public void setData(List<UserProfile> listOfBlockedUsers, List<String> lstOfUid) {
         this.listOfBlockedUsers = listOfBlockedUsers;
+        this.lstOfUid = lstOfUid;
     }
 
     @NonNull
@@ -45,6 +50,19 @@ public class BlockedUsersAdapter extends RecyclerView.Adapter<BlockedUsersAdapte
             Picasso.get().load(UImg).into(holder.iv_user_profile_pic);
         }
 
+        holder.unblock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String currentUserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                FirebaseFirestore.getInstance()
+                        .collection("users")
+                        .document(currentUserUid)
+                        .collection("blocked users")
+                        .document(lstOfUid.get(position))
+                        .delete();
+            }
+        });
+
     }
 
 
@@ -57,11 +75,15 @@ public class BlockedUsersAdapter extends RecyclerView.Adapter<BlockedUsersAdapte
 
         ImageView iv_user_profile_pic;
         TextView tv_username;
+        Button unblock;
 
-        public BlockedUsersHolder(@NonNull View itemView) {
+        BlockedUsersHolder(@NonNull View itemView) {
             super(itemView);
             iv_user_profile_pic = itemView.findViewById(R.id.iv_blocked_user_image);
             tv_username = itemView.findViewById(R.id.tv_blocked_user_username);
+            unblock = itemView.findViewById(R.id.btn_unblock_user);
+
+
         }
     }
 }
