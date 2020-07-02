@@ -313,6 +313,7 @@ public class MessagePage extends AppCompatActivity {
                                                 List<MessageChat> messages
                                                         = queryDocumentSnapshots.toObjects(MessageChat.class);
                                                 adapter.setData(messages);
+                                                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
                                             }
                                         }
                                     });

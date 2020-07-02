@@ -104,8 +104,6 @@
             android:layout_width="180dp"
             android:layout_height="140dp"
             android:layout_marginTop="@dimen/_10sdp"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/baseGrey"
             android:src="@drawable/default_picture" />
 
         <TextView

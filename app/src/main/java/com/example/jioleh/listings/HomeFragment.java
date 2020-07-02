@@ -64,8 +64,8 @@ public class HomeFragment extends Fragment {
         findNearBy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent test = new Intent(getContext(), NearByActivity.class);
-                startActivity(test);
+                Intent nextActivity = new Intent(getContext(), NearByActivity.class);
+                startActivity(nextActivity);
             }
         });
 

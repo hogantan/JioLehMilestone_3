@@ -27,7 +27,6 @@ class JioActivityRepository {
 
     JioActivityRepository(databaseOperations databaseOperations) {
         this.databaseOperations = databaseOperations;
-
     }
 
     public void getJioActivityData() {
