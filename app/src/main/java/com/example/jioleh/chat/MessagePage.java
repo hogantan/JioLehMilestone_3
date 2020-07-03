@@ -68,15 +68,9 @@ public class MessagePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_page);
-        initialiseToolbar();
         initialise();
+        initialiseToolbar();
         initialiseRecyclerView();
-
-        username = findViewById(R.id.tvMessageUsername);
-        String updateUsername = intent.getStringExtra("username");
-        username.setText(updateUsername);
-        String imageUrl = intent.getStringExtra("image_url");
-        Picasso.get().load(imageUrl).into(receiverImage);
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -348,6 +342,15 @@ public class MessagePage extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        //Setting details in toolbar
+        username = findViewById(R.id.tvMessageUsername);
+        String updateUsername = intent.getStringExtra("username");
+        username.setText(updateUsername);
+        String imageUrl = intent.getStringExtra("image_url");
+        if (!imageUrl.isEmpty()) {
+            Picasso.get().load(imageUrl).into(receiverImage);
+        }
     }
 
     private void initialiseRecyclerView() {
