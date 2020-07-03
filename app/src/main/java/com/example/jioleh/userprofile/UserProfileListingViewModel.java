@@ -1,26 +1,24 @@
-package com.example.jioleh.favourites;
+package com.example.jioleh.userprofile;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.listings.JioActivity;
 
 import java.util.List;
 
-public class FavouriteFragmentViewModel extends ViewModel implements databaseOperations{
+public class UserProfileListingViewModel extends ViewModel implements databaseOperations {
 
     private MutableLiveData<List<JioActivity>> listOfActivities = new MutableLiveData<>();
-    private FavouritesFragmentRepository repository;
-
+    private userProfileRepository repository;
     private String current_uid;
-    private String type;
 
-    public FavouriteFragmentViewModel(String current_uid, String type) {
+    public UserProfileListingViewModel(String current_uid) {
         this.current_uid = current_uid;
-        this.type = type;
-        repository = new FavouritesFragmentRepository(this);
-        repository.getActivities(current_uid, type);
+        this.repository = new userProfileRepository(this);
+        this.repository.getActivities(current_uid);
     }
 
     public LiveData<List<JioActivity>> getListOfActivities() {
@@ -28,7 +26,7 @@ public class FavouriteFragmentViewModel extends ViewModel implements databaseOpe
     }
 
     public void refreshActivities() {
-        repository.getActivities(current_uid, type);
+        this.repository.getActivities(current_uid);
     }
 
     @Override
