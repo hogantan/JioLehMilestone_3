@@ -2,7 +2,6 @@ package com.example.jioleh.location;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -14,7 +13,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.jioleh.R;
@@ -47,7 +45,7 @@ public class NearByActivity extends AppCompatActivity
         GoogleMap.OnInfoWindowClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private Toolbar toolbar;
+
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final double QUERY_NEARBY_RADIUS = 1.0;
@@ -63,24 +61,12 @@ public class NearByActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near_by);
-        initialiseToolbar();
 
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
-    }
-
-    private void initialiseToolbar() {
-        toolbar = findViewById(R.id.tbTopBar);
-        toolbar.setTitle("");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     @Override

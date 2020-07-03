@@ -84,7 +84,7 @@ public class OtherUserView extends AppCompatActivity {
             blocked_user_view.setVisibility(View.VISIBLE);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
-            builder.setTitle("Error fetching user details");
+            builder.setTitle("Error fecthing user details");
             builder.setMessage("The user cannot be found!");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
