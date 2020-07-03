@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 public class userProfileViewModel extends ViewModel {
 
-    private userProfileRepository repository;
+    userProfileRepository repository;
 
     public userProfileViewModel() {
         this.repository = new userProfileRepository();

@@ -6,16 +6,6 @@
     android:background="@color/baseBlack"
     tools:context=".userprofile.UserProfileListingsFragment">
 
-    <TextView
-        android:id="@+id/tvEmptyMsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No activities listed yet..."
-        android:visibility="invisible"
-        android:textColor="@color/baseGrey"
-        android:layout_gravity="center">
-    </TextView>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
