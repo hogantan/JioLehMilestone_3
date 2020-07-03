@@ -14,12 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.R;
 import com.example.jioleh.listings.JioActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mapbox.mapboxsdk.plugins.annotation.Line;
 
 import java.util.List;
 
@@ -31,8 +29,6 @@ public class JoinedFragment extends Fragment {
     private RecyclerView recyclerView;
     private FavouritesAdapter adapter;
 
-    private LinesOfChecks linesOfChecks = new LinesOfChecks();
-
     private FavouriteFragmentViewModel viewModel;
     private FirebaseUser currentUser;
 
@@ -43,7 +39,33 @@ public class JoinedFragment extends Fragment {
         initialise();
         initialiseRecyclerView();
 
+        //this is to update when an activity expires but it does not get reflected since join and like fragment does not listen to field data of activity
+        //Third line of check
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Second line of check
+                viewModel.checkActivityExpiry();
+                viewModel.checkActivityCancelledConfirmed();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return currentView;
+    }
+
+    private void initialise() {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
+        emptyText = currentView.findViewById(R.id.tvFavouriteEmpty);
+    }
+
+    private void initialiseRecyclerView() {
+        adapter = new FavouritesAdapter();
+        recyclerView = currentView.findViewById(R.id.rvFavouriteJoined);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -66,34 +88,5 @@ public class JoinedFragment extends Fragment {
                 }
             }
         });
-
-        //this is to update when an activity expires but it does not get reflected since join and like fragment does not listen to field data of activity
-        //Third line of check
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //Second line of check
-                linesOfChecks.checkActivityExpiry();
-                linesOfChecks.checkActivityCancelledConfirmed();
-
-                viewModel.refreshActivities();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
     }
-
-    private void initialise() {
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
-        emptyText = currentView.findViewById(R.id.tvFavouriteEmpty);
-    }
-
-    private void initialiseRecyclerView() {
-        adapter = new FavouritesAdapter();
-        recyclerView = currentView.findViewById(R.id.rvFavouriteJoined);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.setAdapter(adapter);
-    }
-
 }
