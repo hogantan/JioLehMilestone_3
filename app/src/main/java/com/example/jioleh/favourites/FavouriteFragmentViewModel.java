@@ -13,12 +13,7 @@ public class FavouriteFragmentViewModel extends ViewModel implements databaseOpe
     private MutableLiveData<List<JioActivity>> listOfActivities = new MutableLiveData<>();
     private FavouritesFragmentRepository repository;
 
-    private String current_uid;
-    private String type;
-
     public FavouriteFragmentViewModel(String current_uid, String type) {
-        this.current_uid = current_uid;
-        this.type = type;
         repository = new FavouritesFragmentRepository(this);
         repository.getActivities(current_uid, type);
     }
@@ -27,9 +22,11 @@ public class FavouriteFragmentViewModel extends ViewModel implements databaseOpe
         return listOfActivities;
     }
 
-    public void refreshActivities() {
-        repository.getActivities(current_uid, type);
+    public void checkActivityExpiry() {
+        repository.checkActivityExpiry();
     }
+
+    public void checkActivityCancelledConfirmed() { repository.checkActivityCancelledConfirmed();}
 
     @Override
     public void activitiesDataAdded(List<JioActivity> allActivities) {
