@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 import com.squareup.picasso.Picasso;
@@ -35,6 +38,8 @@ import com.squareup.picasso.Picasso;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +54,11 @@ public class MessagePage extends AppCompatActivity {
     private ImageView receiverImage;
     private EditText input_message;
     private RecyclerView recyclerView;
+    private DocumentSnapshot lastVisible;
+    private List<MessageChat> messages;
+    private String channelId;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private int limit = 20;
 
     private MessageAdapter adapter;
 
@@ -96,6 +106,15 @@ public class MessagePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToUserProfile();
+            }
+        });
+
+        //Third line of check
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshMessages();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -299,27 +318,63 @@ public class MessagePage extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.get("channelId") != null) {
-                            String channelId = documentSnapshot.get("channelId").toString();
+                            channelId = documentSnapshot.get("channelId").toString();
                             datastore.collection("chats")
                                     .document(channelId)
                                     .collection("messages")
-                                    .orderBy("dateSent")
+                                    .orderBy("dateSent", Query.Direction.DESCENDING)
+                                    .limit(limit)
                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                         @Override
                                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
                                                             @Nullable FirebaseFirestoreException e) {
                                             if (e != null) {
                                             } else {
-                                                List<MessageChat> messages
-                                                        = queryDocumentSnapshots.toObjects(MessageChat.class);
+                                                messages = queryDocumentSnapshots.toObjects(MessageChat.class);
+                                                Collections.reverse(messages);
                                                 adapter.setData(messages);
+                                                adapter.notifyDataSetChanged();
                                                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+
+                                                lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
                                             }
                                         }
                                     });
                         }
                     }
                 });
+    }
+
+    //To prevent retrieving all messages which could be quite expensive when chat has many messages
+    public void refreshMessages() {
+        if (lastVisible != null) {
+            datastore.collection("chats")
+                    .document(channelId)
+                    .collection("messages")
+                    .orderBy("dateSent", Query.Direction.DESCENDING)
+                    .startAfter(lastVisible)
+                    .limit(limit)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<MessageChat> new_input = queryDocumentSnapshots.toObjects(MessageChat.class);
+                            Collections.reverse(new_input);
+                            new_input.addAll(messages);
+                            messages = new_input;
+                            adapter.setData(messages);
+                            adapter.notifyDataSetChanged();
+
+                            if (queryDocumentSnapshots.size() - 1 < 0) {
+                                lastVisible = null;
+                            } else {
+                                lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                            }
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "No more messages to load", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String convertDateFormat(Date date) {
@@ -337,6 +392,7 @@ public class MessagePage extends AppCompatActivity {
         database = FirebaseAuth.getInstance();
         sender = currentUser.getUid();
         receiver = intent.getStringExtra("user_id");
+        swipeRefreshLayout = findViewById(R.id.swipeContainer);
     }
 
     private void initialiseToolbar() {
