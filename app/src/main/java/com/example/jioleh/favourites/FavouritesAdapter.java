@@ -44,6 +44,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
     private List<JioActivity> activities;
     private boolean deletable;
     private boolean removable;
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public FavouritesAdapter() {
         activities = new ArrayList<>();
@@ -98,6 +99,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
         private TextView date;
         private TextView time;
         private TextView location;
+        private TextView update;
         private String activity_id;
         private Context currentContext;
 
@@ -112,6 +114,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
             date = itemView.findViewById(R.id.tvFavouritesDate);
             time = itemView.findViewById(R.id.tvFavouritesTime);
             location = itemView.findViewById(R.id.tvFavouritesLocation);
+            update = itemView.findViewById(R.id.tvNewUpdates);
             currentContext = displayImage.getContext();
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +172,13 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
             if (!jioActivity.getImageUrl().equals("") && jioActivity.getImageUrl()!=null) {
                 Picasso.get().load(jioActivity.getImageUrl()).into(displayImage);
             }
+
+            if (jioActivity.isUpdated() && jioActivity.getReadParticipants().contains(currentUser.getUid())) {
+                update.setVisibility(TextView.VISIBLE);
+            } else {
+                update.setVisibility(TextView.INVISIBLE);
+            }
+
             displayTitle.setText(jioActivity.getTitle());
             date.setText(convertDateFormat(jioActivity.getEvent_date()));
             time.setText(jioActivity.getEvent_time());
