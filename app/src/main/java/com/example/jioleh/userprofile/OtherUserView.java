@@ -195,7 +195,6 @@ public class OtherUserView extends AppCompatActivity {
 
     private void initialiseToolbar() {
         toolbar = findViewById(R.id.include_top_app_bar);
-        setSupportActionBar(toolbar);
         toolbar.setTitle(this.profileUsername);
         toolbar.setTitleTextColor(getResources().getColor(R.color.baseGreen));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -235,7 +234,6 @@ public class OtherUserView extends AppCompatActivity {
         tabLayoutMediator.attach();
 
     }
-
 
     private void uploadBlockedUserDetails(String uid, String username) {
         String currentViewerUid = FirebaseAuth.getInstance().getUid();

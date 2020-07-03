@@ -23,6 +23,21 @@
         android:textColor="@color/baseGreen"
         tools:layout_editor_absoluteY="60dp" />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civAlertNewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="83dp"
+        android:layout_marginLeft="83dp"
+        android:layout_marginTop="55dp"
+        android:background="@drawable/ic_baseline_reply_basegreen_14"
+        android:visibility="invisible"
+        tools:layout_editor_absoluteY="60dp"></de.hdodenhof.circleimageview.CircleImageView>
+
     <TextView
         android:id="@+id/tvSingleUsersLastMsg"
         android:layout_width="wrap_content"
