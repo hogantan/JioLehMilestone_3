@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> parent of ca2abdd... 3/7
 import com.google.firebase.firestore.CollectionReference;
@@ -55,6 +56,9 @@ import com.mapbox.mapboxsdk.plugins.annotation.Line;
 =======
 import com.mapbox.mapboxsdk.plugins.annotation.Line;
 >>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
+=======
+import com.mapbox.mapboxsdk.plugins.annotation.Line;
+>>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -94,6 +98,7 @@ public class JoinedFragment extends Fragment {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
@@ -120,6 +125,10 @@ public class JoinedFragment extends Fragment {
     private LinesOfChecks linesOfChecks = new LinesOfChecks();
 
 >>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
+=======
+    private LinesOfChecks linesOfChecks = new LinesOfChecks();
+
+>>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
     private FavouriteFragmentViewModel viewModel;
 >>>>>>> parent of e40b192... Revert "Merge pull request #53 from hogantan/2/7"
     private FirebaseUser currentUser;
@@ -182,12 +191,37 @@ public class JoinedFragment extends Fragment {
             }
         });
 
+        return currentView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel = new FavouriteFragmentViewModel(currentUser.getUid(), "joined");
+
+        //observe for changes in database
+        viewModel.getListOfActivities().observe(getViewLifecycleOwner(), new Observer<List<JioActivity>>() {
+            @Override
+            public void onChanged(List<JioActivity> activities) {
+                adapter.setData(activities, false, true);
+                adapter.notifyDataSetChanged();
+
+                //Display empty text message
+                if(adapter.getItemCount() == 0) {
+                    emptyText.setText("You have not join any activities!");
+                } else {
+                    emptyText.setText("");
+                }
+            }
+        });
+
         //this is to update when an activity expires but it does not get reflected since join and like fragment does not listen to field data of activity
         //Third line of check
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 //Second line of check
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -238,10 +272,13 @@ public class JoinedFragment extends Fragment {
 =======
 =======
 >>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
+=======
+>>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
                 linesOfChecks.checkActivityExpiry();
                 linesOfChecks.checkActivityCancelledConfirmed();
 
                 viewModel.refreshActivities();
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
 =======
@@ -250,6 +287,8 @@ public class JoinedFragment extends Fragment {
 >>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
 =======
 >>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
+=======
+>>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -269,6 +308,7 @@ public class JoinedFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -397,4 +437,6 @@ public class JoinedFragment extends Fragment {
 >>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
 =======
 >>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
+=======
+>>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
 }
