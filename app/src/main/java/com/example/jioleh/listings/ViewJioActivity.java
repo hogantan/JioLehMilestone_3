@@ -230,29 +230,6 @@ public class ViewJioActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         currentActivity = documentSnapshot.toObject(JioActivity.class);
-
-                        if (currentActivity.getReadParticipants().contains(currentUser.getUid())) {
-                            datastore.collection("activities")
-                                    .document(activity_id)
-                                    .update("toRead", currentActivity.getToRead() - 1)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                if (currentActivity.getToRead() == 0) {
-                                                    datastore.collection("activities")
-                                                            .document(activity_id)
-                                                            .update("updated", false);
-                                                }
-                                            }
-                                        }
-                                    });
-
-                            currentActivity.getReadParticipants().remove(currentUser.getUid());
-                            datastore.collection("activities")
-                                    .document(activity_id)
-                                    .update("readParticipants", currentActivity.getReadParticipants());
-                        }
                     }
                 });
     }
@@ -601,18 +578,6 @@ public class ViewJioActivity extends AppCompatActivity {
                 datastore.collection("activities")
                         .document(activity_id)
                         .update("details", textInputEditText.getText().toString());
-
-                datastore.collection("activities")
-                        .document(activity_id)
-                        .update("updated", true);
-
-                datastore.collection("activities")
-                        .document(activity_id)
-                        .update("toRead", current_participants);
-
-                datastore.collection("activities")
-                        .document(activity_id)
-                        .update("readParticipants", currentActivity.getParticipants());
             }
         });
 

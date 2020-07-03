@@ -22,7 +22,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.R;
 import com.example.jioleh.favourites.FavouritesAdapter;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
@@ -69,8 +68,6 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
     private ActivityAdapter adapter;
 
     private FirebaseFirestore datastore;
-
-    private LinesOfChecks linesOfChecks;
 
     private boolean buttonFlag = false;
     private int currentHour;
@@ -160,7 +157,6 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
         expandableRelativeLayout.collapse();
         resultsMessage = findViewById(R.id.tvSearchResultsMessage);
         datastore = FirebaseFirestore.getInstance();
-        linesOfChecks = new LinesOfChecks();
     }
 
     private void initialiseToolbar() {
@@ -229,8 +225,8 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
 
     private void searchDatabase() {
         //Third line of check
-        linesOfChecks.checkActivityExpiry();
-        linesOfChecks.checkActivityCancelledConfirmed();
+        checkActivityExpiry();
+        checkActivityCancelledConfirmed();
 
         String title_input = title.getEditText().getText().toString();
         String location_input = location.getEditText().getText().toString();
@@ -283,7 +279,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
                 adapter.notifyDataSetChanged();
 
                 if (list_of_activities.size() == 0) {
-                    resultsMessage.setText("No matches");
+                    resultsMessage.setText("No matches.");
                 } else {
                     resultsMessage.setText("");
                 }
@@ -356,5 +352,48 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
             words[i] = words[i].replaceAll("[^\\w]", "");
         }
         return words;
+    }
+
+    public void checkActivityExpiry() {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        CollectionReference jioActivityColRef = datastore.collection("activities");
+
+        jioActivityColRef.whereLessThan("event_timestamp", currentDateTime)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
+                            jioActivityColRef.document(documentSnapshot.getId())
+                                    .update("expired", true);
+                        }
+                    }
+                });
+    }
+
+    public void checkActivityCancelledConfirmed() {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        CollectionReference jioActivityColRef = datastore.collection("activities");
+
+        jioActivityColRef.whereLessThan("deadline_timestamp", currentDateTime)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
+                            int minimum = Integer.parseInt(documentSnapshot.get("min_participants").toString());
+                            int current = Integer.parseInt(documentSnapshot.get("current_participants").toString());
+                            if (current < minimum) {
+                                jioActivityColRef.document(documentSnapshot.getId())
+                                        .update("cancelled", true);
+                            } else {
+                                jioActivityColRef.document(documentSnapshot.getId())
+                                        .update("confirmed", true);
+                            }
+                        }
+                    }
+                });
     }
 }

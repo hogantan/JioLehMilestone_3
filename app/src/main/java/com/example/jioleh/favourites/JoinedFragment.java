@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.R;
 import com.example.jioleh.listings.ActivityAdapter;
 import com.example.jioleh.listings.JioActivity;
@@ -25,7 +24,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-<<<<<<< HEAD
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -39,10 +37,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-=======
-import com.mapbox.mapboxsdk.plugins.annotation.Line;
-
->>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
 import java.util.List;
 
 public class JoinedFragment extends Fragment {
@@ -53,12 +47,6 @@ public class JoinedFragment extends Fragment {
     private RecyclerView recyclerView;
     private FavouritesAdapter adapter;
 
-<<<<<<< HEAD
-=======
-    private LinesOfChecks linesOfChecks = new LinesOfChecks();
-
-    private FavouriteFragmentViewModel viewModel;
->>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
     private FirebaseUser currentUser;
     private FirebaseFirestore datastore;
     private ArrayList<JioActivity> list_of_activities = new ArrayList<>();
@@ -75,49 +63,20 @@ public class JoinedFragment extends Fragment {
         checkActivityCancelledConfirmed();
         getJoined();
 
-        return currentView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewModel = new FavouriteFragmentViewModel(currentUser.getUid(), "joined");
-
-        //observe for changes in database
-        viewModel.getListOfActivities().observe(getViewLifecycleOwner(), new Observer<List<JioActivity>>() {
-            @Override
-            public void onChanged(List<JioActivity> activities) {
-                adapter.setData(activities, false, true);
-                adapter.notifyDataSetChanged();
-
-                //Display empty text message
-                if(adapter.getItemCount() == 0) {
-                    emptyText.setText("You have not join any activities!");
-                } else {
-                    emptyText.setText("");
-                }
-            }
-        });
-
         //this is to update when an activity expires but it does not get reflected since join and like fragment does not listen to field data of activity
         //Third line of check
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 //Second line of check
-<<<<<<< HEAD
                 checkActivityExpiry();
                 checkActivityCancelledConfirmed();
                 getJoined();
-=======
-                linesOfChecks.checkActivityExpiry();
-                linesOfChecks.checkActivityCancelledConfirmed();
-
-                viewModel.refreshActivities();
->>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
+        return currentView;
     }
 
     private void initialise() {
@@ -203,7 +162,6 @@ public class JoinedFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-<<<<<<< HEAD
     public void checkActivityExpiry() {
         Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
         CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
@@ -246,6 +204,4 @@ public class JoinedFragment extends Fragment {
                     }
                 });
     }
-=======
->>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
 }
