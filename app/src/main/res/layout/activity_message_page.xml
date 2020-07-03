@@ -40,18 +40,12 @@
 
     </View>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeContainer"
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/rvMessageList"
         android:layout_below="@+id/viewLine"
-        android:layout_above="@+id/rlMessageBar">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/rvMessageList" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_above="@+id/rlMessageBar"/>
 
     <RelativeLayout
         android:id="@+id/rlMessageBar"
