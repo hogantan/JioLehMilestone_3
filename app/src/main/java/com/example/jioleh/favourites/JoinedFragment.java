@@ -30,6 +30,9 @@ import com.google.firebase.auth.FirebaseUser;
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of ca2abdd... 3/7
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -51,12 +54,15 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+<<<<<<< HEAD
 =======
 
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
 
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
+=======
+>>>>>>> parent of ca2abdd... 3/7
 import java.util.List;
 
 public class JoinedFragment extends Fragment {
@@ -67,6 +73,7 @@ public class JoinedFragment extends Fragment {
     private RecyclerView recyclerView;
     private FavouritesAdapter adapter;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -86,6 +93,8 @@ public class JoinedFragment extends Fragment {
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
     private FavouriteFragmentViewModel viewModel;
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
+=======
+>>>>>>> parent of ca2abdd... 3/7
     private FirebaseUser currentUser;
     private FirebaseFirestore datastore;
     private ArrayList<JioActivity> list_of_activities = new ArrayList<>();
@@ -107,6 +116,7 @@ public class JoinedFragment extends Fragment {
         checkActivityExpiry();
         checkActivityCancelledConfirmed();
         getJoined();
+<<<<<<< HEAD
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
@@ -119,6 +129,8 @@ public class JoinedFragment extends Fragment {
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
+=======
+>>>>>>> parent of ca2abdd... 3/7
 
         //this is to update when an activity expires but it does not get reflected since join and like fragment does not listen to field data of activity
         //Third line of check
@@ -126,6 +138,7 @@ public class JoinedFragment extends Fragment {
             @Override
             public void onRefresh() {
                 //Second line of check
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -159,6 +172,11 @@ public class JoinedFragment extends Fragment {
                 viewModel.checkActivityExpiry();
                 viewModel.checkActivityCancelledConfirmed();
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
+=======
+                checkActivityExpiry();
+                checkActivityCancelledConfirmed();
+                getJoined();
+>>>>>>> parent of ca2abdd... 3/7
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -255,6 +273,9 @@ public class JoinedFragment extends Fragment {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of ca2abdd... 3/7
     public void checkActivityExpiry() {
         Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
         CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
@@ -296,6 +317,7 @@ public class JoinedFragment extends Fragment {
                         }
                     }
                 });
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
@@ -343,5 +365,7 @@ public class JoinedFragment extends Fragment {
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
+=======
+>>>>>>> parent of ca2abdd... 3/7
     }
 }

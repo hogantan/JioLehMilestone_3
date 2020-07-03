@@ -55,6 +55,7 @@ public class LikedFragment extends Fragment {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
@@ -68,6 +69,8 @@ public class LikedFragment extends Fragment {
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
     private FavouriteFragmentViewModel viewModel;
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
+=======
+>>>>>>> parent of ca2abdd... 3/7
     private FirebaseUser currentUser;
     private FirebaseFirestore datastore;
     private ArrayList<JioActivity> list_of_activities = new ArrayList<>();
@@ -94,6 +97,7 @@ public class LikedFragment extends Fragment {
             }
         });
 
+<<<<<<< HEAD
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -148,6 +152,8 @@ public class LikedFragment extends Fragment {
             }
         });
 
+=======
+>>>>>>> parent of ca2abdd... 3/7
         return currentView;
     }
 
@@ -272,6 +278,7 @@ public class LikedFragment extends Fragment {
                         }
                     }
                 });
+<<<<<<< HEAD
 =======
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -309,5 +316,7 @@ public class LikedFragment extends Fragment {
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
+=======
+>>>>>>> parent of ca2abdd... 3/7
     }
 }
