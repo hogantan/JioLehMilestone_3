@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 //Adapter used to convert MessageChats into display items
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageHolder> {
 
@@ -87,7 +89,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
 
         private TextView messageSent;
         private TextView dateSent;
-        private ImageView displayImage;
+        private CircleImageView displayImage;
 
         //Initialising the holder
         public MessageHolder(@NonNull View itemView) {
@@ -111,7 +113,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         String imageUrl = documentSnapshot.get("imageUrl").toString();
-                        Picasso.get().load(imageUrl).into(displayImage);
+                        if (!imageUrl.isEmpty()) {
+                            Picasso.get().load(imageUrl).into(displayImage);
+                        }
                     }
                 });
             }

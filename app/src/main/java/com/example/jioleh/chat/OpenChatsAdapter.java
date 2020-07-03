@@ -122,8 +122,8 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
 
         //Setting the details in the holder
         void setUpView(UserProfile userProfile) {
-            if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl()!=null) {
-                imageUrl = userProfile.getImageUrl();
+            imageUrl = userProfile.getImageUrl();
+            if (!imageUrl.isEmpty()) {
                 Picasso.get().load(imageUrl).into(displayImage);
             }
             username.setText(userProfile.getUsername());
