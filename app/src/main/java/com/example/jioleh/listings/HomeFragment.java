@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.R;
 import com.example.jioleh.location.NearByActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,8 +37,6 @@ public class HomeFragment extends Fragment {
 
     private ActivityAdapter adapter;
     private View currentView;
-
-    private LinesOfChecks linesOfChecks = new LinesOfChecks();
 
     // viewModel for jioActivity
     private JioActivityViewModel viewModel;
@@ -70,6 +67,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        //Third line of check
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                viewModel.checkActivityExpiry();
+                viewModel.checkActivityCancelledConfirmed();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return currentView;
     }
 
@@ -77,6 +84,7 @@ public class HomeFragment extends Fragment {
         search = currentView.findViewById(R.id.ivSearchActivity);
         findNearBy = currentView.findViewById(R.id.ivFindNearby);
         swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
+
     }
 
     private void initialiseRecyclerView() {
@@ -93,8 +101,8 @@ public class HomeFragment extends Fragment {
         //Creates a ViewModel
         viewModel = new ViewModelProvider(this).get(JioActivityViewModel.class);
         //First Line of check
-        linesOfChecks.checkActivityExpiry();
-        linesOfChecks.checkActivityCancelledConfirmed();
+        viewModel.checkActivityExpiry();
+        viewModel.checkActivityCancelledConfirmed();
 
         //observe for changes in database
         viewModel.getListOfJioActivities().observe(getViewLifecycleOwner(), new Observer<List<JioActivity>>() {
@@ -104,16 +112,6 @@ public class HomeFragment extends Fragment {
                 //adapter.submitList(jioActivities);
                 //is there another way to do this?
                 adapter.notifyDataSetChanged();
-            }
-        });
-
-        //Third line of check
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                linesOfChecks.checkActivityExpiry();
-                linesOfChecks.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
