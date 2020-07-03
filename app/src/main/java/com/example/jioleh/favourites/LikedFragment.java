@@ -51,55 +51,9 @@ public class LikedFragment extends Fragment {
     private RecyclerView recyclerView;
     private FavouritesAdapter adapter;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
     private LinesOfChecks linesOfChecks = new LinesOfChecks();
 
->>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
-=======
->>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
-=======
-    private LinesOfChecks linesOfChecks = new LinesOfChecks();
-
->>>>>>> parent of fdc8f07... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
     private FavouriteFragmentViewModel viewModel;
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of ca2abdd... 3/7
-=======
-=======
-    private LinesOfChecks linesOfChecks = new LinesOfChecks();
-
->>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
-=======
-    private LinesOfChecks linesOfChecks = new LinesOfChecks();
-
->>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
-    private FavouriteFragmentViewModel viewModel;
->>>>>>> parent of e40b192... Revert "Merge pull request #53 from hogantan/2/7"
     private FirebaseUser currentUser;
 
     @Override
@@ -109,90 +63,6 @@ public class LikedFragment extends Fragment {
         initialise();
         initialiseRecyclerView();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.checkActivityExpiry();
-                viewModel.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.checkActivityExpiry();
-                viewModel.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.checkActivityExpiry();
-                viewModel.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.checkActivityExpiry();
-                viewModel.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.checkActivityExpiry();
-                viewModel.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.checkActivityExpiry();
-                viewModel.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.checkActivityExpiry();
-                viewModel.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-
-=======
->>>>>>> parent of ca2abdd... 3/7
-=======
->>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
-=======
->>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
-=======
->>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
-=======
->>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
-=======
->>>>>>> parent of fdc8f07... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
         return currentView;
     }
 
@@ -210,63 +80,11 @@ public class LikedFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public void checkActivityExpiry() {
-        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
-        CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
-
-        jioActivityColRef.whereLessThan("event_timestamp", currentDateTime)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
-                            jioActivityColRef.document(documentSnapshot.getId())
-                                    .update("expired", true);
-                        }
-                    }
-                });
-    }
-
-    public void checkActivityCancelledConfirmed() {
-        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
-        CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
-
-        jioActivityColRef.whereLessThan("deadline_timestamp", currentDateTime)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
-                            int minimum = Integer.parseInt(documentSnapshot.get("min_participants").toString());
-                            int current = Integer.parseInt(documentSnapshot.get("current_participants").toString());
-                            if (current < minimum) {
-                                jioActivityColRef.document(documentSnapshot.getId())
-                                        .update("cancelled", true);
-                            } else {
-                                jioActivityColRef.document(documentSnapshot.getId())
-                                        .update("confirmed", true);
-                            }
-                        }
-                    }
-                });
-<<<<<<< HEAD
-=======
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = new FavouriteFragmentViewModel(currentUser.getUid(), "liked");
 
-=======
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewModel = new FavouriteFragmentViewModel(currentUser.getUid(), "liked");
-
->>>>>>> parent of e40b192... Revert "Merge pull request #53 from hogantan/2/7"
         //observe for changes in database
         viewModel.getListOfActivities().observe(getViewLifecycleOwner(), new Observer<List<JioActivity>>() {
             @Override
@@ -282,39 +100,6 @@ public class LikedFragment extends Fragment {
                 }
             }
         });
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
-=======
->>>>>>> parent of ca2abdd... 3/7
-=======
->>>>>>> parent of e40b192... Revert "Merge pull request #53 from hogantan/2/7"
-=======
-=======
->>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
-=======
->>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
-=======
->>>>>>> parent of fdc8f07... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -326,17 +111,5 @@ public class LikedFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
-=======
->>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
-=======
->>>>>>> parent of 6761555... Merge pull request #56 from hogantan/master
-=======
->>>>>>> parent of 7c873d5... Merge pull request #54 from hogantan/master
-=======
->>>>>>> parent of fdc8f07... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
     }
 }
