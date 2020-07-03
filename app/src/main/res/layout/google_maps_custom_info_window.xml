@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/baseLighterBlack">
+    android:background="@color/baseBlack">
 
     <View
         android:id="@+id/view"
@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/logo_wide" />
+        app:srcCompat="@drawable/btn_round_rectangle" />
 
     <TextView
         android:id="@+id/tv_map_title"
@@ -38,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="10dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Title of Post"
@@ -71,7 +70,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Date of Activity"
@@ -101,7 +99,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:text="Time of Activity"
         android:textColor="@color/baseWhite"
         android:textSize="@dimen/_9ssp"
@@ -130,7 +127,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvHomeActivityDisplayTime"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Location"
@@ -161,7 +157,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvHomeActivityDisplayLocation"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:text="100/100"
         android:textColor="@color/baseWhite"
         android:textSize="@dimen/_9ssp"

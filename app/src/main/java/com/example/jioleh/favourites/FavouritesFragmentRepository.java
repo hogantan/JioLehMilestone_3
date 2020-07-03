@@ -23,7 +23,7 @@ import java.util.List;
 
 public class FavouritesFragmentRepository {
 
-    private databaseOperations databaseOperations;
+    databaseOperations databaseOperations;
 
     private FirebaseFirestore datastore = FirebaseFirestore.getInstance();
     private ArrayList<JioActivity> list_of_activities = new ArrayList<>();
@@ -49,20 +49,19 @@ public class FavouritesFragmentRepository {
 
                         //Adding a list of completable futures
                         for (DocumentSnapshot documentSnapshot : snapshots) {
-                            if (documentSnapshot.exists()) {
-                                list_of_tasks.add(getActivity(documentSnapshot.getId(), current_uid, type));
-                            }
+                            list_of_tasks.add(getActivity(documentSnapshot.getId(), current_uid, type));
                         }
 
                         //Waiting for completable futures to complete
                         Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
                             @Override
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {
-
-                                //Arranges activities based on actual event date and time to show user the most upcoming events
+                                //to show activities that are not expired first
+                                //linear time sorting though, although doubt that n will become too large anyways
                                 Collections.sort(list_of_activities, new Comparator<JioActivity>() {
                                     @Override
                                     public int compare(JioActivity o1, JioActivity o2) {
+                                        //Arranges activities based on actual event date and time to show user the most upcoming events
                                         return o1.getEvent_timestamp().compareTo(o2.getEvent_timestamp());
                                     }
                                 });
@@ -90,6 +89,49 @@ public class FavouritesFragmentRepository {
                                     .collection(type)
                                     .document(activity_uid)
                                     .delete();
+                        }
+                    }
+                });
+    }
+
+    public void checkActivityExpiry() {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
+
+        jioActivityColRef.whereLessThan("event_timestamp", currentDateTime)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
+                            jioActivityColRef.document(documentSnapshot.getId())
+                                    .update("expired", true);
+                        }
+                    }
+                });
+    }
+
+    public void checkActivityCancelledConfirmed() {
+        Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
+        CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
+
+        jioActivityColRef.whereLessThan("deadline_timestamp", currentDateTime)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot documentSnapshot: list_of_documents) {
+                            int minimum = Integer.parseInt(documentSnapshot.get("min_participants").toString());
+                            int current = Integer.parseInt(documentSnapshot.get("current_participants").toString());
+                            if (current < minimum) {
+                                jioActivityColRef.document(documentSnapshot.getId())
+                                        .update("cancelled", true);
+                            } else {
+                                jioActivityColRef.document(documentSnapshot.getId())
+                                        .update("confirmed", true);
+                            }
                         }
                     }
                 });

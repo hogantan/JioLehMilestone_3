@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.R;
 import com.example.jioleh.listings.ActivityAdapter;
 import com.example.jioleh.listings.JioActivity;
@@ -60,6 +59,7 @@ public class LikedFragment extends Fragment {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
@@ -75,6 +75,8 @@ public class LikedFragment extends Fragment {
     private LinesOfChecks linesOfChecks = new LinesOfChecks();
 
 >>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
+=======
+>>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
     private FavouriteFragmentViewModel viewModel;
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
@@ -92,6 +94,9 @@ public class LikedFragment extends Fragment {
         initialiseRecyclerView();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -101,6 +106,7 @@ public class LikedFragment extends Fragment {
             }
         });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -160,6 +166,8 @@ public class LikedFragment extends Fragment {
 >>>>>>> parent of ca2abdd... 3/7
 =======
 >>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
+=======
+>>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
         return currentView;
     }
 
@@ -256,6 +264,7 @@ public class LikedFragment extends Fragment {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
@@ -284,5 +293,7 @@ public class LikedFragment extends Fragment {
             }
         });
 >>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
+=======
+>>>>>>> parent of cdff690... Revert "Merge pull request #56 from hogantan/master"
     }
 }
