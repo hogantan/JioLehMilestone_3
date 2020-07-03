@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.R;
 import com.example.jioleh.listings.ActivityAdapter;
 import com.example.jioleh.listings.JioActivity;
@@ -49,6 +50,12 @@ public class LikedFragment extends Fragment {
     private RecyclerView recyclerView;
     private FavouritesAdapter adapter;
 
+<<<<<<< HEAD
+=======
+    private LinesOfChecks linesOfChecks = new LinesOfChecks();
+
+    private FavouriteFragmentViewModel viewModel;
+>>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
     private FirebaseUser currentUser;
     private FirebaseFirestore datastore;
     private ArrayList<JioActivity> list_of_activities = new ArrayList<>();
@@ -62,6 +69,7 @@ public class LikedFragment extends Fragment {
         initialiseRecyclerView();
         getLiked();
 
+<<<<<<< HEAD
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -75,6 +83,8 @@ public class LikedFragment extends Fragment {
             }
         });
 
+=======
+>>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
         return currentView;
     }
 
@@ -175,6 +185,7 @@ public class LikedFragment extends Fragment {
                 });
     }
 
+<<<<<<< HEAD
     public void checkActivityCancelledConfirmed() {
         Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
         CollectionReference jioActivityColRef = FirebaseFirestore.getInstance().collection("activities");
@@ -198,5 +209,33 @@ public class LikedFragment extends Fragment {
                         }
                     }
                 });
+=======
+        //observe for changes in database
+        viewModel.getListOfActivities().observe(getViewLifecycleOwner(), new Observer<List<JioActivity>>() {
+            @Override
+            public void onChanged(List<JioActivity> activities) {
+                adapter.setData(activities, false, true);
+                adapter.notifyDataSetChanged();
+
+                //Display empty text message
+                if(adapter.getItemCount() == 0) {
+                    emptyText.setText("You have not like any activities!");
+                } else {
+                    emptyText.setText("");
+                }
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                linesOfChecks.checkActivityExpiry();
+                linesOfChecks.checkActivityCancelledConfirmed();
+
+                viewModel.refreshActivities();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+>>>>>>> parent of 1e5a48b... Revert "Added load more messages feature to chat feature to prevent retrieving all messages when opening chat"
     }
 }

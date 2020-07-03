@@ -16,7 +16,7 @@
         android:layout_width="170dp"
         android:layout_height="150dp"
         android:scaleType="fitXY"
-        android:src="@drawable/btn_round_rectangle"
+        android:src="@drawable/logo_wide"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -176,6 +176,20 @@
         app:layout_constraintStart_toEndOf="@+id/ivFavouritesDate"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.97" />
+
+    <TextView
+        android:id="@+id/tvNewUpdates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Updates!"
+        android:textColor="@color/baseGreen"
+        android:textSize="@dimen/_7ssp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"></TextView>
 
     <View
         android:id="@+id/bottomLine"

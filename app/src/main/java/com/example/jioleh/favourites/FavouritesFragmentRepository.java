@@ -1,17 +1,12 @@
-package com.example.jioleh.userprofile;
-
-import android.widget.Toast;
+package com.example.jioleh.favourites;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.listings.JioActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -26,69 +21,43 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class userProfileRepository{
+public class FavouritesFragmentRepository {
 
     private databaseOperations databaseOperations;
-    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
+    private FirebaseFirestore datastore = FirebaseFirestore.getInstance();
     private ArrayList<JioActivity> list_of_activities = new ArrayList<>();
     private ArrayList<Task<DocumentSnapshot>> list_of_tasks = new ArrayList<>();
 
-    //used by UserProfileViewModel
-    public userProfileRepository(){
-    }
-
-    //used by UserProfileListingViewModel
-    public userProfileRepository(databaseOperations databaseOperations){
+    public FavouritesFragmentRepository(databaseOperations databaseOperations) {
         this.databaseOperations = databaseOperations;
     }
 
-    public LiveData<UserProfile> getUser(String uid) {
-        final MutableLiveData<UserProfile> userLiveData = new MutableLiveData<>();
-        firebaseFirestore.collection("users")
-                .document(uid)
-                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (documentSnapshot!=null && documentSnapshot.exists()) {
-                            userLiveData.setValue(documentSnapshot.toObject(UserProfile.class));
-                        } else if (e != null) {
-                            //handle exceptions
-                        }
-                    }
-                });
-        return userLiveData;
-    }
-
-    public void getActivities(String current_uid) {
-
-        firebaseFirestore.collection("users")
+    //To locate the activities that the user has joined
+    public void getActivities(String current_uid, String type) {
+        datastore.collection("users")
                 .document(current_uid)
-                .collection("activities_listed")
+                .collection(type)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        //listens to joined for changes which will only occur if there is a change in activities collection which is prompted by ViewJioActivity Listener
+                        List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
 
                         list_of_tasks.clear();
                         list_of_activities.clear();
 
-                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        //Adding a list of completable futures
+                        for (DocumentSnapshot documentSnapshot : snapshots) {
                             if (documentSnapshot.exists()) {
-                                list_of_tasks.add(getActivity(documentSnapshot.getId()));
+                                list_of_tasks.add(getActivity(documentSnapshot.getId(), current_uid, type));
                             }
                         }
 
+                        //Waiting for completable futures to complete
                         Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
                             @Override
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {
-                                for (int i = 0; i < list_of_tasks.size(); i++) {
-                                    DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
-                                    JioActivity jioActivity = snapshot.toObject(JioActivity.class);
-                                    if(jioActivity!=null) {
-                                        list_of_activities.add(jioActivity);
-                                    }
-                                }
 
                                 //Arranges activities based on actual event date and time to show user the most upcoming events
                                 Collections.sort(list_of_activities, new Comparator<JioActivity>() {
@@ -104,7 +73,25 @@ public class userProfileRepository{
                 });
     }
 
-    private Task<DocumentSnapshot> getActivity(String id) {
-        return firebaseFirestore.collection("activities").document(id).get();
+    //Get a completable future task
+    private Task<DocumentSnapshot> getActivity(final String activity_uid, final String user_uid, String type) {
+        return datastore.collection("activities")
+                .document(activity_uid)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            list_of_activities.add(documentSnapshot.toObject(JioActivity.class));
+                        } else {
+                            //removes from current user joined activities
+                            datastore.collection("users")
+                                    .document(user_uid)
+                                    .collection(type)
+                                    .document(activity_uid)
+                                    .delete();
+                        }
+                    }
+                });
     }
 }
