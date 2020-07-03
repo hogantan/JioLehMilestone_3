@@ -119,4 +119,5 @@ public class YourOwnOtherUserView extends AppCompatActivity {
         });
         tabLayoutMediator.attach();
     }
+
 }
