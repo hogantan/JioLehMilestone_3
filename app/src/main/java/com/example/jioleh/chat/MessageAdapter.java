@@ -80,7 +80,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
     //Setting the list of messages
     public void setData(List<MessageChat> messages) {
         this.messages = messages;
-        notifyDataSetChanged();
     }
 
     //Message Holder holds the details of the message layout eg.message_item_left/right.xml
