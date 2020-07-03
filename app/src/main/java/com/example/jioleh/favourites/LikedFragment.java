@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,6 +57,7 @@ public class LikedFragment extends Fragment {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
@@ -71,10 +73,10 @@ public class LikedFragment extends Fragment {
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
 >>>>>>> parent of ca2abdd... 3/7
+=======
+    private FavouriteFragmentViewModel viewModel;
+>>>>>>> parent of e40b192... Revert "Merge pull request #53 from hogantan/2/7"
     private FirebaseUser currentUser;
-    private FirebaseFirestore datastore;
-    private ArrayList<JioActivity> list_of_activities = new ArrayList<>();
-    private ArrayList<Task<DocumentSnapshot>> list_of_tasks = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,17 +84,12 @@ public class LikedFragment extends Fragment {
         currentView = inflater.inflate(R.layout.fragment_liked, container, false);
         initialise();
         initialiseRecyclerView();
-        getLiked();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                list_of_tasks.clear();
-                list_of_activities.clear();
-                //Second line of check
-                checkActivityExpiry();
-                checkActivityCancelledConfirmed();
-                getLiked();
+                viewModel.checkActivityExpiry();
+                viewModel.checkActivityCancelledConfirmed();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -159,73 +156,8 @@ public class LikedFragment extends Fragment {
 
     private void initialise() {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        datastore = FirebaseFirestore.getInstance();
         swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
         emptyText = currentView.findViewById(R.id.tvFavouriteEmpty);
-    }
-
-    private void getLiked() {
-        datastore.collection("users")
-                .document(currentUser.getUid())
-                .collection("liked")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        //listens to joined for changes which will only occur if there is a change in activities collection which is prompted by ViewJioActivity Listener
-                        List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
-                        list_of_tasks.clear();
-                        list_of_activities.clear();
-
-                        //Adding a list of completable futures
-                        for (DocumentSnapshot documentSnapshot : snapshots) {
-                            list_of_tasks.add(getActivity(documentSnapshot.getId()));
-                        }
-
-                        //Waiting for completable futures to complete
-                        Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
-                            @Override
-                            public void onSuccess(List<? super DocumentSnapshot> snapShots) {
-                                //to show activities that are not expired first
-                                //linear time sorting though, although doubt that n will become too large anyways
-                                Collections.sort(list_of_activities, new Comparator<JioActivity>() {
-                                    @Override
-                                    public int compare(JioActivity o1, JioActivity o2) {
-                                        return o1.getEvent_timestamp().compareTo(o2.getEvent_timestamp());
-                                    }
-                                });
-                                adapter.setData(list_of_activities, false, false);
-                                adapter.notifyDataSetChanged();
-                                //Visual text
-                                if (list_of_activities.isEmpty()) {
-                                    emptyText.setText("You have not join any activities!");
-                                } else {
-                                    emptyText.setText("");
-                                }
-                            }
-                        });
-                    }
-                });
-    }
-
-    private Task<DocumentSnapshot> getActivity(final String uid) {
-        return datastore.collection("activities")
-                .document(uid)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            list_of_activities.add(documentSnapshot.toObject(JioActivity.class));
-                        } else {
-                            //removes from current user joined activities
-                            datastore.collection("users")
-                                    .document(currentUser.getUid())
-                                    .collection("liked")
-                                    .document(uid)
-                                    .delete();
-                        }
-                    }
-                });
     }
 
     private void initialiseRecyclerView() {
@@ -236,6 +168,7 @@ public class LikedFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     public void checkActivityExpiry() {
         Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
@@ -285,6 +218,13 @@ public class LikedFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = new FavouriteFragmentViewModel(currentUser.getUid(), "liked");
 
+=======
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel = new FavouriteFragmentViewModel(currentUser.getUid(), "liked");
+
+>>>>>>> parent of e40b192... Revert "Merge pull request #53 from hogantan/2/7"
         //observe for changes in database
         viewModel.getListOfActivities().observe(getViewLifecycleOwner(), new Observer<List<JioActivity>>() {
             @Override
@@ -305,6 +245,7 @@ public class LikedFragment extends Fragment {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
@@ -318,5 +259,7 @@ public class LikedFragment extends Fragment {
 >>>>>>> parent of 7c73d04... Added load more messages feature to chat feature to prevent retrieving all messages when opening chat
 =======
 >>>>>>> parent of ca2abdd... 3/7
+=======
+>>>>>>> parent of e40b192... Revert "Merge pull request #53 from hogantan/2/7"
     }
 }
