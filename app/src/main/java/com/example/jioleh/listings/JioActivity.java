@@ -37,6 +37,9 @@ public class JioActivity {
     private boolean expired;
     private boolean cancelled;
     private boolean confirmed;
+    private boolean updated;
+    private int toRead;
+    private ArrayList<String> readParticipants;
     @ServerTimestamp
     private Date time_created;
 
@@ -59,11 +62,14 @@ public class JioActivity {
         this.min_participants = min_participants;
         this.max_participants = max_participants;
         this.participants = new ArrayList<>();
+        this.readParticipants = new ArrayList<>();
         this.title_map = new HashMap<>();
         this.current_participants = 0;
         this.expired = false;
         this.cancelled = false;
         this.confirmed = false;
+        this.updated = false;
+        this.toRead = 0;
         this.imageUrl = "";
     }
 
@@ -289,5 +295,29 @@ public class JioActivity {
 
     public void setLocation_map(HashMap<String, Boolean> location_map) {
         this.location_map = location_map;
+    }
+
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
+    }
+
+    public int getToRead() {
+        return toRead;
+    }
+
+    public void setToRead(int toRead) {
+        this.toRead = toRead;
+    }
+
+    public ArrayList<String> getReadParticipants() {
+        return readParticipants;
+    }
+
+    public void setReadParticipants(ArrayList<String> readParticipants) {
+        this.readParticipants = readParticipants;
     }
 }
