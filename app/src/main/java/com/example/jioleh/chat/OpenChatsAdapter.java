@@ -22,7 +22,9 @@ import com.example.jioleh.listings.ViewJioActivity;
 import com.example.jioleh.post.PostingPage;
 import com.example.jioleh.userprofile.OtherUserView;
 import com.example.jioleh.userprofile.UserProfile;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -122,14 +124,45 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
 
         //Setting the details in the holder
         void setUpView(UserProfile userProfile) {
-            imageUrl = userProfile.getImageUrl();
-            if (!imageUrl.isEmpty()) {
+
+            if (userProfile.getImageUrl()!=null && !userProfile.getImageUrl().equals("")) {
+                imageUrl = userProfile.getImageUrl();
                 Picasso.get().load(imageUrl).into(displayImage);
             }
             username.setText(userProfile.getUsername());
 
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+            //check if this user has blocked the other users
+            FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(currentUser.getUid())
+                    .collection("blocked users")
+                    .document(user_id)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                //means the user is blocked
+                                DocumentSnapshot documentSnapshot = task.getResult();
+                                if (documentSnapshot.exists()) {
+                                    //user is blocked
+                                    last_msg.setText("This user has been blocked by you");
+                                } else {
+                                    getLastMessage();
+                                }
+                            }
+                        }
+                    });
+
+
+        }
+
+        private void getLastMessage() {
             //Getting last message to display
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
             FirebaseFirestore
                     .getInstance()
                     .collection("users")
@@ -159,7 +192,7 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
                                                 }
                                             }
                                         }
-                                    }); 
+                                    });
                         }
                     });
         }

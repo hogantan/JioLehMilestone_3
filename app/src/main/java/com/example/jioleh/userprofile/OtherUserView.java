@@ -64,13 +64,13 @@ public class OtherUserView extends AppCompatActivity {
     private UserProfileViewPagerAdapter pagerAdapter;
     private ViewPager2 viewPager2;
 
-    private boolean documentExist=false;
+    private boolean documentExist = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_other_user_view);
-        initialise();
+        //setContentView(R.layout.activity_other_user_view);
+        //initialise();
 
         final Intent intent = getIntent();
         //the intent that opens this must put extra as "user_id" the user's id
@@ -79,65 +79,13 @@ public class OtherUserView extends AppCompatActivity {
         profileUsername = intent.getStringExtra("username");
         chcekIfBlocked();
 
-        if (documentExist) {
-            LinearLayout blocked_user_view = findViewById(R.id.blocked_user_layout);
-            blocked_user_view.setVisibility(View.VISIBLE);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
-            builder.setTitle("Error fetching user details");
-            builder.setMessage("The user cannot be found!");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    finish();
-                }
-            });
-            builder.show();
-
-        } else {
-            initialiseToolbar();
-
-            viewModel = new ViewModelProvider(this).get(userProfileViewModel.class);
-
-
-            viewModel = new ViewModelProvider(this).get(userProfileViewModel.class);
-            viewModel.getUser(profileUID).observe(this, new Observer<UserProfile>() {
-                @Override
-                public void onChanged(UserProfile userProfile) {
-                    fill(userProfile);
-                }
-            });
-
-            initialiseViewPagerAndTab(profileUID);
-
-            btn_message.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
-                    nextActivity.putExtra("username", tv_username.getText().toString());
-                    nextActivity.putExtra("user_id", profileUID);
-                    nextActivity.putExtra("image_url", imageUrl);
-                    startActivity(nextActivity);
-                }
-            });
-
-            btn_review.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent reviewPage = new Intent(OtherUserView.this, ReviewPage.class);
-                    reviewPage.putExtra("username", profileUsername);
-                    reviewPage.putExtra("user_id", profileUID);
-                    startActivity(reviewPage);
-                }
-            });
-        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.other_user_profile_menu,menu);
+        menuInflater.inflate(R.menu.other_user_profile_menu, menu);
         return true;
     }
 
@@ -146,18 +94,18 @@ public class OtherUserView extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.report_user_option:
                 Intent reportPage = new Intent(OtherUserView.this, ReportUserPage.class);
-                reportPage.putExtra("username",profileUsername);
-                reportPage.putExtra("user_id",profileUID);
+                reportPage.putExtra("username", profileUsername);
+                reportPage.putExtra("user_id", profileUID);
                 startActivity(reportPage);
                 return true;
             case R.id.block_user_option:
-                AlertDialog.Builder builder =  new AlertDialog.Builder(OtherUserView.this);
-                builder.setMessage("Are you sure you want to block" + " "+ profileUsername + "?");
+                AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
+                builder.setMessage("Are you sure you want to block" + " " + profileUsername + "?");
                 builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         progressBar.setVisibility(View.VISIBLE);
-                        uploadBlockedUserDetails(profileUID,profileUsername);
+                        uploadBlockedUserDetails(profileUID, profileUsername);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -183,7 +131,7 @@ public class OtherUserView extends AppCompatActivity {
         }
     }
 
-    public void initialise(){
+    public void initialise() {
         tv_username = findViewById(R.id.tv_profilePageUsername);
         tv_age = findViewById(R.id.tv_profilePageAge);
         tv_gender = findViewById(R.id.tv_profilePageGender);
@@ -207,7 +155,7 @@ public class OtherUserView extends AppCompatActivity {
 
     private void initialiseViewPagerAndTab(String uid) {
         viewPager2 = findViewById(R.id.userProfile_viewPager);
-        pagerAdapter = new UserProfileViewPagerAdapter(this,uid);
+        pagerAdapter = new UserProfileViewPagerAdapter(this, uid);
         viewPager2.setAdapter(pagerAdapter);
         TabLayout tabLayout = findViewById(R.id.userProfile_tabLayout);
 
@@ -238,7 +186,7 @@ public class OtherUserView extends AppCompatActivity {
     private void uploadBlockedUserDetails(String uid, String username) {
         String currentViewerUid = FirebaseAuth.getInstance().getUid();
         HashMap<String, Object> blockedUser = new HashMap<>();
-        blockedUser.put("username",username);
+        blockedUser.put("username", username);
 
         CollectionReference colRef = FirebaseFirestore.getInstance()
                 .collection("users")
@@ -267,7 +215,6 @@ public class OtherUserView extends AppCompatActivity {
     }
 
     private void chcekIfBlocked() {
-
         String viewerUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         rootRef.collection("users")
@@ -280,16 +227,65 @@ public class OtherUserView extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot documentSnapshot = task.getResult();
-                            if (!documentSnapshot.exists()) {
-                                isBlocked(documentSnapshot.exists());
+                            //this mean viewer is blocked
+                            if (documentSnapshot.exists()) {
+                                setContentView(R.layout.blank_layout_black);
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
+                                builder.setTitle("Error fetching user details");
+                                builder.setMessage("The user cannot be found!");
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        finish();
+                                    }
+                                });
+                                builder.show();
                             }
+                        } else {
+                            setContentView(R.layout.activity_other_user_view);
+                            initialise();
+
+                            initialiseToolbar();
+
+                            viewModel = new ViewModelProvider(OtherUserView.this).get(userProfileViewModel.class);
+
+
+                            viewModel = new ViewModelProvider(OtherUserView.this).get(userProfileViewModel.class);
+                            viewModel.getUser(profileUID).observe(OtherUserView.this, new Observer<UserProfile>() {
+                                @Override
+                                public void onChanged(UserProfile userProfile) {
+                                    fill(userProfile);
+                                }
+                            });
+
+                            initialiseViewPagerAndTab(profileUID);
+
+                            btn_message.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
+                                    nextActivity.putExtra("username", tv_username.getText().toString());
+                                    nextActivity.putExtra("user_id", profileUID);
+                                    nextActivity.putExtra("image_url", imageUrl);
+                                    startActivity(nextActivity);
+                                }
+                            });
+
+                            btn_review.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent reviewPage = new Intent(OtherUserView.this, ReviewPage.class);
+                                    reviewPage.putExtra("username", profileUsername);
+                                    reviewPage.putExtra("user_id", profileUID);
+                                    startActivity(reviewPage);
+                                }
+                            });
                         }
                     }
                 });
     }
 
-    private void isBlocked(boolean result) {
-        this.documentExist = result;
-    }
-    
+
 }

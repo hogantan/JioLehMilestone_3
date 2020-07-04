@@ -113,7 +113,8 @@ public class NearByActivity extends AppCompatActivity
 
                 //GeoFirestore
                 CollectionReference colRef = FirebaseFirestore.getInstance().collection("activities");
-                GeoQuery geoQuery = new GeoFirestore(colRef).queryAtLocation(new GeoPoint(currentLatitude,currentLongitude), QUERY_NEARBY_RADIUS);
+                GeoQuery geoQuery = new GeoFirestore(colRef)
+                        .queryAtLocation(new GeoPoint(currentLatitude,currentLongitude), QUERY_NEARBY_RADIUS);
 
                 //adding info window adapter to map
                 map.setInfoWindowAdapter(new CustomInfoWindowAdapter(this));
@@ -122,12 +123,16 @@ public class NearByActivity extends AppCompatActivity
                     @Override
                     public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
                         JioActivity jio = documentSnapshot.toObject(JioActivity.class);
-                        LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                        MarkerOptions options = new MarkerOptions()
-                                .position(latLng);
+                        if (jio.isCancelled() || jio.isConfirmed() || jio.isExpired()) {
+                            //do nth
+                        } else {
+                            LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                            MarkerOptions options = new MarkerOptions()
+                                    .position(latLng);
 
-                        map.addMarker(options)
-                        .setTag(jio);
+                            map.addMarker(options)
+                                    .setTag(jio);
+                        }
                     }
 
                     @Override
