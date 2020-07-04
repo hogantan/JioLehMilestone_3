@@ -44,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.OpenChatsHolder> {
@@ -87,6 +88,7 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
         private ImageView displayImage;
         private TextView username;
         private TextView last_msg;
+        private CircleImageView alert;
         private String user_id;
         private String imageUrl;
         private Context currentContext;
@@ -97,6 +99,7 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
             displayImage = itemView.findViewById(R.id.ivUserImage);
             username = itemView.findViewById(R.id.tvSingleUsersUsername);
             last_msg = itemView.findViewById(R.id.tvSingleUsersLastMsg);
+            alert = itemView.findViewById(R.id.civAlertNewMessage);
             currentContext = displayImage.getContext();
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +124,7 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
 
         //Setting the details in the holder
         void setUpView(UserProfile userProfile) {
+
             if (userProfile.getImageUrl()!=null && !userProfile.getImageUrl().equals("")) {
                 imageUrl = userProfile.getImageUrl();
                 Picasso.get().load(imageUrl).into(displayImage);
@@ -182,6 +186,10 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
                                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                                             if (queryDocumentSnapshots.size() > 0) {
                                                 last_msg.setText(queryDocumentSnapshots.getDocuments().get(0).get("text").toString());
+
+                                                if (queryDocumentSnapshots.getDocuments().get(0).get("sender").toString().equals(currentUser.getUid())) {
+                                                    alert.setVisibility(CircleImageView.VISIBLE);
+                                                }
                                             }
                                         }
                                     });

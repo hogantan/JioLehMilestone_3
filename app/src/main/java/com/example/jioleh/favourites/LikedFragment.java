@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.jioleh.LinesOfChecks;
 import com.example.jioleh.R;
 import com.example.jioleh.listings.ActivityAdapter;
 import com.example.jioleh.listings.JioActivity;
@@ -50,6 +51,8 @@ public class LikedFragment extends Fragment {
     private RecyclerView recyclerView;
     private FavouritesAdapter adapter;
 
+    private LinesOfChecks linesOfChecks = new LinesOfChecks();
+
     private FavouriteFragmentViewModel viewModel;
     private FirebaseUser currentUser;
 
@@ -59,15 +62,6 @@ public class LikedFragment extends Fragment {
         currentView = inflater.inflate(R.layout.fragment_liked, container, false);
         initialise();
         initialiseRecyclerView();
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                viewModel.checkActivityExpiry();
-                viewModel.checkActivityCancelledConfirmed();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
 
         return currentView;
     }
@@ -104,6 +98,17 @@ public class LikedFragment extends Fragment {
                 } else {
                     emptyText.setText("");
                 }
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                linesOfChecks.checkActivityExpiry();
+                linesOfChecks.checkActivityCancelledConfirmed();
+
+                viewModel.refreshActivities();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
