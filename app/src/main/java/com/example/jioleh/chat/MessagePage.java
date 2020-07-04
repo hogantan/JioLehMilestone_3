@@ -314,9 +314,6 @@ public class MessagePage extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-/*
-this whole part has to be resolved
-
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot documentSnapshot = task.getResult();
@@ -336,58 +333,36 @@ this whole part has to be resolved
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         if (documentSnapshot.get("channelId") != null) {
-                                            String channelId = documentSnapshot.get("channelId").toString();
+                                            channelId = documentSnapshot.get("channelId").toString();
                                             datastore.collection("chats")
                                                     .document(channelId)
                                                     .collection("messages")
-                                                    .orderBy("dateSent")
+                                                    .orderBy("dateSent", Query.Direction.DESCENDING)
+                                                    .limit(limit)
                                                     .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                                         @Override
                                                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
                                                                             @Nullable FirebaseFirestoreException e) {
                                                             if (e != null) {
                                                             } else {
-                                                                List<MessageChat> messages
-                                                                        = queryDocumentSnapshots.toObjects(MessageChat.class);
+                                                                messages = queryDocumentSnapshots.toObjects(MessageChat.class);
+                                                                Collections.reverse(messages);
                                                                 adapter.setData(messages);
+                                                                adapter.notifyDataSetChanged();
                                                                 recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+
+                                                                lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
                                                             }
+
                                                         }
                                                     });
-
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.get("channelId") != null) {
-                            channelId = documentSnapshot.get("channelId").toString();
-                            datastore.collection("chats")
-                                    .document(channelId)
-                                    .collection("messages")
-                                    .orderBy("dateSent", Query.Direction.DESCENDING)
-                                    .limit(limit)
-                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                                            @Nullable FirebaseFirestoreException e) {
-                                            if (e != null) {
-                                            } else {
-                                                messages = queryDocumentSnapshots.toObjects(MessageChat.class);
-                                                Collections.reverse(messages);
-                                                adapter.setData(messages);
-                                                adapter.notifyDataSetChanged();
-                                                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-
-                                                lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
-                                            }
-
                                         }
                                     }
-
                                 });
-
                             }
                         }
-                    }});
-                    */
-
+                    }
+                });
     }
 
     //To prevent retrieving all messages which could be quite expensive when chat has many messages
