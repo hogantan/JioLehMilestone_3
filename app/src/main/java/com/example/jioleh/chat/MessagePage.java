@@ -50,6 +50,7 @@ public class MessagePage extends AppCompatActivity {
     private EditText input_message;
     private RecyclerView recyclerView;
 
+
     private MessageAdapter adapter;
 
     private FirebaseAuth database;
@@ -285,35 +286,61 @@ public class MessagePage extends AppCompatActivity {
     //message DOCUMENT, convert to MessageChat class so that the MessageAdapter can
     //display it
     private void getMessages() {
-                datastore.collection("users")
+
+        //check to see if current user (Sender) has blocked the other user (receiver)
+        datastore.collection("users")
                 .document(sender)
-                .collection("openchats")
-                .document(intent.getStringExtra("user_id"))
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                .collection("blocked users")
+                .document(receiver)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.get("channelId") != null) {
-                            String channelId = documentSnapshot.get("channelId").toString();
-                            datastore.collection("chats")
-                                    .document(channelId)
-                                    .collection("messages")
-                                    .orderBy("dateSent")
-                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                                            @Nullable FirebaseFirestoreException e) {
-                                            if (e != null) {
-                                            } else {
-                                                List<MessageChat> messages
-                                                        = queryDocumentSnapshots.toObjects(MessageChat.class);
-                                                adapter.setData(messages);
-                                                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
-                                            }
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()) {
+                                Toast.makeText(MessagePage.this, "You have blocked the user", Toast.LENGTH_SHORT).show();
+
+                                input_message.setEnabled(false);
+                                send.setEnabled(false);
+                                send.setVisibility(View.GONE);
+                                input_message.setText("You have blocked the user");
+                            } else {
+                                datastore.collection("users")
+                                        .document(sender)
+                                        .collection("openchats")
+                                        .document(intent.getStringExtra("user_id"))
+                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        if (documentSnapshot.get("channelId") != null) {
+                                            String channelId = documentSnapshot.get("channelId").toString();
+                                            datastore.collection("chats")
+                                                    .document(channelId)
+                                                    .collection("messages")
+                                                    .orderBy("dateSent")
+                                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                                                            @Nullable FirebaseFirestoreException e) {
+                                                            if (e != null) {
+                                                            } else {
+                                                                List<MessageChat> messages
+                                                                        = queryDocumentSnapshots.toObjects(MessageChat.class);
+                                                                adapter.setData(messages);
+                                                                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+                                                            }
+                                                        }
+                                                    });
                                         }
-                                    });
+                                    }
+
+                                });
+
+                            }
                         }
-                    }
-                });
+                    }});
+
     }
 
     private String convertDateFormat(Date date) {
@@ -331,6 +358,7 @@ public class MessagePage extends AppCompatActivity {
         database = FirebaseAuth.getInstance();
         sender = currentUser.getUid();
         receiver = intent.getStringExtra("user_id");
+
     }
 
     private void initialiseToolbar() {
@@ -348,7 +376,7 @@ public class MessagePage extends AppCompatActivity {
         String updateUsername = intent.getStringExtra("username");
         username.setText(updateUsername);
         String imageUrl = intent.getStringExtra("image_url");
-        if (!imageUrl.isEmpty()) {
+        if (imageUrl!=null && !imageUrl.isEmpty()) {
             Picasso.get().load(imageUrl).into(receiverImage);
         }
     }

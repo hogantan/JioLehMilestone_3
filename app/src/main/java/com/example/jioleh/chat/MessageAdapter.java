@@ -111,8 +111,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
                      .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        String imageUrl = documentSnapshot.get("imageUrl").toString();
-                        Picasso.get().load(imageUrl).into(displayImage);
+
+                        String imageUrl = (String) documentSnapshot.get("imageUrl");
+                        if (imageUrl != null && !imageUrl.equals("")){
+                            Picasso.get().load(imageUrl).into(displayImage);
+                        }
                     }
                 });
             }

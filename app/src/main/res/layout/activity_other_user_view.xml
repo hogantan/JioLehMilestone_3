@@ -157,12 +157,5 @@
     android:layout_marginRight="60sp"
     android:id="@+id/pb"/>
 
-    <LinearLayout
-        android:id="@+id/blocked_user_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/baseBlack"
-        android:visibility="invisible"
-        android:orientation="horizontal" />
 
 </RelativeLayout>
