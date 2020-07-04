@@ -242,50 +242,51 @@ public class OtherUserView extends AppCompatActivity {
                                     }
                                 });
                                 builder.show();
+                            } else {
+                                setContentView(R.layout.activity_other_user_view);
+                                initialise();
+
+                                initialiseToolbar();
+
+                                viewModel = new ViewModelProvider(OtherUserView.this).get(userProfileViewModel.class);
+
+
+                                viewModel = new ViewModelProvider(OtherUserView.this).get(userProfileViewModel.class);
+                                viewModel.getUser(profileUID).observe(OtherUserView.this, new Observer<UserProfile>() {
+                                    @Override
+                                    public void onChanged(UserProfile userProfile) {
+                                        fill(userProfile);
+                                    }
+                                });
+
+                                initialiseViewPagerAndTab(profileUID);
+
+                                btn_message.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
+                                        nextActivity.putExtra("username", tv_username.getText().toString());
+                                        nextActivity.putExtra("user_id", profileUID);
+                                        nextActivity.putExtra("image_url", imageUrl);
+                                        startActivity(nextActivity);
+                                    }
+                                });
+
+                                btn_review.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent reviewPage = new Intent(OtherUserView.this, ReviewPage.class);
+                                        reviewPage.putExtra("username", profileUsername);
+                                        reviewPage.putExtra("user_id", profileUID);
+                                        startActivity(reviewPage);
+                                    }
+                                });
                             }
-                        } else {
-                            setContentView(R.layout.activity_other_user_view);
-                            initialise();
-
-                            initialiseToolbar();
-
-                            viewModel = new ViewModelProvider(OtherUserView.this).get(userProfileViewModel.class);
 
 
-                            viewModel = new ViewModelProvider(OtherUserView.this).get(userProfileViewModel.class);
-                            viewModel.getUser(profileUID).observe(OtherUserView.this, new Observer<UserProfile>() {
-                                @Override
-                                public void onChanged(UserProfile userProfile) {
-                                    fill(userProfile);
-                                }
-                            });
-
-                            initialiseViewPagerAndTab(profileUID);
-
-                            btn_message.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent nextActivity = new Intent(OtherUserView.this, MessagePage.class);
-                                    nextActivity.putExtra("username", tv_username.getText().toString());
-                                    nextActivity.putExtra("user_id", profileUID);
-                                    nextActivity.putExtra("image_url", imageUrl);
-                                    startActivity(nextActivity);
-                                }
-                            });
-
-                            btn_review.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent reviewPage = new Intent(OtherUserView.this, ReviewPage.class);
-                                    reviewPage.putExtra("username", profileUsername);
-                                    reviewPage.putExtra("user_id", profileUID);
-                                    startActivity(reviewPage);
-                                }
-                            });
                         }
                     }
                 });
     }
-
-
 }
+
