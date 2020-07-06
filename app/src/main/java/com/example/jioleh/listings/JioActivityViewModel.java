@@ -16,7 +16,6 @@ public class JioActivityViewModel extends ViewModel implements databaseOperation
         //because this constructor just activates the method getJioActivityData whenever
         //instantiated. This is to invoke method jioActivityDataAdded to set the list<JioActivity>
         //to MutableLiveData
-
         repository = new JioActivityRepository(this);
         repository.getJioActivityData();
     }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 
 import com.example.jioleh.R;
+import com.example.jioleh.listings.JioActivityViewModel;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -57,30 +60,23 @@ public class UserProfileReviewsFragment extends Fragment {
     public void initRv() {
         Rv_Review.setHasFixedSize(true);
         Rv_Review.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        ReviewAdapter reviewAdapter = new ReviewAdapter();
+        reviewAdapter.setUid(UserProfileReviewsFragment.this.uid);
+        reviewAdapter.setViewer_uid(FirebaseAuth.getInstance().getUid());
+        Rv_Review.setAdapter(reviewAdapter);
+
+        ReviewViewModel reviewVM = new ViewModelProvider(this).get(ReviewViewModel.class);
+        reviewVM.getReviews(this.uid);
+        reviewVM.getListOfReviews().observe(getViewLifecycleOwner(), new Observer<List<Review>>() {
+            @Override
+            public void onChanged(List<Review> reviews) {
+
+                reviewAdapter.setData(reviews);
+                reviewAdapter.notifyDataSetChanged();
 
 
-        FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(this.uid)
-                .collection("Reviews")
-                .orderBy("timeOfPost", Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        lst = new ArrayList<>();
-                        for (DocumentSnapshot dc : queryDocumentSnapshots.getDocuments()) {
-                            Review review = dc.toObject(Review.class);
-                            if (review != null) {
-                                lst.add(review);
-                            }
-                    }
-
-                        ReviewAdapter reviewAdapter = new ReviewAdapter();
-                        reviewAdapter.setData(lst);
-                        reviewAdapter.setUid(UserProfileReviewsFragment.this.uid);
-                        reviewAdapter.setViewer_uid(FirebaseAuth.getInstance().getUid());
-                        Rv_Review.setAdapter(reviewAdapter);
-                }});
+            }
+        });
     }
 
 }
