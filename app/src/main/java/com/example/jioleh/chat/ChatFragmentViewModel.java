@@ -12,14 +12,20 @@ public class ChatFragmentViewModel extends ViewModel implements databaseOperatio
 
     private MutableLiveData<List<?>[]> listOfProfilesAndUids = new MutableLiveData<>();
     private ChatFragmentRepository repository;
+    private String current_uid;
 
     public ChatFragmentViewModel(String current_uid) {
         repository = new ChatFragmentRepository(this);
         repository.getUserProfiles(current_uid);
+        this.current_uid = current_uid;
     }
 
     public LiveData<List<?>[]> getListOfUserProfiles() {
         return listOfProfilesAndUids;
+    }
+
+    public void refreshProfiles() {
+        repository.getUserProfiles(current_uid);
     }
 
     @Override

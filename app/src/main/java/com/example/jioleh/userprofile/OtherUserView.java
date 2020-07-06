@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -27,9 +28,12 @@ import android.widget.Toast;
 
 import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
+import com.example.jioleh.listings.JioActivity;
+import com.example.jioleh.post.PostingPage;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -69,7 +73,7 @@ public class OtherUserView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_other_user_view);
+        setContentView(R.layout.activity_other_user_view);
         //initialise();
 
         final Intent intent = getIntent();
@@ -77,9 +81,7 @@ public class OtherUserView extends AppCompatActivity {
         //this is the current profile user id not the current user
         profileUID = intent.getStringExtra("user_id");
         profileUsername = intent.getStringExtra("username");
-        chcekIfBlocked();
-
-
+        checkIfDeleted();
     }
 
     @Override
@@ -128,6 +130,11 @@ public class OtherUserView extends AppCompatActivity {
         imageUrl = userProfile.getImageUrl();
         if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl() != null) {
             Picasso.get().load(imageUrl).into(iv_ProfilePic);
+        } else {
+            //Set default after checking rather than put in xml this is because
+            //setting as default will allow user to see default picture first before
+            //loading in the actual image(if imageURL exists)
+            iv_ProfilePic.setImageDrawable(getResources().getDrawable(R.drawable.default_picture));
         }
     }
 
@@ -214,7 +221,29 @@ public class OtherUserView extends AppCompatActivity {
                 });
     }
 
-    private void chcekIfBlocked() {
+    private Task<DocumentSnapshot> checkIfDeleted() {
+        return FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(profileUID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot currentProfile = task.getResult();
+                            if (currentProfile.get("isDeleted") != null) {
+                                alertDeleteDialog();
+                            } else {
+                                checkIfBlocked();
+                            }
+                        } else {
+                            System.out.println("Check Delete Error");
+                        }
+                    }
+                });
+    }
+
+    private void checkIfBlocked() {
         String viewerUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         rootRef.collection("users")
@@ -232,8 +261,10 @@ public class OtherUserView extends AppCompatActivity {
                                 setContentView(R.layout.blank_layout_black);
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
-                                builder.setTitle("Error fetching user details");
-                                builder.setMessage("The user cannot be found!");
+                                builder.setTitle("Error");
+                                builder.setMessage("The user cannot be found.");
+                                builder.setCancelable(false);
+
                                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -287,6 +318,24 @@ public class OtherUserView extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void alertDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
+
+        builder.setTitle("Error");
+        builder.setMessage("The user cannot be found.");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 }
 

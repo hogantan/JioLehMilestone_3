@@ -72,7 +72,6 @@ public class PostLoginPage extends AppCompatActivity {
                     case R.id.bab_home:
                         selectedFragment = frag1;
                         toolbar_title.setText("JioLeh");
-
                         break;
                     case R.id.bab_chat:
                         selectedFragment = frag2;
@@ -111,6 +110,7 @@ public class PostLoginPage extends AppCompatActivity {
         bottom_nav_view = findViewById(R.id.bnvBtmNavBar);
         toolbar_title = findViewById(R.id.tbTitle);
         jio = findViewById(R.id.btnJio);
+        bottom_nav_view.getMenu().getItem(2).setEnabled(false);
     }
 
     private void initialiseToolbar() {
@@ -118,7 +118,7 @@ public class PostLoginPage extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_background));
-
+        bottom_nav_view.getMenu().getItem(2).setCheckable(false);
     }
 
     private void initialiseFragments() {

@@ -2,6 +2,7 @@ package com.example.jioleh.chat;
 
 import androidx.annotation.Nullable;
 
+import com.example.jioleh.listings.JioActivity;
 import com.example.jioleh.userprofile.UserProfile;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -14,6 +15,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatFragmentRepository {
@@ -39,12 +42,17 @@ public class ChatFragmentRepository {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
+                        List<String> initialUids = new ArrayList<>();
+
+                        list_of_task.clear();
+                        listOfUserProfiles.clear();
+                        list_of_uid.clear();
 
                         for(DocumentSnapshot documentSnapshot : list_of_documents) {
-                            list_of_uid.add(documentSnapshot.getId());
+                            initialUids.add(documentSnapshot.getId());
                         }
 
-                        for(String uid : list_of_uid) {
+                        for(String uid : initialUids) {
                             list_of_task.add(getUser(uid));
                         }
 
@@ -53,9 +61,13 @@ public class ChatFragmentRepository {
                             public void onSuccess(List<? super DocumentSnapshot> snapShots) {
                                 for (int i = 0; i < list_of_task.size(); i++) {
                                     DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
-                                    UserProfile userProfile = snapshot.toObject(UserProfile.class);
-                                    listOfUserProfiles.add(userProfile);
+                                    if (snapshot.exists()) {
+                                        UserProfile userProfile = snapshot.toObject(UserProfile.class);
+                                        listOfUserProfiles.add(userProfile);
+                                        list_of_uid.add(snapshot.getId());
+                                    }
                                 }
+
                                 profiles_and_uids[0] = listOfUserProfiles;
                                 profiles_and_uids[1] = list_of_uid;
                                 databaseOperations.userProfileDataAdded(profiles_and_uids);

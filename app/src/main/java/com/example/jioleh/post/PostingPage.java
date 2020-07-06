@@ -289,7 +289,7 @@ public class PostingPage
                 new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                textView.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
+                textView.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
             }
         }, currentYear, currentMonth, currentDay);
         datePickerDialog.show();
@@ -365,7 +365,7 @@ public class PostingPage
     }
 
     private Date convertDate(String date, String time) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         try {
             return formatter.parse(date + " " + time);
         } catch (ParseException e) {
@@ -404,7 +404,7 @@ public class PostingPage
     }
 
     private boolean checkDate(String first, String second) {
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date currentDateTime = Calendar.getInstance().getTime(); //this gets both date and time
         Date d1 = null;
         Date d2 = null;
@@ -570,7 +570,7 @@ public class PostingPage
 
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                onBackPressed();
+                finish();
             }
         });
         AlertDialog dialog = builder.create();
@@ -604,6 +604,11 @@ public class PostingPage
         Drawable defaultImage = getResources().getDrawable(R.drawable.ic_baseline_add_a_photo_basegreen);
         displayImage.setImageDrawable(defaultImage);
         mImageUri = null;
+    }
+
+    @Override
+    public void onBackPressed() {
+        cancelDialog();
     }
 
     //Used for spinner

@@ -48,6 +48,9 @@ public class BlockedUsersAdapter extends RecyclerView.Adapter<BlockedUsersAdapte
 
         if (UImg != null&& !UImg.equals("") ) {
             Picasso.get().load(UImg).into(holder.iv_user_profile_pic);
+        } else {
+            holder.iv_user_profile_pic.setImageDrawable(holder.iv_user_profile_pic.getContext()
+                    .getResources().getDrawable(R.drawable.default_picture));
         }
 
         holder.unblock.setOnClickListener(new View.OnClickListener() {

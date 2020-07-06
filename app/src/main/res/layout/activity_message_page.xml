@@ -11,7 +11,7 @@
         android:id="@+id/tbMessageTopBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/baseBlack"
+        android:background="@drawable/toolbar_background"
         app:navigationIcon="?homeAsUpIndicator"
         android:textColor="#fff">
 
@@ -66,7 +66,7 @@
             android:id="@+id/viewLine2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/baseWhite">
+            android:background="@color/darkGrey">
         </View>
 
         <EditText
@@ -75,8 +75,8 @@
             android:layout_toLeftOf="@+id/ibSendButton"
             android:layout_centerVertical="true"
             android:hint="Type message here"
-            android:textColorHint="#fff"
-            android:textColor="#fff"
+            android:textColorHint="@color/baseGrey"
+            android:textColor="@color/baseWhite"
             android:backgroundTint="#202124"
             android:id="@+id/etSendMessage">
         </EditText>

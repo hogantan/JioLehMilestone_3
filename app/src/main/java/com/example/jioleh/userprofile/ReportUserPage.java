@@ -1,9 +1,11 @@
 package com.example.jioleh.userprofile;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.example.jioleh.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ReportUserPage extends AppCompatActivity {
@@ -44,7 +47,7 @@ public class ReportUserPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String words = report_words.getText().toString();
-                uploadToReportToFirestore(currentUid, reportedUserId, words);
+                confirmationDialog(currentUid,reportedUserId, words, reportedUserName);
             }
         });
 
@@ -59,7 +62,7 @@ public class ReportUserPage extends AppCompatActivity {
 
     public void initTb() {
         tb_report_user_top_bar = findViewById(R.id.report_user_top_bar);
-        tb_report_user_top_bar.setTitle("Report");
+        tb_report_user_top_bar.setTitle("");
         tb_report_user_top_bar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,5 +90,25 @@ public class ReportUserPage extends AppCompatActivity {
                 });
     }
 
+    private void confirmationDialog(String currenUid, String reportedUid, String words, String reportedUsername) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ReportUserPage.this);
+
+        builder.setMessage("Are you done with your report of " + reportedUsername + "?")
+                .setTitle("Confirm Report");
+
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                uploadToReportToFirestore(currenUid, reportedUid, words);
+            }
+        });
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
 
 }

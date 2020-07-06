@@ -20,7 +20,6 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_blocked_user_image"
-        android:src="@drawable/default_picture"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentStart="true"

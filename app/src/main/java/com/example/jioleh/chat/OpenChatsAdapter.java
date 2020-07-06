@@ -25,6 +25,7 @@ import com.example.jioleh.userprofile.UserProfile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -40,6 +41,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -53,8 +56,9 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
     private List<String> list_of_uid;
 
     public OpenChatsAdapter() {
-        profiles = new ArrayList<>();
+        this.profiles = new ArrayList<>();
     }
+
 
     @NonNull
     @Override
@@ -66,6 +70,7 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
 
     @Override
     public void onBindViewHolder(@NonNull OpenChatsAdapter.OpenChatsHolder holder, int position) {
+        holder.setIsRecyclable(false);
         UserProfile profile = profiles.get(position);
         holder.user_id = list_of_uid.get(position);
         holder.setUpView(profile);
@@ -83,12 +88,11 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
         this.list_of_uid = list_of_uid;
     }
 
-    static class OpenChatsHolder extends RecyclerView.ViewHolder {
+    class OpenChatsHolder extends RecyclerView.ViewHolder {
 
         private ImageView displayImage;
         private TextView username;
         private TextView last_msg;
-        private CircleImageView alert;
         private String user_id;
         private String imageUrl;
         private Context currentContext;
@@ -96,10 +100,9 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
         //Initialising the holder
         OpenChatsHolder(@NonNull final View itemView) {
             super(itemView);
-            displayImage = itemView.findViewById(R.id.ivUserImage);
+            displayImage = itemView.findViewById(R.id.civUserImage);
             username = itemView.findViewById(R.id.tvSingleUsersUsername);
             last_msg = itemView.findViewById(R.id.tvSingleUsersLastMsg);
-            alert = itemView.findViewById(R.id.civAlertNewMessage);
             currentContext = displayImage.getContext();
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -124,39 +127,40 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
 
         //Setting the details in the holder
         void setUpView(UserProfile userProfile) {
+            if (userProfile != null) {
+                if (userProfile.getImageUrl()!=null && !userProfile.getImageUrl().equals("")) {
+                    imageUrl = userProfile.getImageUrl();
+                    Picasso.get().load(imageUrl).into(displayImage);
+                } else {
+                    displayImage.setImageDrawable(currentContext.getResources().getDrawable(R.drawable.default_picture));
+                }
+                username.setText(userProfile.getUsername());
 
-            if (userProfile.getImageUrl()!=null && !userProfile.getImageUrl().equals("")) {
-                imageUrl = userProfile.getImageUrl();
-                Picasso.get().load(imageUrl).into(displayImage);
-            }
-            username.setText(userProfile.getUsername());
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-            //check if this user has blocked the other users
-            FirebaseFirestore.getInstance()
-                    .collection("users")
-                    .document(currentUser.getUid())
-                    .collection("blocked users")
-                    .document(user_id)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                //means the user is blocked
-                                DocumentSnapshot documentSnapshot = task.getResult();
-                                if (documentSnapshot.exists()) {
-                                    //user is blocked
-                                    last_msg.setText("This user has been blocked by you");
-                                } else {
-                                    getLastMessage();
+                //check if this user has blocked the other users
+                FirebaseFirestore.getInstance()
+                        .collection("users")
+                        .document(currentUser.getUid())
+                        .collection("blocked users")
+                        .document(user_id)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    //means the user is blocked
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()) {
+                                        //user is blocked
+                                        last_msg.setText("This user has been blocked by you");
+                                    } else {
+                                        getLastMessage();
+                                    }
                                 }
                             }
-                        }
-                    });
-
-
+                        });
+            }
         }
 
         private void getLastMessage() {
@@ -187,9 +191,10 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
                                             if (queryDocumentSnapshots.size() > 0) {
                                                 last_msg.setText(queryDocumentSnapshots.getDocuments().get(0).get("text").toString());
 
-                                                if (queryDocumentSnapshots.getDocuments().get(0).get("sender").toString().equals(currentUser.getUid())) {
-                                                    alert.setVisibility(CircleImageView.VISIBLE);
+                                                if (!queryDocumentSnapshots.getDocuments().get(0).get("sender").toString().equals(currentUser.getUid())) {
+                                                    last_msg.setTextColor(last_msg.getContext().getResources().getColor(R.color.baseWhite));
                                                 }
+
                                             }
                                         }
                                     });

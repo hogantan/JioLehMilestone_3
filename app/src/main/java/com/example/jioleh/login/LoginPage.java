@@ -101,7 +101,7 @@ public class LoginPage extends AppCompatActivity {
                     } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         progressBar.dismiss();
                         Toast.makeText(LoginPage.this,
-                                "User does not exist",
+                                "Email address is not registered",
                                 Toast.LENGTH_SHORT).show();
                     } else {
                         progressBar.dismiss();
