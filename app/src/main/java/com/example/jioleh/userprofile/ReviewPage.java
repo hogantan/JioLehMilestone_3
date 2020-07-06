@@ -1,6 +1,7 @@
 package com.example.jioleh.userprofile;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
@@ -8,7 +9,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +22,8 @@ import android.widget.Toast;
 
 
 import com.example.jioleh.R;
+import com.example.jioleh.listings.JioActivity;
+import com.example.jioleh.post.PostingPage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,7 +68,6 @@ public class ReviewPage extends AppCompatActivity {
             }
         });
 
-
         final DocumentReference reviewDocRef = FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(other_userId)
@@ -73,27 +77,7 @@ public class ReviewPage extends AppCompatActivity {
         btn_submit_review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float rating = ratingBar.getRating();
-                String reviewWord = review_words.getText().toString();
-                String currentUid = firebaseUser.getUid();
-
-                Review review = new Review(reviewWord, currentUid,profilePic,username,rating);
-
-                review.setDocumentId(reviewDocRef.getId());
-
-                reviewDocRef.set(review)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(ReviewPage.this, "Review submitted!",Toast.LENGTH_SHORT).show();
-                                    finish();
-                                } else {
-                                    Toast.makeText(ReviewPage.this, "Error please try submitting again!",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                confirmationDialog(reviewDocRef, other_username);
             }
         });
     }
@@ -112,7 +96,7 @@ public class ReviewPage extends AppCompatActivity {
     }
 
     public void initTb() {
-        tb_user_profile.setTitle("Review");
+        tb_user_profile.setTitle("");
         tb_user_profile.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,5 +107,46 @@ public class ReviewPage extends AppCompatActivity {
 
     public LiveData<UserProfile> fetchCurrentUserDetails(String currentUserId) {
         return viewModel.getUser(currentUserId);
+    }
+
+    private void confirmationDialog(DocumentReference documentReference, String other_username) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ReviewPage.this);
+
+        builder.setMessage("Are you done with your review of " + other_username + "?")
+                .setTitle("Confirm Review");
+
+        builder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+
+        builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                float rating = ratingBar.getRating();
+                String reviewWord = review_words.getText().toString();
+                String currentUid = firebaseUser.getUid();
+
+                Review review = new Review(reviewWord, currentUid,profilePic,username,rating);
+
+                review.setDocumentId(documentReference.getId());
+
+                documentReference.set(review)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(ReviewPage.this, "Review submitted!",Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } else {
+                                    Toast.makeText(ReviewPage.this, "Error please try submitting again!",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
     }
 }

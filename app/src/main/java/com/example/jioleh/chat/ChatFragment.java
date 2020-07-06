@@ -9,6 +9,7 @@ package com.example.jioleh.chat;
         import androidx.lifecycle.ViewModelProvider;
         import androidx.recyclerview.widget.LinearLayoutManager;
         import androidx.recyclerview.widget.RecyclerView;
+        import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
         import android.view.LayoutInflater;
         import android.view.View;
@@ -38,6 +39,7 @@ public class ChatFragment extends Fragment {
     private RecyclerView recyclerView;
     private View currentView;
     private OpenChatsAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private ChatFragmentViewModel viewModel;
 
@@ -52,6 +54,7 @@ public class ChatFragment extends Fragment {
 
     private void initialise() {
         recyclerView = currentView.findViewById(R.id.rvUsersList);
+        swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
     }
 
     private void initialiseRecyclerView() {
@@ -73,6 +76,16 @@ public class ChatFragment extends Fragment {
             public void onChanged(List<?>[] userProfiles) {
                 adapter.setData((List<UserProfile>)userProfiles[0], (List<String>)userProfiles[1]);
                 adapter.notifyDataSetChanged();
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Second line of check
+                viewModel.refreshProfiles();
+                adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }

@@ -77,7 +77,7 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
         public ParticipantsHolder(@NonNull final View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.tvSingleUsersUsername);
-            displayImage = itemView.findViewById(R.id.ivUserImage);
+            displayImage = itemView.findViewById(R.id.civUserImage);
             currentContext = username.getContext();
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +102,10 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
             if (!userProfile.getImageUrl().equals("") && userProfile.getImageUrl() != null) {
                 imageUrl = userProfile.getImageUrl();
                 Picasso.get().load(imageUrl).into(displayImage);
+            } else {
+                displayImage.setBackground(currentContext.getResources().getDrawable(R.drawable.default_picture));
             }
+
             username.setText(userProfile.getUsername());
 
             //Allows host to kick participants

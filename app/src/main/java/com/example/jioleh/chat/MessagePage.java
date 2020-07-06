@@ -173,20 +173,17 @@ public class MessagePage extends AppCompatActivity {
                                 //if both users share the same chat channel
                                 if (senderChannel.toString().equals(receiverChannel.toString())) {
                                     MessageChat message = new MessageChat(sender,
-                                            receiver, input, documentSnapshot.get("channelId").toString()
-                                            , convertDateFormat(Calendar.getInstance().getTime()));
+                                            receiver, input, documentSnapshot.get("channelId").toString());
 
                                     sendMessage(message);
                                 }
                                 //if both users DO NOT share the same chat channel
                                 else {
                                     MessageChat message1 = new MessageChat(sender,
-                                            receiver, input, receiverChannel.toString()
-                                            , convertDateFormat(Calendar.getInstance().getTime()));
+                                            receiver, input, receiverChannel.toString());
 
                                     MessageChat message2 = new MessageChat(sender,
-                                            receiver, input, senderChannel.toString()
-                                            , convertDateFormat(Calendar.getInstance().getTime()));
+                                            receiver, input, senderChannel.toString());
 
                                     sendMessage(message1);
                                     sendMessage(message2);
@@ -194,13 +191,11 @@ public class MessagePage extends AppCompatActivity {
                             }//if sender does not have an open chat channel with the receiver but the receiver has an open chat channel with sender
                             else if (document.get("channelId") == null && documentSnapshot.exists()) {
                                 MessageChat message1 = new MessageChat(sender,
-                                        receiver, input, receiverChannel.toString()
-                                        , convertDateFormat(Calendar.getInstance().getTime()));
+                                        receiver, input, receiverChannel.toString());
 
                                 String chatChannelID = openChatChannel(sender, receiver, SINGLE);
                                 MessageChat message2 = new MessageChat(sender,
-                                        receiver, input, chatChannelID
-                                        , convertDateFormat(Calendar.getInstance().getTime()));
+                                        receiver, input, chatChannelID);
 
                                 sendMessage(message1);
                                 sendMessage(message2);
@@ -209,12 +204,10 @@ public class MessagePage extends AppCompatActivity {
                             else if (document.get("channelId") != null && !documentSnapshot.exists()) {
                                 String chatChannelID = openChatChannel(receiver, sender, SINGLE);
                                 MessageChat message1 = new MessageChat(sender,
-                                        receiver, input, chatChannelID
-                                        , convertDateFormat(Calendar.getInstance().getTime()));
+                                        receiver, input, chatChannelID);
 
                                 MessageChat message2 = new MessageChat(sender,
-                                        receiver, input, senderChannel.toString()
-                                        , convertDateFormat(Calendar.getInstance().getTime()));
+                                        receiver, input, senderChannel.toString());
 
                                 sendMessage(message1);
                                 sendMessage(message2);
@@ -223,8 +216,7 @@ public class MessagePage extends AppCompatActivity {
                             else {
                                 String chatChannelID = openChatChannel(sender, receiver, DOUBLE);
                                 MessageChat message = new MessageChat(sender,
-                                        receiver, input, chatChannelID
-                                        , convertDateFormat(Calendar.getInstance().getTime()));
+                                        receiver, input, chatChannelID);
 
                                 sendMessage(message);
                             }
@@ -397,11 +389,6 @@ public class MessagePage extends AppCompatActivity {
         }
     }
 
-    private String convertDateFormat(Date date) {
-        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-        return formatter.format(date);
-    }
-
     private void initialise() {
         send = findViewById(R.id.ibSendButton);
         input_message = findViewById(R.id.etSendMessage);
@@ -442,5 +429,14 @@ public class MessagePage extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (messages != null){
+                    //recyclerView.scrollToPosition(messages.size()-1);
+                }
+            }
+        });
     }
 }

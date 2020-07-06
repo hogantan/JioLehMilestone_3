@@ -12,17 +12,15 @@ public class MessageChat {
     private String receiver;
     private String text;
     private String channelID;
-    private String date;
 
     @ServerTimestamp
     private Date dateSent;
 
-    public MessageChat(String sender, String receiver, String text, String channelID, String date) {
+    public MessageChat(String sender, String receiver, String text, String channelID) {
         this.sender = sender;
         this.receiver = receiver;
         this.text = text;
         this.channelID = channelID;
-        this.date = date;
     }
 
     public MessageChat(){
@@ -66,13 +64,5 @@ public class MessageChat {
 
     public void setDateSent(Date dateSent) {
         this.dateSent = dateSent;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 }

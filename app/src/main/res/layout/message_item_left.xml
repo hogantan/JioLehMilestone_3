@@ -8,8 +8,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivLeftPic"
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/default_picture"/>
+        android:layout_height="40dp" />
 
     <TextView
         android:id="@+id/tvMessage"

@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -102,7 +103,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
         //Setting the details in the holder
         public void setUpView(MessageChat message) {
             messageSent.setText(message.getText());
-            dateSent.setText(message.getDate());
+            dateSent.setText(convertDateTime(message.getDateSent()));
 
             if (getItemViewType() == MSG_LEFT) {
              FirebaseFirestore.getInstance()
@@ -112,20 +113,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageH
                      .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-
                         String imageUrl = (String) documentSnapshot.get("imageUrl");
                         if (imageUrl != null && !imageUrl.equals("")){     
                           Picasso.get().load(imageUrl).into(displayImage);
+                        } else {
+                            displayImage.setImageDrawable(displayImage.getContext().getResources()
+                                    .getDrawable(R.drawable.default_picture));
                         }
                     }
                 });
             }
         }
 
-        private String convertDateFormat(Date date) {
-            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-            return formatter.format(date);
+        private String convertDateTime(Date datetime) {
+            if (datetime != null) {
+                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                return formatter.format(datetime);
+            } else {
+                return "";
+            }
         }
     }
 }

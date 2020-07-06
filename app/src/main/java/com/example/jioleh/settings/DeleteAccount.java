@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,7 +38,8 @@ import java.util.List;
 public class DeleteAccount extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private TextInputLayout username;
+    private TextInputLayout email;
+    private TextInputLayout password;
     private Button delete;
 
     private FirebaseAuth database;
@@ -63,10 +66,10 @@ public class DeleteAccount extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 //Confirming deletion/Verifying deletion
-                                if (documentSnapshot.get("username").toString().equals(username.getEditText().getText().toString())) {
+                                if (checkInputs()) {
                                     alertDialog();
                                 } else {
-                                    Toast.makeText(DeleteAccount.this, "Incorrect username", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(DeleteAccount.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -76,7 +79,8 @@ public class DeleteAccount extends AppCompatActivity {
 
     private void initialise() {
         progressBar = new ProgressDialog(DeleteAccount.this);
-        username = findViewById(R.id.tilConfirmUsername);
+        email = findViewById(R.id.tilConfirmEmail);
+        password = findViewById(R.id.tilConfirmPassword);
         delete = findViewById(R.id.btnConfirmCDelete);
         database = FirebaseAuth.getInstance();
         datastore = FirebaseFirestore.getInstance();
@@ -151,18 +155,30 @@ public class DeleteAccount extends AppCompatActivity {
                         });
 
                 //Deleting from FirebaseAuth
-                currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(email.getEditText().getText().toString(), password.getEditText().getText().toString());
+                currentUser.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            progressBar.dismiss();
-                            Intent nextActivity = new Intent(DeleteAccount.this, MainActivity.class);
-                            nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(nextActivity);
-                            Toast.makeText(DeleteAccount.this, "Account has been deleted successfully", Toast.LENGTH_SHORT).show();
+                            currentUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        progressBar.dismiss();
+                                        Intent nextActivity = new Intent(DeleteAccount.this, MainActivity.class);
+                                        nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(nextActivity);
+                                        Toast.makeText(DeleteAccount.this, "Account has been deleted successfully", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        progressBar.dismiss();
+                                        Toast.makeText(DeleteAccount.this, "Failed to delete account" , Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         } else {
                             progressBar.dismiss();
-                            Toast.makeText(DeleteAccount.this, "Failed to delete account", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DeleteAccount.this, "Incorrect email or password" + task.getException() , Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -204,5 +220,13 @@ public class DeleteAccount extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private boolean checkInputs() {
+        if (email.getEditText() == null || password.getEditText() == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

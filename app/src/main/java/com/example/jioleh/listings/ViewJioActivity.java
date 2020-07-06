@@ -471,7 +471,7 @@ public class ViewJioActivity extends AppCompatActivity {
                             actual_date.setText(convertDateFormat(currentActivity.getEvent_date()));
                             actual_time.setText(currentActivity.getEvent_time());
                             confirm_date.setText(convertDateFormat(currentActivity.getDeadline_date()));
-                            confirm_time.setText(currentActivity.getEvent_time());
+                            confirm_time.setText(currentActivity.getDeadline_time());
                             details.setText(currentActivity.getDetails());
                             participants_counter.setText(currentActivity.getCurrent_participants() + "/" + max_participants);
                             minimum.setText("Minimum required: " + currentActivity.getMin_participants() + "/" + currentActivity.getMax_participants());
@@ -541,7 +541,7 @@ public class ViewJioActivity extends AppCompatActivity {
     //Method to convert how date looks --> current format allows date to be seen as e.g. 24 June 2012
     private String convertDateFormat(String date) {
         Date new_date = new Date();
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         try {
             new_date = formatter.parse(date);
             return formatter.format(new_date);

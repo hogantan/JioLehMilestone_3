@@ -118,7 +118,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
 
         private String convertDateFormat(String date) {
             Date new_date = new Date();
-            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
             DateFormat formatter2 = new SimpleDateFormat("dd MMMM yyyy");
             try {
                 new_date = formatter.parse(date);
