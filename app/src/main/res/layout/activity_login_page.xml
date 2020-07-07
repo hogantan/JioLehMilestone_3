@@ -31,12 +31,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textColorHint="@color/baseWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvLoginSubHeader">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiletLoginEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -44,7 +44,7 @@
             android:inputType="textEmailAddress"
             android:textColor="@color/baseWhite"
             android:maxLength="320"
-            android:textColorHint="@color/baseWhite" />
+            android:textColorHint="@color/baseGrey" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -52,19 +52,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:textColorHint="@color/baseWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilLoginEmail"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiletLoginPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:hint="Password"
             android:inputType="textPassword"
-            android:textColor="@color/baseWhite" />
+            android:textColor="@color/baseWhite"
+            android:textColorHint="@color/baseGrey"
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -91,7 +93,7 @@
         android:id="@+id/tvForgotPasswordLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot Password?"
+        android:text="Forgot password?"
         android:textColor="@color/baseWhite"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"

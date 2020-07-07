@@ -1,8 +1,10 @@
 package com.example.jioleh.favourites;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.jioleh.listings.JioActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -48,9 +50,51 @@ public class FavouritesFragmentRepository {
                         list_of_activities.clear();
 
                         //Adding a list of completable futures
+                        System.out.println("snapshots size = " + snapshots.size());
                         for (DocumentSnapshot documentSnapshot : snapshots) {
                             if (documentSnapshot.exists()) {
                                 list_of_tasks.add(getActivity(documentSnapshot.getId(), current_uid, type));
+                            }
+                        }
+
+                        //Waiting for completable futures to complete
+                        Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
+                            @Override
+                            public void onSuccess(List<? super DocumentSnapshot> snapShots) {
+
+                                //Arranges activities based on actual event date and time to show user the most upcoming events
+                                Collections.sort(list_of_activities, new Comparator<JioActivity>() {
+                                    @Override
+                                    public int compare(JioActivity o1, JioActivity o2) {
+                                        return o1.getEvent_timestamp().compareTo(o2.getEvent_timestamp());
+                                    }
+                                });
+                                databaseOperations.activitiesDataAdded(list_of_activities);
+                            }
+                        });
+                    }
+                });
+    }
+
+    public void refreshActivities(String current_uid, String type) {
+        datastore.collection("users")
+                .document(current_uid)
+                .collection(type)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> snapshots = queryDocumentSnapshots.getDocuments();
+
+                        list_of_tasks.clear();
+                        list_of_activities.clear();
+
+                        //Adding a list of completable futures
+                        for (DocumentSnapshot documentSnapshot : snapshots) {
+                            if (documentSnapshot.exists()) {
+                                list_of_tasks.add(getActivity(documentSnapshot.getId(), current_uid, type));
+                            } else {
+                                //remove from joined/liked
                             }
                         }
 

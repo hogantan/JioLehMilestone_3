@@ -81,6 +81,16 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
         return activities.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     //Used to determine who the receiver or sender is depending on current user
 
     public void setData(List<JioActivity> jioActivities, boolean deletable, boolean removable) {

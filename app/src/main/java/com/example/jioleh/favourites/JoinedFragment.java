@@ -57,6 +57,7 @@ public class JoinedFragment extends Fragment {
             public void onChanged(List<JioActivity> activities) {
                 adapter.setData(activities, false, true);
                 adapter.notifyDataSetChanged();
+                System.out.println("adapter size = " + adapter.getItemCount());
 
                 //Display empty text message
                 if(adapter.getItemCount() == 0) {
@@ -77,6 +78,7 @@ public class JoinedFragment extends Fragment {
                 linesOfChecks.checkActivityCancelledConfirmed();
 
                 viewModel.refreshActivities();
+                adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -95,5 +97,4 @@ public class JoinedFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
     }
-
 }

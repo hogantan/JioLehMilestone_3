@@ -204,19 +204,22 @@ public class DeleteAccount extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        int current_participants = documentSnapshot.toObject(JioActivity.class).getCurrent_participants();
-                        ArrayList<String> list_of_participants = documentSnapshot.toObject(JioActivity.class).getParticipants();
+                        //Document might not exist if another user has deleted an activity, etc
+                        if (documentSnapshot.exists()) {
+                            int current_participants = documentSnapshot.toObject(JioActivity.class).getCurrent_participants();
+                            ArrayList<String> list_of_participants = documentSnapshot.toObject(JioActivity.class).getParticipants();
 
-                        current_participants = current_participants -1;
-                        list_of_participants.remove(currentUser.getUid());
+                            current_participants = current_participants -1;
+                            list_of_participants.remove(currentUser.getUid());
 
-                        datastore.collection("activities")
-                                .document(activity_id)
-                                .update("current_participants", current_participants);
+                            datastore.collection("activities")
+                                    .document(activity_id)
+                                    .update("current_participants", current_participants);
 
-                        datastore.collection("activities")
-                                .document(activity_id)
-                                .update("participants", list_of_participants);
+                            datastore.collection("activities")
+                                    .document(activity_id)
+                                    .update("participants", list_of_participants);
+                        }
                     }
                 });
 
