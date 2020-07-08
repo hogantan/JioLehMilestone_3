@@ -81,6 +81,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiletusername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -108,6 +109,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/username">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiletage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -166,6 +168,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvAboutMe">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiletcontact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -188,6 +191,7 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiletLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -210,6 +214,7 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiletbio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -230,6 +235,7 @@
                 tools:layout_editor_absoluteX="0dp">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiletInterest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

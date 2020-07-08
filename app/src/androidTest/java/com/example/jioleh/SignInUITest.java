@@ -1,5 +1,4 @@
-package com.example.jioleh.login;
-
+package com.example.jioleh;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.example.jioleh.R;
+import com.example.jioleh.login.MainActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -32,7 +32,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
+//This test goes through sign in --> forgot password --> back press --> back press
 //To test whether all UI elements are present and are presenting the correct inputs
+//Important: Ensure that app is currently NOT logged in before running test
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -43,16 +45,20 @@ public class SignInUITest {
 
     @Test
     public void signInUITest() {
+
+        takeFive();
+
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btnSignIn), withText("Sign in"),
                         isDisplayed()));
         appCompatButton.perform(click());
 
+        takeFive();
+
         ViewInteraction imageButton = onView(
                 allOf(withContentDescription("Navigate up"),
                         isDisplayed()));
         imageButton.check(matches(isDisplayed()));
-
 
         onView(withId(R.id.tvLoginSubHeader)).check(matches(withText("Sign In")));
 
@@ -68,6 +74,8 @@ public class SignInUITest {
                 allOf(withId(R.id.tvForgotPasswordLogin), withText("Forgot password?"),
                         isDisplayed()));
         appCompatTextView.perform(click());
+
+        takeFive();
 
         onView(withId(R.id.tvForgotPassword)).check(matches(withText("Forgot Password")));
 
@@ -92,9 +100,22 @@ public class SignInUITest {
                         isDisplayed()));
         appCompatImageButton.perform(click());
 
+        takeFive();
+
         ViewInteraction appCompatImageButton2 = onView(
                 allOf(withContentDescription("Navigate up"),
                         isDisplayed()));
         appCompatImageButton2.perform(click());
+
+        takeFive();
+    }
+
+    //Take a break for UI to load
+    private void takeFive() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
