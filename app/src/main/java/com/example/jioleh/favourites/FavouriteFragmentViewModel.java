@@ -28,7 +28,7 @@ public class FavouriteFragmentViewModel extends ViewModel implements databaseOpe
     }
 
     public void refreshActivities() {
-        repository.getActivities(current_uid, type);
+        repository.refreshActivities(current_uid, type);
     }
 
     @Override

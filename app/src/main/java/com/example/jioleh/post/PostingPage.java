@@ -548,7 +548,7 @@ public class PostingPage
 
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                onBackPressed();
+                finish();
                 uploadFile(jioActivity, image);
             }
         });
