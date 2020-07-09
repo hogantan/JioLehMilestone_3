@@ -61,12 +61,13 @@
             android:focusableInTouchMode="true">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tiletSearchTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search Title"
                 android:maxLength="40"
                 android:maxLines="1"
-                android:textColorHint="@color/baseBlack" />
+                android:textColorHint="@color/baseGrey" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -77,12 +78,13 @@
             android:layout_below="@+id/tilSearchTitle">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tiletSearchLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search Location"
                 android:maxLength="60"
                 android:maxLines="1"
-                android:textColorHint="@color/baseWhite" />
+                android:textColorHint="@color/baseGrey" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

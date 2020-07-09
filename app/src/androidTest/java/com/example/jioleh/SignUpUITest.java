@@ -1,21 +1,13 @@
-package com.example.jioleh.login;
+package com.example.jioleh;
 
-
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.example.jioleh.R;
+import com.example.jioleh.login.MainActivity;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,15 +16,15 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
 
+//This test goes through sign up --> back press
 //To test whether all UI elements are present and are presenting the correct inputs
+//Important: Ensure that app is currently NOT logged in before running test
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -43,10 +35,15 @@ public class SignUpUITest {
 
     @Test
     public void signUpUITest() {
+
+        takeFive();
+
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.btnNeedAAccount), withText("Sign up"),
                         isDisplayed()));
         appCompatButton.perform(click());
+
+        takeFive();
 
         ViewInteraction imageButton = onView(
                 allOf(withContentDescription("Navigate up"),
@@ -70,5 +67,16 @@ public class SignUpUITest {
                 allOf(withContentDescription("Navigate up"),
                         isDisplayed()));
         appCompatImageButton.perform(click());
+
+        takeFive();
+    }
+
+    //Take a break for UI to load
+    private void takeFive() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

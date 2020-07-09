@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/tbTempTopBar"
-        layout="@layout/top_app_bar" />
+        layout="@layout/top_app_bar_noline" />
 
     <TextView
         android:id="@+id/tvDeleteAccount"
@@ -62,13 +62,14 @@
         tools:layout_editor_absoluteX="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiletConfirmEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/baseWhite"
             android:textColorHint="@color/baseGrey"
             android:inputType="textEmailAddress"
-            android:hint="Email Address" />
+            android:hint="Email address" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -80,6 +81,7 @@
         tools:layout_editor_absoluteX="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/tiletConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
