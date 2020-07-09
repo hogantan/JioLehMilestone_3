@@ -76,7 +76,7 @@ public class BlockedUsersScreen extends AppCompatActivity {
 
     private void initialiseTb() {
         toolbar = findViewById(R.id.blocked_users_top_bar);
-        toolbar.setTitle("Blocked Users");
+        toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

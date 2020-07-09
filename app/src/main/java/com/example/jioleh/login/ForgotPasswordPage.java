@@ -42,8 +42,6 @@ public class ForgotPasswordPage extends AppCompatActivity {
                 if (checkUserInputDetails()) {
 
                     //Setting Details of Loading Screen
-                    progressBar.setTitle("Loading");
-                    progressBar.setMessage("Contacting with server");
                     progressBar.setCanceledOnTouchOutside(false);
                     progressBar.show();
 

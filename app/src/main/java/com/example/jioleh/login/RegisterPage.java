@@ -54,8 +54,8 @@ public class RegisterPage extends AppCompatActivity {
                 progressBar.show();
 
                 if (checkUserInputDetails()) {
-                    String user_email = email.getEditText().getText().toString().trim();
-                    String user_password = password.getEditText().getText().toString().trim();
+                    String user_email = email.getEditText().getText().toString();
+                    String user_password = password.getEditText().getText().toString();
                     database.createUserWithEmailAndPassword(user_email, user_password)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -75,10 +75,12 @@ public class RegisterPage extends AppCompatActivity {
                                         });
 
                                     } else if (task.getException() instanceof FirebaseAuthWeakPasswordException){
+                                        progressBar.dismiss();
                                         Toast.makeText(RegisterPage.this,
                                                 "Registration failed, password must have more than 6 characters",
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
+                                        progressBar.dismiss();
                                         Toast.makeText(RegisterPage.this,
                                                 "Registration failed, please contact administrator",
                                                 Toast.LENGTH_SHORT).show();
@@ -110,6 +112,7 @@ public class RegisterPage extends AppCompatActivity {
         String inputEmail = email.getEditText().getText().toString();
         String inputPassword = password.getEditText().getText().toString();
         if (inputPassword.isEmpty() || inputEmail.isEmpty()) {
+            progressBar.dismiss();
             Toast.makeText(RegisterPage.this, "Please fill up all the required fields",
                     Toast.LENGTH_SHORT).show();
             return false;

@@ -70,11 +70,10 @@ public class ChatFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         viewModel = new ChatFragmentViewModel(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        //observe for changes in database
-        viewModel.getListOfUserProfiles().observe(getViewLifecycleOwner(), new Observer<List<?>[]>() {
+        viewModel.getListOfChatChannels().observe(getViewLifecycleOwner(), new Observer<List<ChatChannel>>() {
             @Override
-            public void onChanged(List<?>[] userProfiles) {
-                adapter.setData((List<UserProfile>)userProfiles[0], (List<String>)userProfiles[1]);
+            public void onChanged(List<ChatChannel> chatChannels) {
+                adapter.setData(chatChannels);
                 adapter.notifyDataSetChanged();
             }
         });

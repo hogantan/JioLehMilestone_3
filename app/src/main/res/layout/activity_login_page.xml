@@ -63,6 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:hint="Password"
+            android:maxLength="128"
             android:inputType="textPassword"
             android:textColor="@color/baseWhite"
             android:textColorHint="@color/baseGrey"

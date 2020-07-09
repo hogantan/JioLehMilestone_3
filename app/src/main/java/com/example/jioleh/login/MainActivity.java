@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.jioleh.PostLoginPage;
 import com.example.jioleh.R;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,9 +30,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         //Auto-Login
-        //10/6 buggy interaction when deleting account from firebase eg. if i sign in as account A
-        //then close the app and delete account A in firebase then i still can auto login but keeps crashing
         if (currentUser != null) {
+            Toast.makeText(this, currentUser.getUid(), Toast.LENGTH_SHORT).show();
             Intent nextActivity = new Intent(MainActivity.this, PostLoginPage.class);
             nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             finish();

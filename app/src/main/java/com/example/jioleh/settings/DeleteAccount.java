@@ -113,47 +113,6 @@ public class DeleteAccount extends AppCompatActivity {
                 progressBar.setCanceledOnTouchOutside(false);
                 progressBar.show();
 
-                HashMap<String, Boolean> input = new HashMap<>();
-                input.put("isDeleted", true);
-
-                //Deleting from FirebaseFireStore
-                //To flag to delete or not rather than delete the whole collection which might run out of memory
-                datastore.collection("users")
-                        .document(currentUser.getUid())
-                        .set(input, SetOptions.merge());
-
-                //Delete all of users listed activities
-                datastore.collection("users")
-                        .document(currentUser.getUid())
-                        .collection("activities_listed")
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                                for (DocumentSnapshot document : documents) {
-                                    datastore.collection("activities")
-                                            .document(document.getId())
-                                            .delete();
-                                }
-                            }
-                        });
-
-                //Delete user from all his joined activity
-                datastore.collection("users")
-                        .document(currentUser.getUid())
-                        .collection("joined")
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                                for (DocumentSnapshot document : documents) {
-                                    updateParticipants(document.getId());
-                                }
-                            }
-                        });
-
                 //Deleting from FirebaseAuth
                 AuthCredential credential = EmailAuthProvider
                         .getCredential(email.getEditText().getText().toString(), password.getEditText().getText().toString());
@@ -170,6 +129,7 @@ public class DeleteAccount extends AppCompatActivity {
                                         nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(nextActivity);
                                         Toast.makeText(DeleteAccount.this, "Account has been deleted successfully", Toast.LENGTH_SHORT).show();
+                                        deleteData();
                                     } else {
                                         progressBar.dismiss();
                                         Toast.makeText(DeleteAccount.this, "Failed to delete account" , Toast.LENGTH_SHORT).show();
@@ -178,7 +138,7 @@ public class DeleteAccount extends AppCompatActivity {
                             });
                         } else {
                             progressBar.dismiss();
-                            Toast.makeText(DeleteAccount.this, "Incorrect email or password" + task.getException() , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DeleteAccount.this, "Incorrect email or password", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -231,5 +191,48 @@ public class DeleteAccount extends AppCompatActivity {
         } else {
             return true;
         }
+    }
+
+    private void deleteData() {
+        HashMap<String, Boolean> input = new HashMap<>();
+        input.put("isDeleted", true);
+
+        //Deleting from FirebaseFireStore
+        //To flag to delete or not rather than delete the whole collection which might run out of memory
+        datastore.collection("users")
+                .document(currentUser.getUid())
+                .set(input, SetOptions.merge());
+
+        //Delete all of users listed activities
+        datastore.collection("users")
+                .document(currentUser.getUid())
+                .collection("activities_listed")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot document : documents) {
+                            datastore.collection("activities")
+                                    .document(document.getId())
+                                    .delete();
+                        }
+                    }
+                });
+
+        //Delete user from all his joined activity
+        datastore.collection("users")
+                .document(currentUser.getUid())
+                .collection("joined")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot document : documents) {
+                            updateParticipants(document.getId());
+                        }
+                    }
+                });
     }
 }
