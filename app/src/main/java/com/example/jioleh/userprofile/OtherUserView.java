@@ -324,7 +324,7 @@ public class OtherUserView extends AppCompatActivity {
     private void alertDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
 
-        builder.setTitle("Error");
+        builder.setTitle("Oops!");
         builder.setMessage("The user cannot be found.");
         builder.setCancelable(false);
 

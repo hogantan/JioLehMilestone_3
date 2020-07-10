@@ -50,7 +50,6 @@ public class FavouritesFragmentRepository {
                         list_of_activities.clear();
 
                         //Adding a list of completable futures
-                        System.out.println("snapshots size = " + snapshots.size());
                         for (DocumentSnapshot documentSnapshot : snapshots) {
                             if (documentSnapshot.exists()) {
                                 list_of_tasks.add(getActivity(documentSnapshot.getId(), current_uid, type));
@@ -93,8 +92,6 @@ public class FavouritesFragmentRepository {
                         for (DocumentSnapshot documentSnapshot : snapshots) {
                             if (documentSnapshot.exists()) {
                                 list_of_tasks.add(getActivity(documentSnapshot.getId(), current_uid, type));
-                            } else {
-                                //remove from joined/liked
                             }
                         }
 

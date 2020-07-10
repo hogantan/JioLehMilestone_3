@@ -21,8 +21,16 @@ public class JioActivityViewModel extends ViewModel implements databaseOperation
     }
 
 
-    LiveData<List<JioActivity>> getListOfJioActivities() {
+    public LiveData<List<JioActivity>> getListOfJioActivities() {
         return listOfJioActivities;
+    }
+
+    public void getMoreActivities() {
+        repository.getMoreActivities();
+    }
+
+    public void refreshActivities() {
+        repository.getJioActivityData();
     }
 
     @Override

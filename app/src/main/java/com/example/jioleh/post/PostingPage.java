@@ -392,6 +392,7 @@ public class PostingPage
 
         //this is to set a maximum to both minimum and maximum to ensure that participants array do not get too large which can affect database storage and time complexities when querying
         if (first > 50 || second > 50) {
+            Toast.makeText(this, "Max Participants allowed is 50", Toast.LENGTH_SHORT).show();
             return false;
         }
 

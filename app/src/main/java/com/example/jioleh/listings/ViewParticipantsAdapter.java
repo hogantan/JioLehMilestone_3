@@ -50,7 +50,9 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
 
     @Override
     public void onBindViewHolder(@NonNull ViewParticipantsAdapter.ParticipantsHolder holder, int position) {
+        holder.setIsRecyclable(false);
         holder.user_id = list_of_uid.get(position);
+        holder.position = position;
         holder.setUpView(list_of_participants.get(position));
     }
 
@@ -59,12 +61,21 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
         return list_of_participants.size();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public void setData(List<UserProfile> users, List<String> list_of_uid, String host_uid, String activity_id) {
         this.list_of_participants = users;
         this.list_of_uid = list_of_uid;
         this.host_uid = host_uid;
         this.activity_id = activity_id;
-        notifyDataSetChanged();
     }
 
     class ParticipantsHolder extends RecyclerView.ViewHolder {
@@ -75,6 +86,7 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
         private String imageUrl;
         private String currentUserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         private Context currentContext;
+        private int position;
 
         public ParticipantsHolder(@NonNull final View itemView) {
             super(itemView);
@@ -112,8 +124,6 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
 
             //Allows host to kick participants
             if (currentUserUid.equals(host_uid)) {
-                System.out.println(currentUserUid);
-                System.out.println(user_id);
                 if (!currentUserUid.equals(user_id)) {
                     itemView.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
@@ -177,6 +187,10 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
                             datastore.collection("activities")
                                     .document(activity_id)
                                     .update("participants", updatedListParticipants);
+
+                            list_of_uid.remove(position);
+                            list_of_participants.remove(position);
+                            notifyDataSetChanged();
                         }
                     });
         }

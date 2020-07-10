@@ -1,5 +1,6 @@
 package com.example.jioleh.listings;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -63,7 +64,11 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
     private Button expand;
     private View viewLine;
     private TextView searchExpand;
+    private Query query;
+    private ArrayList<JioActivity> list_of_activities = new ArrayList<>();
     private RecyclerView results;
+    private DocumentSnapshot lastVisible;
+    private int limit = 20;
     private TextView resultsMessage;
     private ExpandableRelativeLayout expandableRelativeLayout;
     private ActivityAdapter adapter;
@@ -181,6 +186,23 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
         results.setHasFixedSize(true);
         results.setLayoutManager(new LinearLayoutManager(this));
         results.setAdapter(adapter);
+
+        results.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == adapter.getItemCount() - 1) {
+                    getMoreActivities();
+                }
+            }
+        });
     }
 
     private void initialiseSpinners() {
@@ -238,7 +260,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
         String time_input = time.getText().toString();
         String type_input = spinner_input;
 
-        Query query = datastore.collection("activities");
+        query = datastore.collection("activities");
 
         //checking each individual user input
 
@@ -270,25 +292,49 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
             query = query.whereEqualTo("event_time", time_input);
         }
 
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                ArrayList<JioActivity> list_of_activities = new ArrayList<>();
-                for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
-                    if (queryDocumentSnapshot.get("expired").equals(false) && queryDocumentSnapshot.get("cancelled").equals(false)) {
-                        list_of_activities.add(queryDocumentSnapshot.toObject(JioActivity.class));
-                    }
-                }
-                adapter.setData(list_of_activities);
-                adapter.notifyDataSetChanged();
+        query.limit(limit)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
+                            if (queryDocumentSnapshot.get("expired").equals(false) && queryDocumentSnapshot.get("cancelled").equals(false)) {
+                                list_of_activities.add(queryDocumentSnapshot.toObject(JioActivity.class));
+                            }
+                        }
+                        adapter.setData(list_of_activities);
+                        adapter.notifyDataSetChanged();
 
-                if (list_of_activities.size() == 0) {
-                    resultsMessage.setText("No matches");
-                } else {
-                    resultsMessage.setText("");
-                }
-            }
-        });
+                        if (list_of_activities.size() == 0) {
+                            resultsMessage.setText("No matches");
+                        } else {
+                            resultsMessage.setText("");
+                            lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                        }
+                    }
+                });
+    }
+
+    private void getMoreActivities() {
+        if (lastVisible != null) {
+            query.startAfter(lastVisible)
+                    .limit(limit)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<JioActivity> new_input = queryDocumentSnapshots.toObjects(JioActivity.class);
+                            list_of_activities.addAll(new_input);
+
+                            adapter.notifyDataSetChanged();
+                            if (queryDocumentSnapshots.size() - 1 < 0) {
+                                lastVisible = null;
+                            } else {
+                                lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                            }
+                        }
+                    });
+        }
     }
 
     private void openClock(final TextView textView) {

@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Auto-Login
         if (currentUser != null) {
-            Toast.makeText(this, currentUser.getUid(), Toast.LENGTH_SHORT).show();
             Intent nextActivity = new Intent(MainActivity.this, PostLoginPage.class);
             nextActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             finish();
