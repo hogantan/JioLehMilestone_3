@@ -13,8 +13,10 @@
         android:roundIcon="@mipmap/launcher_icon_logo_512_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".settings.BlockedUsersScreen"></activity>
-        <activity android:name=".location.LocationPicker" /> <!-- Google Map declarations -->
+        <activity android:name=".settings.BlockedUsersScreen"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".location.LocationPicker"
+            android:screenOrientation="portrait"/> <!-- Google Map declarations -->
         <service
             android:name=".location.NearByActivity"
             android:foregroundServiceType="location" />
@@ -22,40 +24,61 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" /> <!-- ******************************************* -->
-        <activity android:name=".location.NearByActivity" />
-        <activity android:name=".userprofile.YourOwnOtherUserView" />
-        <activity android:name=".settings.DeleteAccount" />
-        <activity android:name=".listings.SearchJioActivity" />
-        <activity android:name=".userprofile.ReportUserPage" />
-        <activity android:name=".userprofile.ReviewPage" />
-        <activity android:name=".listings.ViewParticipants" />
-        <activity android:name=".listings.ViewJioActivity" />
-        <activity android:name=".userprofile.OtherUserView" />
-        <activity android:name=".settings.EditProfilePage" />
-        <activity android:name=".post.PostingPage" />
-        <activity android:name=".chat.MessagePage" />
+        <activity android:name=".location.NearByActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".userprofile.YourOwnOtherUserView"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".settings.DeleteAccount"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".listings.SearchJioActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".userprofile.ReportUserPage"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".userprofile.ReviewPage"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".listings.ViewParticipants"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".listings.ViewJioActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".userprofile.OtherUserView"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".settings.EditProfilePage"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".post.PostingPage"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".chat.MessagePage"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".settings.SettingsPage"
             android:label="@string/title_activity_settings_page"
+            android:screenOrientation="portrait"
             android:parentActivityName=".PostLoginPage" />
-        <activity android:name=".userprofile.ProfilePage" />
+        <activity android:name=".userprofile.ProfilePage"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".login.LoginPage"
-            android:parentActivityName=".login.MainActivity" />
-        <activity android:name=".login.FirstTimeUserPage" />
+            android:parentActivityName=".login.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".login.FirstTimeUserPage"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".settings.ChangePasswordPage"
-            android:parentActivityName=".settings.SettingsPage" />
+            android:parentActivityName=".settings.SettingsPage"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".login.ForgotPasswordPage"
-            android:parentActivityName=".login.LoginPage" />
+            android:parentActivityName=".login.LoginPage"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".login.RegisterPage"
-            android:parentActivityName=".login.MainActivity" />
+            android:parentActivityName=".login.MainActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".PostLoginPage"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".login.MainActivity">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".login.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
