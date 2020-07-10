@@ -23,18 +23,17 @@ public class ChatFragmentRepository {
 
     databaseOperations databaseOperations;
 
-    private List<UserProfile> listOfUserProfiles = new ArrayList<>();
-    private List<String> list_of_uid = new ArrayList<>();
-    private List<?>[] profiles_and_uids = new List<?>[2];
+    private List<ChatChannel> listOfChatChannels = new ArrayList<>();
     private ArrayList<Task<DocumentSnapshot>> list_of_task = new ArrayList<>();
     private CollectionReference userProfilesColRef = FirebaseFirestore.getInstance().collection("users");
+    private CollectionReference chatsColRef = FirebaseFirestore.getInstance().collection("chats");
 
     public ChatFragmentRepository(databaseOperations databaseOperations) {
         this.databaseOperations = databaseOperations;
     }
 
 
-    public void getUserProfiles(String current_uid) {
+    public void getChatChannels(String current_uid) {
         userProfilesColRef
                 .document(current_uid)
                 .collection("openchats")
@@ -45,15 +44,10 @@ public class ChatFragmentRepository {
                         List<String> initialUids = new ArrayList<>();
 
                         list_of_task.clear();
-                        listOfUserProfiles.clear();
-                        list_of_uid.clear();
+                        listOfChatChannels.clear();
 
                         for(DocumentSnapshot documentSnapshot : list_of_documents) {
-                            initialUids.add(documentSnapshot.getId());
-                        }
-
-                        for(String uid : initialUids) {
-                            list_of_task.add(getUser(uid));
+                            list_of_task.add(getChannel(documentSnapshot.get("channelId").toString()));
                         }
 
                         Tasks.whenAllSuccess(list_of_task).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
@@ -62,15 +56,20 @@ public class ChatFragmentRepository {
                                 for (int i = 0; i < list_of_task.size(); i++) {
                                     DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
                                     if (snapshot.exists()) {
-                                        UserProfile userProfile = snapshot.toObject(UserProfile.class);
-                                        listOfUserProfiles.add(userProfile);
-                                        list_of_uid.add(snapshot.getId());
+                                        ChatChannel chatChannel = snapshot.toObject(ChatChannel.class);
+                                        listOfChatChannels.add(chatChannel);
                                     }
                                 }
 
-                                profiles_and_uids[0] = listOfUserProfiles;
-                                profiles_and_uids[1] = list_of_uid;
-                                databaseOperations.userProfileDataAdded(profiles_and_uids);
+                                //Arrange base on latest active chat channel
+                                Collections.sort(listOfChatChannels, new Comparator<ChatChannel>() {
+                                    @Override
+                                    public int compare(ChatChannel o1, ChatChannel o2) {
+                                        return o2.getLast_active().compareTo(o1.getLast_active());
+                                    }
+                                });
+
+                                databaseOperations.chatChannelsDataAdded(listOfChatChannels);
                             }
                         });
                     }
@@ -78,7 +77,7 @@ public class ChatFragmentRepository {
     }
 
     //Get a completable future task
-    private Task<DocumentSnapshot> getUser(String uid) {
-        return userProfilesColRef.document(uid).get();
+    private Task<DocumentSnapshot> getChannel(String chat_uid) {
+        return chatsColRef.document(chat_uid).get();
     }
 }

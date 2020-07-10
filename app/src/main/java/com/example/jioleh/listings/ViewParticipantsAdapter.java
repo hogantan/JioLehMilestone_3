@@ -29,6 +29,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipantsAdapter.ParticipantsHolder> {
     private List<UserProfile> list_of_participants;
     private List<String> list_of_uid;
@@ -68,7 +70,7 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
     class ParticipantsHolder extends RecyclerView.ViewHolder {
 
         private TextView username;
-        private ImageView displayImage;
+        private CircleImageView displayImage;
         private String user_id;
         private String imageUrl;
         private String currentUserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -103,7 +105,7 @@ public class ViewParticipantsAdapter extends RecyclerView.Adapter<ViewParticipan
                 imageUrl = userProfile.getImageUrl();
                 Picasso.get().load(imageUrl).into(displayImage);
             } else {
-                displayImage.setBackground(currentContext.getResources().getDrawable(R.drawable.default_picture));
+                displayImage.setImageDrawable(currentContext.getResources().getDrawable(R.drawable.default_picture));
             }
 
             username.setText(userProfile.getUsername());

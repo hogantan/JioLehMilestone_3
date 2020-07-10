@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface databaseOperations {
 
-    void userProfileDataAdded(List<?>[] allUserProfiles);
+    void chatChannelsDataAdded(List<ChatChannel> allChatChannels);
 
     void onError(Exception e);
 }

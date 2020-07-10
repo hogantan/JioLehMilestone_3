@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
@@ -37,7 +38,6 @@ public class LoginPage extends AppCompatActivity {
     private ProgressDialog progressBar;
 
     private FirebaseAuth database;
-    private FirebaseFirestore fireStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class LoginPage extends AppCompatActivity {
     private void checkUser(String email, String password) {
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(LoginPage.this,
-                    "Incorrect username or password", Toast.LENGTH_SHORT).show();
+                    "Please fill in all fields", Toast.LENGTH_SHORT).show();
         } else {
 
             //Setting Details of Loading Screen
@@ -101,12 +101,15 @@ public class LoginPage extends AppCompatActivity {
                     } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         progressBar.dismiss();
                         Toast.makeText(LoginPage.this,
-                                "Email address is not registered",
+                                "Unregistered email address",
                                 Toast.LENGTH_SHORT).show();
+                    } else if (task.getException() instanceof FirebaseTooManyRequestsException) {
+                        progressBar.dismiss();
+                        Toast.makeText(LoginPage.this, "Too many unsuccessful login attempts, please try again later", Toast.LENGTH_SHORT).show();
                     } else {
                         progressBar.dismiss();
                         Toast.makeText(LoginPage.this,
-                                "Email address or password is incorrect",
+                                "Incorrect password" ,
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -119,7 +122,7 @@ public class LoginPage extends AppCompatActivity {
         boolean isVerified = currentUser.isEmailVerified();
         if (isVerified) {
             Toast.makeText(LoginPage.this,
-                    "Login Successful", Toast.LENGTH_SHORT).show();
+                    "Login successful", Toast.LENGTH_SHORT).show();
             firstTimeUserCheck();
         } else {
             Toast.makeText(LoginPage.this,

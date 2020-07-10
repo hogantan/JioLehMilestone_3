@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
                 android:layout_marginLeft="28dp"
-                android:text="Host Name"
+                android:text=""
                 android:textColor="@color/baseGreen"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/vViewDisplayHost"

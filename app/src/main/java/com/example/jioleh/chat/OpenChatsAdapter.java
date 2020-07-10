@@ -52,11 +52,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.OpenChatsHolder> {
 
-    private List<UserProfile> profiles;
-    private List<String> list_of_uid;
+    private List<ChatChannel> chatChannels;
 
     public OpenChatsAdapter() {
-        this.profiles = new ArrayList<>();
+        this.chatChannels = new ArrayList<>();
     }
 
 
@@ -71,21 +70,19 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
     @Override
     public void onBindViewHolder(@NonNull OpenChatsAdapter.OpenChatsHolder holder, int position) {
         holder.setIsRecyclable(false);
-        UserProfile profile = profiles.get(position);
-        holder.user_id = list_of_uid.get(position);
-        holder.setUpView(profile);
+        ChatChannel chatChannel = chatChannels.get(position);
+        holder.setUpView(chatChannel);
     }
 
     @Override
     public int getItemCount() {
-        return profiles.size();
+        return chatChannels.size();
     }
 
     //Used to determine who the receiver or sender is depending on current user
 
-    public void setData(List<UserProfile> userProfiles, List<String> list_of_uid) {
-        this.profiles = userProfiles;
-        this.list_of_uid = list_of_uid;
+    public void setData(List<ChatChannel> listOfChatChannels) {
+        this.chatChannels = listOfChatChannels;
     }
 
     class OpenChatsHolder extends RecyclerView.ViewHolder {
@@ -126,78 +123,83 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
         }
 
         //Setting the details in the holder
-        void setUpView(UserProfile userProfile) {
-            if (userProfile != null) {
-                if (userProfile.getImageUrl()!=null && !userProfile.getImageUrl().equals("")) {
-                    imageUrl = userProfile.getImageUrl();
-                    Picasso.get().load(imageUrl).into(displayImage);
-                } else {
-                    displayImage.setImageDrawable(currentContext.getResources().getDrawable(R.drawable.default_picture));
-                }
-                username.setText(userProfile.getUsername());
+        void setUpView(ChatChannel chatChannel) {
+            String currentUserUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            String senderUserUid;
+            String user1_uid = chatChannel.getUser1_uid();
+            String user2_uid = chatChannel.getUser2_uid();
 
-                //check if this user has blocked the other users
-                FirebaseFirestore.getInstance()
-                        .collection("users")
-                        .document(currentUser.getUid())
-                        .collection("blocked users")
-                        .document(user_id)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    //means the user is blocked
-                                    DocumentSnapshot documentSnapshot = task.getResult();
-                                    if (documentSnapshot.exists()) {
-                                        //user is blocked
-                                        last_msg.setText("This user has been blocked by you");
-                                    } else {
-                                        getLastMessage();
-                                    }
-                                }
-                            }
-                        });
+            if (currentUserUid.equals(user1_uid)) {
+                senderUserUid = user2_uid;
+                user_id = user2_uid;
+            } else {
+                senderUserUid = user1_uid;
+                user_id = user1_uid;
             }
+
+            FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(senderUserUid)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(documentSnapshot.exists()) {
+                                UserProfile userProfile = documentSnapshot.toObject(UserProfile.class);
+
+                                if (userProfile.getImageUrl()!=null && !userProfile.getImageUrl().equals("")) {
+                                    imageUrl = userProfile.getImageUrl();
+                                    Picasso.get().load(imageUrl).into(displayImage);
+                                } else {
+                                    displayImage.setImageDrawable(currentContext.getResources().getDrawable(R.drawable.default_picture));
+                                }
+
+                                username.setText(userProfile.getUsername());
+
+                                //check if this user has blocked the other users
+                                FirebaseFirestore.getInstance()
+                                        .collection("users")
+                                        .document(currentUserUid)
+                                        .collection("blocked users")
+                                        .document(user_id)
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                if (documentSnapshot.exists()) {
+                                                    last_msg.setText("This user has been blocked by you");
+                                                } else {
+                                                    getLastMessage(chatChannel.getChatChannelId());
+                                                }
+                                            }
+                                        });
+                            }
+                        }
+                    });
         }
 
-        private void getLastMessage() {
+        private void getLastMessage(String chatChannelId) {
             //Getting last message to display
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
             FirebaseFirestore
                     .getInstance()
-                    .collection("users")
-                    .document(currentUser.getUid())
-                    .collection("openchats")
-                    .document(user_id)
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    .collection("chats")
+                    .document(chatChannelId)
+                    .collection("messages")
+                    .orderBy("dateSent", Query.Direction.DESCENDING)
+                    .limit(1)
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            String chatId = documentSnapshot.get("channelId").toString();
-                            FirebaseFirestore
-                                    .getInstance()
-                                    .collection("chats")
-                                    .document(chatId)
-                                    .collection("messages")
-                                    .orderBy("dateSent", Query.Direction.DESCENDING)
-                                    .limit(1)
-                                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                                            if (queryDocumentSnapshots.size() > 0) {
-                                                last_msg.setText(queryDocumentSnapshots.getDocuments().get(0).get("text").toString());
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                            if (queryDocumentSnapshots.size() > 0) {
+                                last_msg.setText(queryDocumentSnapshots.getDocuments().get(0).get("text").toString());
 
-                                                if (!queryDocumentSnapshots.getDocuments().get(0).get("sender").toString().equals(currentUser.getUid())) {
-                                                    last_msg.setTextColor(last_msg.getContext().getResources().getColor(R.color.baseWhite));
-                                                }
-
-                                            }
-                                        }
-                                    });
+                                if (!queryDocumentSnapshots.getDocuments().get(0).get("sender").toString().equals(currentUser.getUid())) {
+                                    last_msg.setTextColor(last_msg.getContext().getResources().getColor(R.color.baseWhite));
+                                }
+                            }
                         }
                     });
         }
@@ -255,7 +257,7 @@ public class OpenChatsAdapter extends RecyclerView.Adapter<OpenChatsAdapter.Open
                                                         input.put("shared", "yes");
                                                         datastore.collection("chats")
                                                                 .document(chatId)
-                                                                .set(input);
+                                                                .set(input, SetOptions.merge());
                                                     }
                                                 }
                                             });

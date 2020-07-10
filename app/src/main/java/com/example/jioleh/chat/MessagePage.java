@@ -33,10 +33,12 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -175,7 +177,7 @@ public class MessagePage extends AppCompatActivity {
                                     MessageChat message = new MessageChat(sender,
                                             receiver, input, documentSnapshot.get("channelId").toString());
 
-                                    sendMessage(message);
+                                    sendMessage(message,senderChannel.toString());
                                 }
                                 //if both users DO NOT share the same chat channel
                                 else {
@@ -185,8 +187,8 @@ public class MessagePage extends AppCompatActivity {
                                     MessageChat message2 = new MessageChat(sender,
                                             receiver, input, senderChannel.toString());
 
-                                    sendMessage(message1);
-                                    sendMessage(message2);
+                                    sendMessage(message1, receiverChannel.toString());
+                                    sendMessage(message2, senderChannel.toString());
                                 }
                             }//if sender does not have an open chat channel with the receiver but the receiver has an open chat channel with sender
                             else if (document.get("channelId") == null && documentSnapshot.exists()) {
@@ -197,8 +199,8 @@ public class MessagePage extends AppCompatActivity {
                                 MessageChat message2 = new MessageChat(sender,
                                         receiver, input, chatChannelID);
 
-                                sendMessage(message1);
-                                sendMessage(message2);
+                                sendMessage(message1, receiverChannel.toString());
+                                sendMessage(message2, chatChannelID);
                             }
                             //if receiver does not have an open chat channel with the sender but the sender has an open chat channel with receiver
                             else if (document.get("channelId") != null && !documentSnapshot.exists()) {
@@ -209,8 +211,8 @@ public class MessagePage extends AppCompatActivity {
                                 MessageChat message2 = new MessageChat(sender,
                                         receiver, input, senderChannel.toString());
 
-                                sendMessage(message1);
-                                sendMessage(message2);
+                                sendMessage(message1, chatChannelID);
+                                sendMessage(message2, sender.toString());
                             }
                             //if both users DO NOT have a chat channel between each other
                             else {
@@ -218,7 +220,7 @@ public class MessagePage extends AppCompatActivity {
                                 MessageChat message = new MessageChat(sender,
                                         receiver, input, chatChannelID);
 
-                                sendMessage(message);
+                                sendMessage(message, chatChannelID);
                             }
                             getMessages(); //to display first message
                         }
@@ -232,7 +234,7 @@ public class MessagePage extends AppCompatActivity {
     }
 
     //Goes into specific chat channel and adds the message in
-    private void sendMessage(MessageChat message) {
+    private void sendMessage(MessageChat message, String channelId) {
         datastore.collection("chats")
                 .document(message.getChannelID())
                 .collection("messages")
@@ -241,6 +243,9 @@ public class MessagePage extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
                         if (task.isSuccessful()) {
+                            datastore.collection("chats")
+                                    .document(channelId)
+                                    .update("last_active", Calendar.getInstance().getTime());
                         } else {
                             Toast.makeText(MessagePage.this,
                                     "Message sent failed", Toast.LENGTH_SHORT).show();
@@ -253,10 +258,16 @@ public class MessagePage extends AppCompatActivity {
     private String openChatChannel(String sender, String receiver, int type) {
         //Creating a new chat channel UID
         DocumentReference ref = datastore.collection("chats").document();
+        String ref_id = ref.getId();
 
         //Creating a new field for users to store channel id
         HashMap<String, String> input_user_firestore = new HashMap<>();
-        input_user_firestore.put("channelId", ref.getId());
+        input_user_firestore.put("channelId", ref_id);
+
+        ChatChannel chatChannel = new ChatChannel(sender, receiver, Calendar.getInstance().getTime(), ref_id);
+        datastore.collection("chats")
+                .document(ref_id)
+                .set(chatChannel);
 
         if (type == SINGLE) {
             //Open channel on sender storage
@@ -266,12 +277,12 @@ public class MessagePage extends AppCompatActivity {
                     .document(receiver)
                     .set(input_user_firestore);
 
-            //to indicate chat channel only own by one user ti facilitate delete
+            //to indicate chat channel only own by one user t0 facilitate delete
             HashMap<String, String> input = new HashMap<>();
             input.put("single", "yes");
             datastore.collection("chats")
-                    .document(ref.getId())
-                    .set(input);
+                    .document(ref_id)
+                    .set(input, SetOptions.merge());
         } else {
             //Open channel on sender storage
             datastore.collection("users")
@@ -285,10 +296,10 @@ public class MessagePage extends AppCompatActivity {
                     .document(receiver)
                     .collection("openchats")
                     .document(sender)
-                    .set(input_user_firestore);
+                    .set(input_user_firestore, SetOptions.merge());
         }
 
-        return ref.getId();
+        return ref_id;
     }
 
     //Goes to the specific chat channel and retrieves all messages

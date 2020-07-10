@@ -531,6 +531,8 @@ public class ViewJioActivity extends AppCompatActivity {
 
                         if (!host_imageUrl.equals("") && host_imageUrl!=null) {
                             Picasso.get().load(host_imageUrl).into(host_image);
+                        } else {
+                            host_image.setImageDrawable(getResources().getDrawable(R.drawable.default_picture));
                         }
 
                         host_name.setText(current_user.getUsername());
