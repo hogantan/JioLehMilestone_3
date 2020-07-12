@@ -2,7 +2,6 @@ package com.example.jioleh.location;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -14,12 +13,14 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.jioleh.R;
 import com.example.jioleh.listings.JioActivity;
 import com.example.jioleh.listings.ViewJioActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
@@ -29,6 +30,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,24 +50,20 @@ public class NearByActivity extends AppCompatActivity
         GoogleMap.OnInfoWindowClickListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private Toolbar toolbar;
-
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final double QUERY_NEARBY_RADIUS = 1.0;
-    private static final int MAP_ZOOM_STANDARD =15;
+    private static final int MAP_ZOOM_STANDARD = 15;
+    private static final LatLng DEFAULT_LOCATION = new LatLng(1.294792, 103.773658);
+    private static final String TAG = "Location_Error";
 
     private boolean permissionDenied = false;
 
     private GoogleMap map;
-    private SupportMapFragment mapFragment;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_near_by);
-        initialiseToolbar();
-
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -72,16 +71,6 @@ public class NearByActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
     }
 
-    private void initialiseToolbar() {
-        toolbar = findViewById(R.id.tbTopBar);
-        toolbar.setTitle("");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -89,87 +78,7 @@ public class NearByActivity extends AppCompatActivity
         map.setOnMyLocationButtonClickListener(this);
         map.setOnMyLocationClickListener(this);
         map.setOnInfoWindowClickListener(this);
-        enableMyLocation();
-    }
-
-    private void enableMyLocation() {
-
-        //this is to get current location
-        LocationManager manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        Criteria mCriteria = new Criteria();
-        String bestProvider = String.valueOf(manager.getBestProvider(mCriteria, true));
-
-        // check for permission
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            if (map != null) {
-                map.setMyLocationEnabled(true);
-
-                //to get location and show when map opens
-                Location mLocation = manager.getLastKnownLocation(bestProvider);
-                final double currentLatitude = mLocation.getLatitude();
-                final double currentLongitude = mLocation.getLongitude();
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLatitude, currentLongitude), MAP_ZOOM_STANDARD));
-
-                //GeoFirestore
-                CollectionReference colRef = FirebaseFirestore.getInstance().collection("activities");
-                GeoQuery geoQuery = new GeoFirestore(colRef)
-                        .queryAtLocation(new GeoPoint(currentLatitude,currentLongitude), QUERY_NEARBY_RADIUS);
-
-                //adding info window adapter to map
-                map.setInfoWindowAdapter(new CustomInfoWindowAdapter(this));
-
-                geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
-                    @Override
-                    public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-                        JioActivity jio = documentSnapshot.toObject(JioActivity.class);
-                        if (jio.isCancelled() || jio.isConfirmed() || jio.isExpired()) {
-                            //do nth
-                        } else {
-                            LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                            MarkerOptions options = new MarkerOptions()
-                                    .position(latLng);
-
-                            map.addMarker(options)
-                                    .setTag(jio);
-                        }
-                    }
-
-                    @Override
-                    public void onDocumentExited(DocumentSnapshot documentSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-
-                    }
-
-                    @Override
-                    public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-
-                    }
-
-                    @Override
-                    public void onGeoQueryReady() {
-
-                    }
-
-                    @Override
-                    public void onGeoQueryError(Exception e) {
-
-                    }
-                });
-                }
-
-
-
-        } else {
-            // Permission to access the location is missing. Show rationale and request permission
-            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
-        }
-
+        getDeviceLocation();
     }
 
     //current location button animates map to user's location
@@ -192,7 +101,7 @@ public class NearByActivity extends AppCompatActivity
 
         if (PermissionUtils.isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
             // Enable the my location layer if the permission has been granted.
-            enableMyLocation();
+            getDeviceLocation();
         } else {
             // Permission was denied. Display an error message
             // Display the missing permission error dialog when the fragments resume.
@@ -224,6 +133,106 @@ public class NearByActivity extends AppCompatActivity
         Intent nextActivity = new Intent(NearByActivity.this, ViewJioActivity.class);
         nextActivity.putExtra("activity_id", jio.getActivityId());
         startActivity(nextActivity);
+    }
+
+    private void getDeviceLocation() {
+        /*
+         * Get the best and most recent location of the device, which may be null in rare
+         * cases when a location is not available.
+         */
+        try {
+            // Construct a FusedLocationProviderClient.
+            FusedLocationProviderClient fusedLocationProviderClient =
+                    LocationServices.getFusedLocationProviderClient(this);
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+
+                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+
+                            Location lastKnownLocation = task.getResult();
+                            if (lastKnownLocation != null) {
+                                map.setMyLocationEnabled(true);
+                                // Set the map's camera position to the current location of the device.
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                        new LatLng(lastKnownLocation.getLatitude(),
+                                                lastKnownLocation.getLongitude()), MAP_ZOOM_STANDARD));
+
+                                final double currentLatitude = lastKnownLocation.getLatitude();
+                                final double currentLongitude = lastKnownLocation.getLongitude();
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLatitude, currentLongitude), MAP_ZOOM_STANDARD));
+
+                                //GeoFirestore
+                                CollectionReference colRef = FirebaseFirestore.getInstance().collection("activities");
+                                GeoQuery geoQuery = new GeoFirestore(colRef)
+                                        .queryAtLocation(new GeoPoint(currentLatitude, currentLongitude), QUERY_NEARBY_RADIUS);
+
+                                //adding info window adapter to map
+                                map.setInfoWindowAdapter(new CustomInfoWindowAdapter(NearByActivity.this));
+                                geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+                                    @Override
+                                    public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                                        JioActivity jio = documentSnapshot.toObject(JioActivity.class);
+                                        if (jio.isCancelled() || jio.isConfirmed() || jio.isExpired()) {
+                                            //do nth
+                                        } else {
+                                            LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                                            MarkerOptions options = new MarkerOptions()
+                                                    .position(latLng);
+
+                                            map.addMarker(options)
+                                                    .setTag(jio);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onDocumentExited(DocumentSnapshot documentSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+                                    }
+
+                                    @Override
+                                    public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+                                    }
+
+                                    @Override
+                                    public void onGeoQueryReady() {
+
+                                    }
+
+                                    @Override
+                                    public void onGeoQueryError(Exception e) {
+
+                                    }
+                                });
+                            }
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.e(TAG, "Exception: %s", task.getException());
+                            map.moveCamera(CameraUpdateFactory
+                                    .newLatLngZoom(DEFAULT_LOCATION, MAP_ZOOM_STANDARD));
+                            map.getUiSettings().setMyLocationButtonEnabled(false);
+                        }
+                    }
+                });
+            } else {
+                // Permission to access the location is missing. Show rationale and request permission
+                PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+                        Manifest.permission.ACCESS_FINE_LOCATION, true);
+
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage(), e);
+        }
     }
 }
 
