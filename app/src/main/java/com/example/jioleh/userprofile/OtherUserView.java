@@ -74,7 +74,6 @@ public class OtherUserView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_user_view);
-        //initialise();
 
         final Intent intent = getIntent();
         //the intent that opens this must put extra as "user_id" the user's id
@@ -195,6 +194,7 @@ public class OtherUserView extends AppCompatActivity {
         String currentViewerUid = FirebaseAuth.getInstance().getUid();
         HashMap<String, Object> blockedUser = new HashMap<>();
         blockedUser.put("username", username);
+        blockedUser.put("UImg",imageUrl);
 
         CollectionReference colRef = FirebaseFirestore.getInstance()
                 .collection("users")
@@ -260,20 +260,33 @@ public class OtherUserView extends AppCompatActivity {
                             //this mean viewer is blocked
                             if (documentSnapshot.exists()) {
                                 setContentView(R.layout.blank_layout_black);
+                                alertBlockedDialog();
+                            } else {
+                                checkIfViewerBlockCurrentProfile(viewerUID);
+                            }
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
-                                builder.setTitle("Error");
-                                builder.setMessage("The user cannot be found.");
-                                builder.setCancelable(false);
 
-                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        finish();
-                                    }
-                                });
-                                builder.show();
+                        }
+                    }
+                });
+    }
+
+    private void checkIfViewerBlockCurrentProfile(String viewerUID) {
+
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        rootRef.collection("users")
+                .document(viewerUID)
+                .collection("blocked users")
+                .document(profileUID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            //this mean viewer has blocked the current profile
+                            if (documentSnapshot.exists()) {
+                                alertBlockedDialog();
                             } else {
                                 setContentView(R.layout.activity_other_user_view);
                                 initialise();
@@ -315,10 +328,10 @@ public class OtherUserView extends AppCompatActivity {
                                 });
                             }
 
-
                         }
                     }
                 });
+
     }
 
     private void alertDeleteDialog() {
@@ -337,6 +350,22 @@ public class OtherUserView extends AppCompatActivity {
         AlertDialog dialog = builder.create();
 
         dialog.show();
+    }
+
+    private void alertBlockedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
+        builder.setTitle("Error");
+        builder.setMessage("The user cannot be found.");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        builder.show();
     }
 }
 

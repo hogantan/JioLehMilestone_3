@@ -19,13 +19,15 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BlockedUsersScreen extends AppCompatActivity {
 
     private LinearLayoutManager layoutManager;
     private BlockedUsersAdapter mAdapter;
-    private List<UserProfile> myDataset;
+    private List<Map<String, Object>> myDataset;
     private List<String> myUserId;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
@@ -59,9 +61,8 @@ public class BlockedUsersScreen extends AppCompatActivity {
                         myDataset = new ArrayList<>();
                         myUserId = new ArrayList<>();
                         for(DocumentSnapshot documentSnapshot:queryDocumentSnapshots.getDocuments()) {
-
                             if(documentSnapshot.exists()) {
-                                UserProfile user = documentSnapshot.toObject(UserProfile.class);
+                                Map<String, Object> user = documentSnapshot.getData();
                                 myDataset.add(user);
                                 myUserId.add(documentSnapshot.getId());
                             }
@@ -76,7 +77,7 @@ public class BlockedUsersScreen extends AppCompatActivity {
 
     private void initialiseTb() {
         toolbar = findViewById(R.id.blocked_users_top_bar);
-        toolbar.setTitle("Settings");
+        toolbar.setTitle("Blocked Users");
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

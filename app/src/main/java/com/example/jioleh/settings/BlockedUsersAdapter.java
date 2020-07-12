@@ -17,17 +17,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BlockedUsersAdapter extends RecyclerView.Adapter<BlockedUsersAdapter.BlockedUsersHolder> {
-    private List<UserProfile> listOfBlockedUsers;
+    private List<Map<String, Object>> listOfBlockedUsers;
     private List<String> lstOfUid;
 
     public BlockedUsersAdapter() {
         this.listOfBlockedUsers = new ArrayList<>();
     }
 
-    public void setData(List<UserProfile> listOfBlockedUsers, List<String> lstOfUid) {
+    public void setData(List<Map<String, Object>> listOfBlockedUsers, List<String> lstOfUid) {
         this.listOfBlockedUsers = listOfBlockedUsers;
         this.lstOfUid = lstOfUid;
     }
@@ -41,12 +43,12 @@ public class BlockedUsersAdapter extends RecyclerView.Adapter<BlockedUsersAdapte
 
     @Override
     public void onBindViewHolder(@NonNull BlockedUsersHolder holder, int position) {
-        UserProfile blockedUser = listOfBlockedUsers.get(position);
+        Map<String, Object> blockedUser = listOfBlockedUsers.get(position);
 
-        holder.tv_username.setText(blockedUser.getUsername());
-        String UImg = blockedUser.getImageUrl();
+        holder.tv_username.setText((String) blockedUser.get("username"));
+        String UImg = (String) blockedUser.get("UImg");
 
-        if (UImg != null&& !UImg.equals("") ) {
+        if (UImg != null && !UImg.equals("") ) {
             Picasso.get().load(UImg).into(holder.iv_user_profile_pic);
         } else {
             holder.iv_user_profile_pic.setImageDrawable(holder.iv_user_profile_pic.getContext()
