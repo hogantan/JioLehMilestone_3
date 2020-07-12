@@ -44,14 +44,27 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
 
     @Override
     public void onBindViewHolder(@NonNull ActivityAdapter.ActivityHolder holder, int position) {
+        holder.setIsRecyclable(false);
+
         JioActivity activity = activities.get(position);
         holder.activity_id = activity.getActivityId();
+        holder.host_uid = activity.getHost_uid();
         holder.setUpView(activity);
     }
 
     @Override
     public int getItemCount() {
         return activities.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
 
@@ -79,6 +92,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
         private TextView location;
         private TextView currentParticipants;
         private String activity_id;
+        private String host_uid;
 
         //Initialising the holder
         ActivityHolder(@NonNull final View itemView) {
@@ -95,6 +109,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
                 public void onClick(View v) {
                     Intent nextActivity = new Intent(itemView.getContext(), ViewJioActivity.class);
                     nextActivity.putExtra("activity_id", activity_id);
+                    nextActivity.putExtra("host_uid", host_uid);
                     itemView.getContext().startActivity(nextActivity);
                 }
             });

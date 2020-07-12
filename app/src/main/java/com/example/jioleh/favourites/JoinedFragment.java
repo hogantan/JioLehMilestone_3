@@ -57,7 +57,6 @@ public class JoinedFragment extends Fragment {
             public void onChanged(List<JioActivity> activities) {
                 adapter.setData(activities, false, true);
                 adapter.notifyDataSetChanged();
-                System.out.println("adapter size = " + adapter.getItemCount());
 
                 //Display empty text message
                 if(adapter.getItemCount() == 0) {

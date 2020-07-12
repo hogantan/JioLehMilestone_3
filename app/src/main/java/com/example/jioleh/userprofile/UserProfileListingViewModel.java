@@ -26,7 +26,7 @@ public class UserProfileListingViewModel extends ViewModel implements databaseOp
     }
 
     public void refreshActivities() {
-        this.repository.getActivities(current_uid);
+        this.repository.refreshActivities(current_uid);
     }
 
     @Override

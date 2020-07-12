@@ -25,7 +25,7 @@ public class ChatFragmentViewModel extends ViewModel implements databaseOperatio
     }
 
     public void refreshProfiles() {
-        repository.getChatChannels(current_uid);
+        repository.refreshChatChannels(current_uid);
     }
 
     @Override

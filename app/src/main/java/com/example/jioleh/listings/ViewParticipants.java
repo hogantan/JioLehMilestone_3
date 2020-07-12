@@ -48,6 +48,7 @@ public class ViewParticipants extends AppCompatActivity {
     //Used to manage locating of participants in datastore
     private ArrayList<UserProfile> list_of_participants = new ArrayList<>();
     private ArrayList<Task<DocumentSnapshot>> list_of_tasks = new ArrayList<>();
+    private  ArrayList<String> list_of_uid = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,30 +67,39 @@ public class ViewParticipants extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        JioActivity currentActivity = documentSnapshot.toObject(JioActivity.class);
+                        if (documentSnapshot.exists()) {
+                            JioActivity currentActivity = documentSnapshot.toObject(JioActivity.class);
 
-                        final ArrayList<String> list_of_uid = currentActivity.getParticipants();
+                            list_of_participants.clear();
+                            list_of_tasks.clear();
+                            list_of_uid.clear();
 
-                        //adding completable futures into list of tasks
-                        for (String uid : list_of_uid) {
-                            list_of_tasks.add(getUserProfile(uid));
-                        }
+                            list_of_uid = currentActivity.getParticipants();
 
-                        //Waiting for completable futures to finish
-                        Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
-                            @Override
-                            public void onSuccess(List<? super DocumentSnapshot> snapShots) {
-                                for (int i = 0 ; i < list_of_tasks.size() ; i++) {
-                                    DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
-                                    UserProfile userProfile = snapshot.toObject(UserProfile.class);
-                                    list_of_participants.add(userProfile);
-                                }
-                                adapter.setData(list_of_participants, list_of_uid, host_id, activity_id);
+                            //adding completable futures into list of tasks
+                            for (String uid : list_of_uid) {
+                                list_of_tasks.add(getUserProfile(uid));
                             }
-                        });
+
+                            System.out.println(list_of_tasks.size());
+                            //Waiting for completable futures to finish
+                            Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
+                                @Override
+                                public void onSuccess(List<? super DocumentSnapshot> snapShots) {
+                                    for (int i = 0; i < list_of_tasks.size(); i++) {
+                                        DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
+                                        UserProfile userProfile = snapshot.toObject(UserProfile.class);
+                                        list_of_participants.add(userProfile);
+                                    }
+                                    adapter.setData(list_of_participants, list_of_uid, host_id, activity_id);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
                     }
                 });
     }
+
 
     private Task<DocumentSnapshot> getUserProfile(String uid) {
         return datastore.collection("users")

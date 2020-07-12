@@ -140,7 +140,6 @@
                 android:layout_height="80dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
-                android:src="@drawable/default_picture"
                 app:layout_constraintBottom_toBottomOf="@+id/vViewDisplayHost"
                 app:layout_constraintStart_toStartOf="@+id/vViewDisplayHost"
                 app:layout_constraintTop_toTopOf="@+id/vViewDisplayHost" />

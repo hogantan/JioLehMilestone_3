@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
+import com.example.jioleh.login.LoginPage;
 import com.example.jioleh.userprofile.OtherUserView;
 import com.example.jioleh.userprofile.UserProfile;
 import com.example.jioleh.userprofile.YourOwnOtherUserView;
@@ -103,9 +105,64 @@ public class ViewJioActivity extends AppCompatActivity {
     private int current_participants;
     private ArrayList<String> list_of_participants;
 
+    //Progress Bar
+    private ProgressDialog progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.progressBar = new ProgressDialog(ViewJioActivity.this);
+
+        intent = getIntent();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        datastore = FirebaseFirestore.getInstance();
+        host_uid = intent.getStringExtra("host_uid");
+        activity_id = intent.getStringExtra("activity_id");
+
+        //Progress Bar Settings
+        progressBar.setMessage("Retrieving Information...");
+        progressBar.setCanceledOnTouchOutside(false);
+        progressBar.show();
+
+        //Checking if post is deleted
+        datastore.collection(("activities"))
+                .document(activity_id)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            checkIsBlocked();
+                        } else {
+                            progressBar.dismiss();
+                            alertDialogDeleted();
+                        }
+                    }
+                });
+    }
+
+    private void checkIsBlocked() {
+        //Checking if blocked by host
+        datastore.collection("users")
+                .document(host_uid)
+                .collection("blocked users")
+                .document(currentUser.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            progressBar.dismiss();
+                            alertDialogBlocked();
+                        } else {
+                            progressBar.dismiss();
+                            setUpView();
+                        }
+                    }
+                });
+    }
+
+    private void setUpView() {
         setContentView(R.layout.activity_view_jio);
         initialise();
         initialiseToolbar();
@@ -117,29 +174,43 @@ public class ViewJioActivity extends AppCompatActivity {
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Check if blocked
+                datastore.collection("users")
+                        .document(host_uid)
+                        .collection("blocked users")
+                        .document(currentUser.getUid())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    alertDialogBlocked();
+                                } else {
+                                    //Fourth line of check when user clicks the join button
+                                    if (checkIsExpired(currentActivity)) {
+                                        return;
+                                    }
 
-                //Fourth line of check when user clicks the join button
-                if (checkIsExpired(currentActivity)) {
-                    return;
-                }
+                                    if (checkIsCancelled(currentActivity)) {
+                                        return;
+                                    }
 
-                if (checkIsCancelled(currentActivity)) {
-                    return;
-                }
+                                    if (checkIsConfirmed(currentActivity)) {
+                                        return;
+                                    }
 
-                if (checkIsConfirmed(currentActivity)) {
-                    return;
-                }
-
-                if (join.getText().toString().equals("Leave")) {
-                    deleteActivity(JOIN);
-                    setButtonVisuals(POSITIVE, join, JOIN);
-                    updateParticipants(activity_id, REMOVE);
-                } else {
-                    setActivity(JOIN);
-                    setButtonVisuals(NEGATIVE, join, JOIN);
-                    updateParticipants(activity_id, ADD);
-                }
+                                    if (join.getText().toString().equals("Leave")) {
+                                        deleteActivity(JOIN);
+                                        setButtonVisuals(POSITIVE, join, JOIN);
+                                        updateParticipants(activity_id, REMOVE);
+                                    } else {
+                                        setActivity(JOIN);
+                                        setButtonVisuals(NEGATIVE, join, JOIN);
+                                        updateParticipants(activity_id, ADD);
+                                    }
+                                }
+                            }
+                        });
             }
         });
 
@@ -217,12 +288,7 @@ public class ViewJioActivity extends AppCompatActivity {
         like = findViewById(R.id.btnTopBarLike);
         buttonFlag = false;
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        datastore = FirebaseFirestore.getInstance();
-
-        //Fetching activity id from activity holder from the activity adapter class
-        intent = getIntent();
-        activity_id = intent.getStringExtra("activity_id");
+        //New updates tracker
         datastore.collection("activities")
                 .document(activity_id)
                 .get()
@@ -619,6 +685,42 @@ public class ViewJioActivity extends AppCompatActivity {
         });
 
         dialog.setView(view);
+        dialog.show();
+    }
+
+    private void alertDialogBlocked() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ViewJioActivity.this);
+
+        builder.setTitle("Oops!");
+        builder.setMessage("The activity cannot be found.");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    private void alertDialogDeleted() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ViewJioActivity.this);
+
+        builder.setTitle("Oops!");
+        builder.setMessage("The activity has been removed.");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
         dialog.show();
     }
 }

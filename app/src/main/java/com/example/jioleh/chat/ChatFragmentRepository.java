@@ -41,7 +41,49 @@ public class ChatFragmentRepository {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
-                        List<String> initialUids = new ArrayList<>();
+
+                        list_of_task.clear();
+                        listOfChatChannels.clear();
+
+                        for(DocumentSnapshot documentSnapshot : list_of_documents) {
+                            list_of_task.add(getChannel(documentSnapshot.get("channelId").toString()));
+                        }
+
+                        Tasks.whenAllSuccess(list_of_task).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
+                            @Override
+                            public void onSuccess(List<? super DocumentSnapshot> snapShots) {
+                                for (int i = 0; i < list_of_task.size(); i++) {
+                                    DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
+                                    if (snapshot.exists()) {
+                                        ChatChannel chatChannel = snapshot.toObject(ChatChannel.class);
+                                        listOfChatChannels.add(chatChannel);
+                                    }
+                                }
+
+                                //Arrange base on latest active chat channel
+                                Collections.sort(listOfChatChannels, new Comparator<ChatChannel>() {
+                                    @Override
+                                    public int compare(ChatChannel o1, ChatChannel o2) {
+                                        return o2.getLast_active().compareTo(o1.getLast_active());
+                                    }
+                                });
+
+                                databaseOperations.chatChannelsDataAdded(listOfChatChannels);
+                            }
+                        });
+                    }
+                });
+    }
+
+    public void refreshChatChannels(String current_uid) {
+        userProfilesColRef
+                .document(current_uid)
+                .collection("openchats")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> list_of_documents = queryDocumentSnapshots.getDocuments();
 
                         list_of_task.clear();
                         listOfChatChannels.clear();

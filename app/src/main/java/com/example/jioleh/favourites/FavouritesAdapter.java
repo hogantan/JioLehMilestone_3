@@ -72,6 +72,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
         JioActivity activity = activities.get(position);
         if (activity != null) {
             holder.activity_id = activity.getActivityId();
+            holder.host_uid = activity.getHost_uid();
             holder.setUpView(activity);
         }
     }
@@ -111,6 +112,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
         private TextView location;
         private TextView update;
         private String activity_id;
+        private String host_uid;
         private Context currentContext;
 
         //Initialising the holder
@@ -141,6 +143,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
                                     if (documentSnapshot.exists()) {
                                         Intent nextActivity = new Intent(itemView.getContext(), ViewJioActivity.class);
                                         nextActivity.putExtra("activity_id", activity_id);
+                                        nextActivity.putExtra("host_uid", host_uid);
                                         itemView.getContext().startActivity(nextActivity);
                                     } else {
                                         alertDialogDoesNotExist();

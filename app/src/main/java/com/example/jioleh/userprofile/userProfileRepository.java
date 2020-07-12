@@ -104,6 +104,48 @@ public class userProfileRepository{
                 });
     }
 
+    public void refreshActivities(String current_uid) {
+        firebaseFirestore.collection("users")
+                .document(current_uid)
+                .collection("activities_listed")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        list_of_tasks.clear();
+                        list_of_activities.clear();
+
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            if (documentSnapshot.exists()) {
+                                list_of_tasks.add(getActivity(documentSnapshot.getId()));
+                            }
+                        }
+
+                        Tasks.whenAllSuccess(list_of_tasks).addOnSuccessListener(new OnSuccessListener<List<? super DocumentSnapshot>>() {
+                            @Override
+                            public void onSuccess(List<? super DocumentSnapshot> snapShots) {
+                                for (int i = 0; i < list_of_tasks.size(); i++) {
+                                    DocumentSnapshot snapshot = (DocumentSnapshot) snapShots.get(i);
+                                    JioActivity jioActivity = snapshot.toObject(JioActivity.class);
+                                    if(jioActivity!=null) {
+                                        list_of_activities.add(jioActivity);
+                                    }
+                                }
+
+                                //Arranges activities based on actual event date and time to show user the most upcoming events
+                                Collections.sort(list_of_activities, new Comparator<JioActivity>() {
+                                    @Override
+                                    public int compare(JioActivity o1, JioActivity o2) {
+                                        return o1.getEvent_timestamp().compareTo(o2.getEvent_timestamp());
+                                    }
+                                });
+                                databaseOperations.activitiesDataAdded(list_of_activities);
+                            }
+                        });
+                    }
+                });
+    }
+
     private Task<DocumentSnapshot> getActivity(String id) {
         return firebaseFirestore.collection("activities").document(id).get();
     }

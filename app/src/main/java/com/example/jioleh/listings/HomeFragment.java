@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -85,6 +86,23 @@ public class HomeFragment extends Fragment {
         activity_list.setHasFixedSize(true);
         activity_list.setLayoutManager(new LinearLayoutManager(this.getContext()));
         activity_list.setAdapter(adapter);
+
+        activity_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == adapter.getItemCount() - 1) {
+                    viewModel.getMoreActivities();
+                }
+            }
+        });
     }
 
     @Override
@@ -113,6 +131,9 @@ public class HomeFragment extends Fragment {
             public void onRefresh() {
                 linesOfChecks.checkActivityExpiry();
                 linesOfChecks.checkActivityCancelledConfirmed();
+
+                viewModel.refreshActivities();
+                adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
