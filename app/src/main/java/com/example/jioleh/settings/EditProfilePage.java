@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -65,6 +66,9 @@ public class EditProfilePage extends AppCompatActivity implements AdapterView.On
     //Firebase Storage
     private StorageReference storageReference;
 
+    //boolean check
+    private boolean wantToRemoveProfilePic = false;
+
 
     StorageTask uploadTask;
 
@@ -80,7 +84,7 @@ public class EditProfilePage extends AppCompatActivity implements AdapterView.On
         ic_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               openFileChooser();
+                profileImageDialog().show();
             }
         });
 
@@ -91,6 +95,27 @@ public class EditProfilePage extends AppCompatActivity implements AdapterView.On
             }
         });
     }
+
+    private Dialog profileImageDialog() {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Edit Profile Image")
+                    .setItems(new String[]{"Replace with another Image", "Remove Current Image"}, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // The 'which' argument contains the index position
+                            // of the selected item
+
+                            if (which == 0) {
+                                openFileChooser();
+                            } else if (which == 1) {
+                                iv_ImageView.setImageResource(R.drawable.default_picture);
+                                mImageUri = null;
+                                wantToRemoveProfilePic = true;
+                            }
+                        }
+                    });
+            return builder.create();
+        }
 
 
     private void initialise() {
@@ -143,7 +168,6 @@ public class EditProfilePage extends AppCompatActivity implements AdapterView.On
             alertDialog();
         } else {
 
-            //commented out coz causing crash
             if (checkAge(til_age)) {
                 Toast.makeText(this, "Please key in an appropriate age", Toast.LENGTH_SHORT).show();
                 return;
@@ -153,8 +177,14 @@ public class EditProfilePage extends AppCompatActivity implements AdapterView.On
                     , age, bio, interests, location);
 
             if (mImageUri == null && oldUserProfile.getImageUrl()!=null) {
-                newUserProfile.setImageUrl(oldUserProfile.getImageUrl());
+
+                if (wantToRemoveProfilePic) {
+                    newUserProfile.setImageUrl("");
+                } else {
+                    newUserProfile.setImageUrl(oldUserProfile.getImageUrl());
+                }
                 putInFirestore(newUserProfile);
+
             } else {
                 uploadFile(newUserProfile, mImageUri);
             }
@@ -225,7 +255,6 @@ public class EditProfilePage extends AppCompatActivity implements AdapterView.On
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                 if (task.isSuccessful()) {
                     UserProfile currUserProfile = task.getResult().toObject(UserProfile.class);
                     fill(currUserProfile);
@@ -259,7 +288,6 @@ public class EditProfilePage extends AppCompatActivity implements AdapterView.On
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("loadProfileFrag", "profilePage");
         startActivity(intent);
-
     }
 
 
@@ -320,13 +348,21 @@ public class EditProfilePage extends AppCompatActivity implements AdapterView.On
             putInFirestore(userProf);
         }
     }
+
     public void putInFirestore(UserProfile user) {
+
         String uid = firebaseUser.getUid();
+        if (user.getImageUrl() == null || user.getImageUrl().equals("")) {
+            //delete profile pic from firebase storage if user decides to remove image.
+            storageReference.child(uid).delete();
+        }
+
         FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(uid)
                 .set(user, SetOptions.merge());
-        onBackPressed();
+        //onBackPressed();
+        startNextActivity();
     }
 
     //Used for spinner
