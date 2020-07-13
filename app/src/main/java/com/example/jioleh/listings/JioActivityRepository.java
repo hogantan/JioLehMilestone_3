@@ -75,7 +75,9 @@ class JioActivityRepository {
                             // order by time activity is created
                             //pass into viewModel
                             databaseOperations.jioActivityDataAdded(allActivities);
-                            lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                            if (queryDocumentSnapshots.size() - 1 >= 0) {
+                                lastVisible = queryDocumentSnapshots.getDocuments().get(queryDocumentSnapshots.size() - 1);
+                            }
                         }
                     }
                 });
