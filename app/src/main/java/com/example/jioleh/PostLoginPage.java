@@ -134,6 +134,7 @@ public class PostLoginPage extends AppCompatActivity {
         if(intentFragment != null && intentFragment.equals("profilePage")) {
             fm.beginTransaction().hide(active).show(frag5).commit();
             active = frag5;
+            bottom_nav_view.setSelectedItemId(R.id.bab_profile);
         }
     }
 }
