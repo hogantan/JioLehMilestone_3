@@ -12,25 +12,14 @@
         layout="@layout/top_app_bar"
         android:id="@+id/blocked_users_top_bar" />
 
-    }
 
-    <TextView
-        android:id="@+id/tvBlockedUsers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/blocked_users_top_bar"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
-        android:text="Blocked Users"
-        android:textColor="@color/baseGreen"
-        android:textSize="24sp"></TextView>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/blocked_users_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/tvBlockedUsers"
+        android:layout_below="@+id/blocked_users_top_bar"
         android:background="@color/baseBlack"
         />
 </RelativeLayout>
