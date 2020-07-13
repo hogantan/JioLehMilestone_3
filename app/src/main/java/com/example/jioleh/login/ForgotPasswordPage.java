@@ -42,6 +42,8 @@ public class ForgotPasswordPage extends AppCompatActivity {
                 if (checkUserInputDetails()) {
 
                     //Setting Details of Loading Screen
+                    progressBar.setTitle("Reset Password");
+                    progressBar.setMessage("Please wait while we check your credentials");
                     progressBar.setCanceledOnTouchOutside(false);
                     progressBar.show();
 
