@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,6 +54,7 @@ public class FirstTimeUserPage extends AppCompatActivity implements AdapterView.
     private Button confirmEdit;
     private TextView toolbarTitle;
     private Toolbar toolbar;
+    private ProgressDialog progressBar;
 
 
     private UserProfile userProfile;
@@ -90,7 +92,7 @@ public class FirstTimeUserPage extends AppCompatActivity implements AdapterView.
             public void onClick(View v) {
                 //prevent users from accidentally clicking button and upload duplicate image
                 if (uploadTask != null && uploadTask.isInProgress()) {
-                    Toast.makeText(FirstTimeUserPage.this, "upload in progress", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(FirstTimeUserPage.this, "upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     createProfile();
                 }
@@ -112,6 +114,7 @@ public class FirstTimeUserPage extends AppCompatActivity implements AdapterView.
         til_location = findViewById(R.id.Location);
         toolbarTitle = findViewById(R.id.tbTitle);
         gender = findViewById(R.id.spGender);
+        progressBar = new ProgressDialog(FirstTimeUserPage.this);
 
         //the storage file for userProfileImage
         storageReference = FirebaseStorage.getInstance().getReference("userProfileImage");
@@ -153,6 +156,12 @@ public class FirstTimeUserPage extends AppCompatActivity implements AdapterView.
                 Toast.makeText(this, "Please key in an appropriate age", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            //Setting Details of Loading Screen
+            progressBar.setTitle("Creating Profile");
+            progressBar.setMessage("Please wait while we create your profile");
+            progressBar.setCanceledOnTouchOutside(false);
+            progressBar.show();
 
             userProfile = new UserProfile(username, contact, gender.toUpperCase().charAt(0) + gender.substring(1).toLowerCase()
                     , age, bio, interests, location);
@@ -255,6 +264,7 @@ public class FirstTimeUserPage extends AppCompatActivity implements AdapterView.
                 .collection("users")
                 .document(uid)
                 .set(user, SetOptions.merge());
+        progressBar.dismiss();
         startNextActivity();
     }
 
@@ -299,7 +309,8 @@ public class FirstTimeUserPage extends AppCompatActivity implements AdapterView.
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(FirstTimeUserPage.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.dismiss();
+                    Toast.makeText(FirstTimeUserPage.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         } else {
@@ -324,15 +335,5 @@ public class FirstTimeUserPage extends AppCompatActivity implements AdapterView.
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
-    }
-
-    private int setSpinnerDetails(String input) {
-        if (input.equals("Male")) {
-            return 1;
-        } else if (input.equals("Female")) {
-            return 2;
-        } else {
-            return 0;
-        }
     }
 }
