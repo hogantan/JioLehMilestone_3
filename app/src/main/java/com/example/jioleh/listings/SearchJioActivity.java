@@ -250,6 +250,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
     }
 
     private void searchDatabase() {
+        list_of_activities.clear();
         //Third line of check
         linesOfChecks.checkActivityExpiry();
         linesOfChecks.checkActivityCancelledConfirmed();
@@ -384,7 +385,7 @@ public class SearchJioActivity extends AppCompatActivity implements AdapterView.
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        textView.setText(dayOfMonth + "-" + (month + 1) + "-" + year);
+                        textView.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
                     }
                 }, currentYear, currentMonth, currentDay);
         datePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {

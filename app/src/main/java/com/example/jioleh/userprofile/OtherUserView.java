@@ -354,8 +354,8 @@ public class OtherUserView extends AppCompatActivity {
 
     private void alertBlockedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(OtherUserView.this);
-        builder.setTitle("Error");
-        builder.setMessage("The user cannot be found.");
+        builder.setTitle("Oops!");
+        builder.setMessage("The user has been blocked");
         builder.setCancelable(false);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {

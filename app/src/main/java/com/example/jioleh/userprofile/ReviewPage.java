@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.example.jioleh.R;
 import com.example.jioleh.listings.JioActivity;
 import com.example.jioleh.post.PostingPage;
+import com.example.jioleh.settings.DeleteAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +41,8 @@ public class ReviewPage extends AppCompatActivity {
     private EditText review_words;
     private Button btn_submit_review;
     private Toolbar tb_user_profile;
+
+    private ProgressDialog progressBar;
 
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -88,6 +92,7 @@ public class ReviewPage extends AppCompatActivity {
     }
 
     public void initialise() {
+        progressBar = new ProgressDialog(ReviewPage.this);
         tv_username_display = findViewById(R.id.review_username);
         ratingBar = findViewById(R.id.review_rating_bar);
         review_words = findViewById(R.id.review_words);
@@ -122,6 +127,13 @@ public class ReviewPage extends AppCompatActivity {
 
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+
+                //Progress bar settings
+                progressBar.setTitle("Submit Review");
+                progressBar.setMessage("Please wait while we submit your review");
+                progressBar.setCanceledOnTouchOutside(false);
+                progressBar.show();
+
                 float rating = ratingBar.getRating();
                 String reviewWord = review_words.getText().toString();
                 String currentUid = firebaseUser.getUid();
@@ -136,9 +148,11 @@ public class ReviewPage extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
 
                                 if (task.isSuccessful()) {
+                                    progressBar.dismiss();
                                     Toast.makeText(ReviewPage.this, "Review submitted!",Toast.LENGTH_SHORT).show();
                                     finish();
                                 } else {
+                                    progressBar.dismiss();
                                     Toast.makeText(ReviewPage.this, "Error please try submitting again!",Toast.LENGTH_SHORT).show();
                                 }
                             }

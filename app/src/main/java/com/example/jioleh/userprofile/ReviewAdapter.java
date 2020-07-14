@@ -103,8 +103,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     @Override
                     public void onClick(View v) {
                         new AlertDialog.Builder(viewGroup.getContext())
-                                .setTitle("Delete review")
-                                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                .setTitle("Delete Review")
+                                .setMessage("Do you want to delete this review?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         FirebaseFirestore.getInstance()
@@ -115,7 +116,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                                                 .delete();
                                     }
                                 })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                     }

@@ -132,6 +132,7 @@ public class NearByActivity extends AppCompatActivity
         JioActivity jio = (JioActivity) marker.getTag();
         Intent nextActivity = new Intent(NearByActivity.this, ViewJioActivity.class);
         nextActivity.putExtra("activity_id", jio.getActivityId());
+        nextActivity.putExtra("host_uid", jio.getHost_uid());
         startActivity(nextActivity);
     }
 
