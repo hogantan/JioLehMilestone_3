@@ -18,8 +18,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.jioleh.PostLoginPage;
 import com.example.jioleh.R;
 import com.example.jioleh.chat.MessagePage;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -187,10 +189,17 @@ public class ReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
                     Context currentContext = reviewer_username.getContext();
-                    Intent nextActivity = new Intent(currentContext, OtherUserView.class);
-                    nextActivity.putExtra("username", reviewer_username.getText().toString());
-                    nextActivity.putExtra("user_id", reviewer_uid);
-                    currentContext.startActivity(nextActivity);
+                    Intent nextActivity;
+                    String myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    if (myUid.equals(reviewer_uid)){
+                        // dont do anything since users clicking on their own name
+                    } else {
+                        nextActivity = new Intent(currentContext, OtherUserView.class);
+                        nextActivity.putExtra("username", reviewer_username.getText().toString());
+                        nextActivity.putExtra("user_id", reviewer_uid);
+                        currentContext.startActivity(nextActivity);
+                    }
+
                 }
             });
         }
