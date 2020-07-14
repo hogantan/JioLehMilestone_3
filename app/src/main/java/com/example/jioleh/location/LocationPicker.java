@@ -394,7 +394,7 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
                             mapboxMap.animateCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory
                                     .newCameraPosition(position), 7000);
 
-                            Toast.makeText(LocationPicker.this, firstResultPoint.toString(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(LocationPicker.this, firstResultPoint.toString(), Toast.LENGTH_SHORT).show();
                         } else {
                             // No result for your request were found.
                             Toast.makeText(LocationPicker.this, "onResponse: No result found", Toast.LENGTH_SHORT).show();

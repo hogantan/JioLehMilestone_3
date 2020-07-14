@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ public class ReportUserPage extends AppCompatActivity {
     private EditText report_words;
     private TextView tv_reportedUsername;
     private Toolbar tb_report_user_top_bar;
+
+    private ProgressDialog progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class ReportUserPage extends AppCompatActivity {
     }
 
     public void initialise() {
+        progressBar = new ProgressDialog(ReportUserPage.this);
         btn_submit_report = findViewById(R.id.report_submit);
         report_words = findViewById(R.id.report_words);
         tv_reportedUsername = findViewById(R.id.report_username);
@@ -82,8 +86,11 @@ public class ReportUserPage extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            progressBar.dismiss();
                             Toast.makeText(ReportUserPage.this, "Submitted successfully", Toast.LENGTH_SHORT).show();
+                            finish();
                         } else {
+                            progressBar.dismiss();
                             Toast.makeText(ReportUserPage.this, "Please try again", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -103,6 +110,13 @@ public class ReportUserPage extends AppCompatActivity {
 
         builder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+
+                //Progress bar settings
+                progressBar.setTitle("Submit Report");
+                progressBar.setMessage("Please wait while we submit your report");
+                progressBar.setCanceledOnTouchOutside(false);
+                progressBar.show();
+
                 uploadToReportToFirestore(currenUid, reportedUid, words);
             }
         });

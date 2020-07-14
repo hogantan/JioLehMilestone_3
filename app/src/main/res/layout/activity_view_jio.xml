@@ -63,51 +63,53 @@
 
             <TextView
                 android:id="@+id/tvViewDisplayTypeActivity"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="13dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
                 android:text="Type of Activity"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintStart_toEndOf="@+id/ivViewDisplayTypeLogo"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTitle"></TextView>
 
             <ImageView
                 android:id="@+id/ivViewDisplayTypeLogo"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
-                app:srcCompat="@drawable/ic_baseline_dehaze_green"
-                app:layout_constraintEnd_toStartOf="@id/tvViewDisplayTypeActivity"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTitle"></ImageView>
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTitle"
+                app:srcCompat="@drawable/ic_baseline_dehaze_green"></ImageView>
 
             <TextView
                 android:id="@+id/tvViewDisplayLocation"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp"
                 android:text="Location"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/ivViewDisplayLocationLogo"
                 app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTypeActivity"></TextView>
 
             <ImageView
                 android:id="@+id/ivViewDisplayLocationLogo"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
-                app:srcCompat="@drawable/ic_baseline_location_on_green"
-                app:layout_constraintEnd_toStartOf="@id/tvViewDisplayLocation"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTypeActivity"></ImageView>
+                app:layout_constraintTop_toBottomOf="@+id/tvViewDisplayTypeActivity"
+                app:srcCompat="@drawable/ic_baseline_location_on_green"></ImageView>
 
             <TextView
                 android:id="@+id/tvViewDisplayWhoJio"

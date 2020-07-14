@@ -63,7 +63,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="4sp"
         android:text="TextView"
-        android:textSize="12sp"
+        android:textSize="8sp"
         android:textColor="@color/baseGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/comment_content"
@@ -99,15 +99,16 @@
 
     <TextView
         android:id="@+id/review_delete"
-        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Delete Review"
-        android:textSize="12sp"
+        android:layout_marginTop="12dp"
         android:clickable="true"
+        android:text="Delete Review"
+        android:textColor="@color/baseRed"
+        android:textSize="8sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.967"
+        app:layout_constraintHorizontal_bias="0.963"
         app:layout_constraintStart_toEndOf="@+id/review_row_date"
         app:layout_constraintTop_toBottomOf="@+id/comment_content" />
 

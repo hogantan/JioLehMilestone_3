@@ -36,7 +36,7 @@
 
         <Preference
             android:key="signout"
-            android:title="Sign out" />
+            android:title="Sign Out" />
 
     </PreferenceCategory>
 
