@@ -6,18 +6,6 @@
             android:key="editProfile"
             android:title="Edit Profile"/>
 
-        <SwitchPreferenceCompat
-            android:title="Show Email"
-            android:summary="Anyone can see your email"
-            app:key="showEmail">
-        </SwitchPreferenceCompat>
-
-        <SwitchPreferenceCompat
-            android:title="Show Contact"
-            android:summary="Anyone can see your contact"
-            app:key="showContact">
-        </SwitchPreferenceCompat>
-
         <Preference
             android:key="blockedUsers"
             android:title="Blocked Users"/>

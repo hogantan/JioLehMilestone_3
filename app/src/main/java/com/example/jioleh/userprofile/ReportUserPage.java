@@ -83,6 +83,7 @@ public class ReportUserPage extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(ReportUserPage.this, "Submitted successfully", Toast.LENGTH_SHORT).show();
+                            finish();
                         } else {
                             Toast.makeText(ReportUserPage.this, "Please try again", Toast.LENGTH_LONG).show();
                         }
