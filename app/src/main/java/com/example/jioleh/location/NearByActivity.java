@@ -1,6 +1,7 @@
 package com.example.jioleh.location;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,11 +10,18 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jioleh.R;
@@ -41,9 +49,14 @@ import org.imperiumlabs.geofirestore.GeoFirestore;
 import org.imperiumlabs.geofirestore.GeoQuery;
 import org.imperiumlabs.geofirestore.listeners.GeoQueryDataEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class NearByActivity extends AppCompatActivity
         implements
+        AdapterView.OnItemSelectedListener,
         OnMyLocationButtonClickListener,
         OnMyLocationClickListener,
         OnMapReadyCallback,
@@ -59,6 +72,10 @@ public class NearByActivity extends AppCompatActivity
     private boolean permissionDenied = false;
 
     private GoogleMap map;
+
+    private GeoQuery geoQuery;
+
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +96,18 @@ public class NearByActivity extends AppCompatActivity
         map.setOnMyLocationClickListener(this);
         map.setOnInfoWindowClickListener(this);
         getDeviceLocation();
+    }
+
+    private void makeSpinner() {
+        spinner = findViewById(R.id.spinner_radius);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.radius,R.layout.map_custom_spinner_item);
+
+        adapter.setDropDownViewResource(R.layout.map_custom_spinner_item);
+
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
     }
 
     //current location button animates map to user's location
@@ -169,9 +198,12 @@ public class NearByActivity extends AppCompatActivity
 
                                 //GeoFirestore
                                 CollectionReference colRef = FirebaseFirestore.getInstance().collection("activities");
-                                GeoQuery geoQuery = new GeoFirestore(colRef)
+                                geoQuery = new GeoFirestore(colRef)
                                         .queryAtLocation(new GeoPoint(currentLatitude, currentLongitude), QUERY_NEARBY_RADIUS);
 
+                                //add spinner for users to select radius of nearby query
+                                makeSpinner();
+                                
                                 //adding info window adapter to map
                                 map.setInfoWindowAdapter(new CustomInfoWindowAdapter(NearByActivity.this));
                                 geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
@@ -234,6 +266,24 @@ public class NearByActivity extends AppCompatActivity
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        switch (position) {
+            case 0: geoQuery.setRadius(1.0);
+                    break;
+            case 1: geoQuery.setRadius(2.0);
+                    break;
+            case 2: geoQuery.setRadius(5.0);
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
 
