@@ -60,7 +60,7 @@ public class JoinedFragment extends Fragment {
 
                 //Display empty text message
                 if(adapter.getItemCount() == 0) {
-                    emptyText.setText("You have not join any activities!");
+                    emptyText.setText("You have not join any activities...");
                 } else {
                     emptyText.setText("");
                 }

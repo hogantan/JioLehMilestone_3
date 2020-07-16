@@ -94,7 +94,7 @@ public class LikedFragment extends Fragment {
 
                 //Display empty text message
                 if(adapter.getItemCount() == 0) {
-                    emptyText.setText("You have not like any activities!");
+                    emptyText.setText("You have not like any activities...");
                 } else {
                     emptyText.setText("");
                 }

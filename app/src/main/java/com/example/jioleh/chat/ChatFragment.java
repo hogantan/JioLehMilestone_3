@@ -14,6 +14,7 @@ package com.example.jioleh.chat;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
+        import android.widget.TextView;
 
         import com.example.jioleh.R;
         import com.example.jioleh.listings.JioActivity;
@@ -36,6 +37,7 @@ package com.example.jioleh.chat;
 //Temporary view of Chat fragment
 public class ChatFragment extends Fragment {
 
+    private TextView emptyText;
     private RecyclerView recyclerView;
     private View currentView;
     private OpenChatsAdapter adapter;
@@ -53,6 +55,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void initialise() {
+        emptyText = currentView.findViewById(R.id.tvChatEmpty);
         recyclerView = currentView.findViewById(R.id.rvUsersList);
         swipeRefreshLayout = currentView.findViewById(R.id.swipeContainer);
     }
@@ -75,6 +78,12 @@ public class ChatFragment extends Fragment {
             public void onChanged(List<ChatChannel> chatChannels) {
                 adapter.setData(chatChannels);
                 adapter.notifyDataSetChanged();
+
+                if(adapter.getItemCount() == 0) {
+                    emptyText.setText("No conversations started yet...");
+                } else {
+                    emptyText.setText("");
+                }
             }
         });
 
