@@ -61,4 +61,10 @@
         <item>Female</item>
     </string-array>
 
+    <string-array name="radius">
+        <item>1.0 km</item>
+        <item>2.0 km</item>
+        <item>5.0 km</item>
+    </string-array>
+
 </resources>
