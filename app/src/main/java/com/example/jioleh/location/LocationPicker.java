@@ -1,14 +1,17 @@
 package com.example.jioleh.location;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -87,12 +90,11 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
     private ImageView hoveringMarker;
     private Layer droppedMarkerLayer;
     private SearchView searchView;
+    private Style style;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         // Mapbox access token is configured here. This needs to be called either in your application
         // object or in the same activity which contains the mapview.
@@ -143,7 +145,6 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
 
                 style.addLayer(symbolLayer);
 
-
                 // Toast instructing user to tap on the mapboxMap
                 Toast.makeText(
                         LocationPicker.this,
@@ -163,7 +164,6 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
 
 
                 // Initialize, but don't show, a SymbolLayer for the marker icon which will represent a selected location.
-                // commented out coz we using dialog for location confirmation
                 initDroppedMarker(style);
 
                 // Button for user to drop marker or to pick marker back up.
@@ -216,6 +216,7 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
                                 droppedMarkerLayer.setProperties(visibility(NONE));
                             }
                         }
+                        LocationPicker.this.style = style;
                     }
                 });
             }
@@ -282,17 +283,18 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
                                 @Override
                                 public void onStyleLoaded(@NonNull Style style) {
                                     if (style.getLayer(DROPPED_MARKER_LAYER_ID) != null) {
-                                        Toast.makeText(LocationPicker.this,
-                                                feature.placeName(), Toast.LENGTH_SHORT).show();
-                                        buildDialog(feature.placeName(), point).show();
-
+                                        Dialog dlg = buildDialog(feature.placeName(), point);
+                                        Window window = dlg.getWindow();
+                                        assert window != null;
+                                        window.setGravity(Gravity.BOTTOM);
+                                        dlg.show();
                                     }
                                 }
                             });
 
                         } else {
                             Toast.makeText(LocationPicker.this,
-                                    ("location_picker_dropped_marker_snippet_no_results"), Toast.LENGTH_SHORT).show();
+                                    ("No result please try selecting another location"), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -343,16 +345,10 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
                     public void onClick(DialogInterface dialog, int which) {
                         //populate back to activity listing
                         Intent data = new Intent();
-
-
                         //---set the data to pass back---
-
                         data.putExtra("Address_name",place);
                         data.putExtra("Latitude_double", point.latitude());
                         data.putExtra("Longitude_double", point.longitude());
-
-
-
                         setResult(RESULT_OK, data);
                         //---close the activity---
                         finish();
@@ -366,6 +362,15 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
                         selectLocationButton.setBackgroundColor(
                                 ContextCompat.getColor(LocationPicker.this, R.color.colorPrimary));
                         selectLocationButton.setText("Select");
+
+                        //make blue icon disappear
+                        droppedMarkerLayer = style.getLayer(DROPPED_MARKER_LAYER_ID);
+                        if (droppedMarkerLayer != null) {
+                            droppedMarkerLayer.setProperties(visibility(NONE));
+                        }
+
+                        //make red icon appear
+                        hoveringMarker.setVisibility(View.VISIBLE);
                     }
                 });
         return builder.create();
@@ -394,10 +399,9 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
                             mapboxMap.animateCamera(com.mapbox.mapboxsdk.camera.CameraUpdateFactory
                                     .newCameraPosition(position), 7000);
 
-                            //Toast.makeText(LocationPicker.this, firstResultPoint.toString(), Toast.LENGTH_SHORT).show();
                         } else {
                             // No result for your request were found.
-                            Toast.makeText(LocationPicker.this, "onResponse: No result found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LocationPicker.this, "No result found", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -461,34 +465,6 @@ public class LocationPicker extends AppCompatActivity implements PermissionsList
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
-    }
-
-    //this func for trying out setting bubble view on location selected
-    //currently not ready
-    private void myFunc(Style style){
-        // create symbol manager object
-        SymbolManager symbolManager = new SymbolManager(mapView, mapboxMap, style);
-        symbolManager.setIconAllowOverlap(true);
-        symbolManager.setIconIgnorePlacement(true);
-
-        // Add symbol at specified lat/lon
-        Symbol symbol = symbolManager.create(new SymbolOptions()
-                .withLatLng(new LatLng(60.169091, 24.939876))
-                .withIconSize(2.0f));
-
-        View customView = LayoutInflater.from(LocationPicker.this).inflate(
-                R.layout.marker_view_bubble, null);
-        customView.setLayoutParams(new FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-
-        // Set the View's TextViews with content
-        TextView titleTextView = customView.findViewById(R.id.marker_window_title);
-        titleTextView.setText("R.string.draw_marker_options_title");
-
-        TextView snippetTextView = customView.findViewById(R.id.marker_window_snippet);
-        snippetTextView.setText("R.string.draw_marker_options_snippet");
-
-
-
     }
 }
 

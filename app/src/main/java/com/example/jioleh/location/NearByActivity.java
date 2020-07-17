@@ -50,7 +50,6 @@ import org.imperiumlabs.geofirestore.GeoQuery;
 import org.imperiumlabs.geofirestore.listeners.GeoQueryDataEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -64,8 +63,10 @@ public class NearByActivity extends AppCompatActivity
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final double QUERY_NEARBY_RADIUS = 1.0;
+    private static final double DEFAULT_QUERY_NEARBY_RADIUS = 1.0;
     private static final int MAP_ZOOM_STANDARD = 15;
+
+    //will show if user's location cannot be fetched
     private static final LatLng DEFAULT_LOCATION = new LatLng(1.294792, 103.773658);
     private static final String TAG = "Location_Error";
 
@@ -149,7 +150,6 @@ public class NearByActivity extends AppCompatActivity
         }
     }
 
-
     // Displays a dialog with error message explaining that the location permission is missing.
     private void showMissingPermissionError() {
         PermissionUtils.PermissionDeniedDialog
@@ -199,54 +199,17 @@ public class NearByActivity extends AppCompatActivity
                                 //GeoFirestore
                                 CollectionReference colRef = FirebaseFirestore.getInstance().collection("activities");
                                 geoQuery = new GeoFirestore(colRef)
-                                        .queryAtLocation(new GeoPoint(currentLatitude, currentLongitude), QUERY_NEARBY_RADIUS);
+                                        .queryAtLocation(new GeoPoint(currentLatitude, currentLongitude), DEFAULT_QUERY_NEARBY_RADIUS);
 
                                 //add spinner for users to select radius of nearby query
                                 makeSpinner();
-                                
+
                                 //adding info window adapter to map
                                 map.setInfoWindowAdapter(new CustomInfoWindowAdapter(NearByActivity.this));
-                                geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
-                                    @Override
-                                    public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-                                        JioActivity jio = documentSnapshot.toObject(JioActivity.class);
-                                        if (jio.isCancelled() || jio.isConfirmed() || jio.isExpired()) {
-                                            //do nth
-                                        } else {
-                                            LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                                            MarkerOptions options = new MarkerOptions()
-                                                    .position(latLng);
 
-                                            map.addMarker(options)
-                                                    .setTag(jio);
-                                        }
-                                    }
+                                //function for nearby queries
+                                geoQueryFunction();
 
-                                    @Override
-                                    public void onDocumentExited(DocumentSnapshot documentSnapshot) {
-
-                                    }
-
-                                    @Override
-                                    public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-
-                                    }
-
-                                    @Override
-                                    public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
-
-                                    }
-
-                                    @Override
-                                    public void onGeoQueryReady() {
-
-                                    }
-
-                                    @Override
-                                    public void onGeoQueryError(Exception e) {
-
-                                    }
-                                });
                             }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
@@ -261,11 +224,76 @@ public class NearByActivity extends AppCompatActivity
                 // Permission to access the location is missing. Show rationale and request permission
                 PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                         Manifest.permission.ACCESS_FINE_LOCATION, true);
-
             }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage(), e);
         }
+    }
+
+    //list to keep track of the markers on map
+    private List<Marker> lstOfMarker = new ArrayList<>();
+    private void geoQueryFunction() {
+        geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+            @Override
+            public void onDocumentEntered(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+                JioActivity jio = documentSnapshot.toObject(JioActivity.class);
+                if (jio.isCancelled() || jio.isConfirmed() || jio.isExpired()) {
+                    //do nth
+                } else {
+                    LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                    MarkerOptions options = new MarkerOptions()
+                            .position(latLng);
+
+                    //make marker with jio activity as tag
+                    Marker marker = map.addMarker(options);
+                    marker.setTag(jio);
+
+                    //record this marker in the lstOfMarkers lsit
+                    lstOfMarker.add(marker);
+                }
+            }
+
+            @Override
+            public void onDocumentExited(DocumentSnapshot documentSnapshot) {
+                //this function takes care of the actions if the jioactivity is now outside of query radius
+                JioActivity jio = documentSnapshot.toObject(JioActivity.class);
+
+                //loop through lstOfMarkers
+                for (int i = 0; i < lstOfMarker.size(); i++) {
+                    Marker marker = lstOfMarker.get(i);
+                    //if this documentSnapshot is the jioactivity that relates to the marker
+                    //then we remove this marker
+                    if (jio.equals(marker.getTag())) {
+                        //only removing one document in each function call of onDocumentExited
+                        marker.remove();
+                        lstOfMarker.remove(i);
+                        break;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onDocumentMoved(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+            }
+
+            @Override
+            public void onDocumentChanged(DocumentSnapshot documentSnapshot, GeoPoint geoPoint) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(Exception e) {
+
+            }
+        });
+
     }
 
     @Override
@@ -285,5 +313,7 @@ public class NearByActivity extends AppCompatActivity
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
 }
 
