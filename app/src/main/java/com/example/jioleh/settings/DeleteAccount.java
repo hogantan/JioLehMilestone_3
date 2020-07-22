@@ -186,7 +186,7 @@ public class DeleteAccount extends AppCompatActivity {
     }
 
     private boolean checkInputs() {
-        if (email.getEditText() == null || password.getEditText() == null) {
+        if (email.getEditText().getText().toString().isEmpty() || password.getEditText().getText().toString().isEmpty()) {
             return false;
         } else {
             return true;
