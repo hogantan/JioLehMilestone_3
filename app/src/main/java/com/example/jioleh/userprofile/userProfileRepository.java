@@ -94,7 +94,7 @@ public class userProfileRepository{
                                 Collections.sort(list_of_activities, new Comparator<JioActivity>() {
                                     @Override
                                     public int compare(JioActivity o1, JioActivity o2) {
-                                        return o1.getEvent_timestamp().compareTo(o2.getEvent_timestamp());
+                                        return o2.getEvent_timestamp().compareTo(o1.getEvent_timestamp());
                                     }
                                 });
                                 databaseOperations.activitiesDataAdded(list_of_activities);
@@ -136,7 +136,7 @@ public class userProfileRepository{
                                 Collections.sort(list_of_activities, new Comparator<JioActivity>() {
                                     @Override
                                     public int compare(JioActivity o1, JioActivity o2) {
-                                        return o1.getEvent_timestamp().compareTo(o2.getEvent_timestamp());
+                                        return o2.getEvent_timestamp().compareTo(o1.getEvent_timestamp());
                                     }
                                 });
                                 databaseOperations.activitiesDataAdded(list_of_activities);
