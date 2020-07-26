@@ -1,2 +1,1 @@
-Milestone 1 : https://docs.google.com/document/d/1ejeea0GYrZcU5tbaI76E-a7Dui1RCBzaXxkNPzpPaO0/edit?usp=sharing
-Milestone 2 : https://docs.google.com/document/d/19JnajrXu7eH-kZTMdub9vZYLXeBFOXklNNLTjhGeHdw/edit?usp=sharing
+Milestone 3 : https://docs.google.com/document/d/12T9HXFkRu0Av6SIxpvuLWRMrz2IqbjjCJGwzknsamok/edit?usp=sharing
